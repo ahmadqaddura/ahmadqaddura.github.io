@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ahmad Qaddura — Editorial Cartoonist & Illustrator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-paper: #FAF8F5;
+            --ink-black: #141414;
+            --ink-gray: #525252;
+            --border-line: #DCD8D0;
+            --card-bg: #FFFFFF;
+            --accent-hover: #2C2C2C;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-paper);
+            color: var(--ink-black);
+            font-family: 'Inter', sans-serif;
+            line-height: 1.65;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            max-width: 1080px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Header & Newspaper Masthead */
+        header {
+            border-bottom: 2px solid var(--ink-black);
+            padding: 36px 0 24px;
+            text-align: center;
+        }
+
+        .masthead-meta {
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            color: var(--ink-gray);
+            margin-bottom: 10px;
+        }
+
+        h1.site-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.4rem, 5vw, 3.6rem);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+            margin-bottom: 10px;
+        }
+
+        .site-subtitle {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 1.15rem;
+            color: var(--ink-gray);
+            margin-bottom: 24px;
+        }
+
+        nav {
+            border-top: 1px solid var(--border-line);
+            padding-top: 16px;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 28px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--ink-black);
+            font-size: 0.88rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            transition: opacity 0.2s;
+        }
+
+        nav a:hover {
+            opacity: 0.6;
+        }
+
+        /* Sections */
+        section {
+            padding: 64px 0;
+            border-bottom: 1px solid var(--border-line);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 36px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        h2.section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.9rem;
+            font-weight: 700;
+        }
+
+        .section-note {
+            font-size: 0.9rem;
+            color: var(--ink-gray);
+        }
+
+        /* Gallery Grid */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 32px;
+        }
+
+        .art-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-line);
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .art-frame {
+            width: 100%;
+            aspect-ratio: 4 / 3;
+            background: #F0EDE6;
+            border: 1px solid var(--ink-black);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            margin-bottom: 16px;
+        }
+
+        .art-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .art-placeholder {
+            text-align: center;
+            padding: 20px;
+            color: var(--ink-gray);
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+        }
+
+        .art-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .art-desc {
+            font-size: 0.92rem;
+            color: var(--ink-gray);
+            margin-bottom: 16px;
+        }
+
+        .art-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            padding: 10px 18px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            text-decoration: none;
+            border: 1px solid var(--ink-black);
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background-color: var(--ink-black);
+            color: #FFFFFF;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--accent-hover);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: var(--ink-black);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--ink-black);
+            color: #FFFFFF;
+        }
+
+        /* Published Strip */
+        .published-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 24px;
+        }
+
+        .pub-item {
+            border-left: 2px solid var(--ink-black);
+            padding-left: 16px;
+        }
+
+        .pub-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .pub-detail {
+            font-size: 0.88rem;
+            color: var(--ink-gray);
+        }
+
+        /* Store Section */
+        .store-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 28px;
+        }
+
+        .store-box {
+            background: var(--card-bg);
+            border: 1px solid var(--ink-black);
+            padding: 28px;
+        }
+
+        .store-box h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+        }
+
+        .store-box p {
+            font-size: 0.95rem;
+            color: var(--ink-gray);
+            margin-bottom: 20px;
+        }
+
+        /* About & Contact */
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 48px;
+        }
+
+        @media (max-width: 768px) {
+            .about-grid {
+                grid-template-columns: 1fr;
+                gap: 32px;
+            }
+        }
+
+        .about-text p {
+            margin-bottom: 16px;
+            font-size: 1rem;
+        }
+
+        .contact-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-line);
+            padding: 24px;
+        }
+
+        .contact-card h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            margin-bottom: 12px;
+        }
+
+        .contact-card p {
+            font-size: 0.92rem;
+            color: var(--ink-gray);
+            margin-bottom: 16px;
+        }
+
+        /* Footer */
+        footer {
+            padding: 36px 0;
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--ink-gray);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <div class="masthead-meta">Gothenburg, Sweden &bull; Official Portfolio &amp; Archive</div>
+            <h1 class="site-title">Ahmad Qaddura</h1>
+            <p class="site-subtitle">Editorial Cartoonist &amp; Satirical Illustrator</p>
+            <nav>
+                <a href="#works">Selected Works</a>
+                <a href="#published">Published In</a>
+                <a href="#store">Qaddura Press Store</a>
+                <a href="#about">About &amp; Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+
+        <!-- Selected Works -->
+        <section id="works">
+            <div class="section-header">
+                <h2 class="section-title">Selected Editorial Works</h2>
+                <span class="section-note">Ink &amp; digital visual commentary</span>
+            </div>
+
+            <div class="gallery-grid">
+                <!-- Artwork 1 -->
+                <article class="art-card">
+                    <div>
+                        <div class="art-frame">
+                            <!-- Replace src with your image filename later, e.g. images/the-wall.jpg -->
+                            <div class="art-placeholder">The Wall — One Unified Land<br><small>(Upload image to display here)</small></div>
+                        </div>
+                        <h3 class="art-title">The Wall: One Unified Land</h3>
+                        <p class="art-desc">A visual reflection on division, roots, and resilience across a shared landscape.</p>
+                    </div>
+                    <div class="art-actions">
+                        <a href="#store" class="btn btn-primary">Shop Apparel</a>
+                        <a href="#store" class="btn btn-outline">License Art</a>
+                    </div>
+                </article>
+
+                <!-- Artwork 2 -->
+                <article class="art-card">
+                    <div>
+                        <div class="art-frame">
+                            <div class="art-placeholder">Featured Editorial Cartoon II<br><small>(Ready for your next artwork)</small></div>
+                        </div>
+                        <h3 class="art-title">Contemporary Satire Series</h3>
+                        <p class="art-desc">Sharp minimalist commentary examining global politics, human rights, and social realities.</p>
+                    </div>
+                    <div class="art-actions">
+                        <a href="#store" class="btn btn-outline">Explore Archive</a>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- Published In -->
+        <section id="published">
+            <div class="section-header">
+                <h2 class="section-title">Selected Publications &amp; Representation</h2>
+                <span class="section-note">Press, books &amp; international syndication</span>
+            </div>
+
+            <div class="published-list">
+                <div class="pub-item">
+                    <div class="pub-name">Dagens Nyheter</div>
+                    <div class="pub-detail">Published Editorial Cartoonist (Sweden, 2026)</div>
+                </div>
+                <div class="pub-item">
+                    <div class="pub-name">Tidötiden</div>
+                    <div class="pub-detail">Featured Satirical Illustrator — Anthology Book (2026)</div>
+                </div>
+                <div class="pub-item">
+                    <div class="pub-name">CartoonStock</div>
+                    <div class="pub-detail">Syndicated Editorial &amp; Press Licensing</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Store & Licensing -->
+        <section id="store">
+            <div class="section-header">
+                <h2 class="section-title">Qaddura Press — Official Store</h2>
+                <span class="section-note">Apparel &amp; commercial licensing via Fourthwall</span>
+            </div>
+
+            <div class="store-grid">
+                <div class="store-box">
+                    <h3>Wear the Art</h3>
+                    <p>Original editorial cartoons printed on heavyweight cotton t-shirts, organic sweatshirts, and pullover hoodies. Shipped worldwide from the EU, UK, and US.</p>
+                    <!-- Replace # with your Fourthwall store link -->
+                    <a href="#" target="_blank" class="btn btn-primary">Visit Apparel Store</a>
+                </div>
+
+                <div class="store-box">
+                    <h3>Digital Art &amp; Licenses</h3>
+                    <p>High-resolution editorial files with official usage certificates for newspapers, magazines, non-profit campaigns, and educational publications.</p>
+                    <!-- Replace # with your Fourthwall digital section link -->
+                    <a href="#" target="_blank" class="btn btn-outline">Browse Digital Licenses</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- About & Contact -->
+        <section id="about" style="border-bottom: none;">
+            <div class="about-grid">
+                <div class="about-text">
+                    <h2 class="section-title" style="margin-bottom: 20px;">About the Artist</h2>
+                    <p><strong>Ahmad Qaddura</strong> is a Gothenburg-based editorial cartoonist and satirical illustrator whose work bridges classic ink-and-engraving traditions with direct, minimalist visual storytelling.</p>
+                    <p>Drawing inspiration from timeless political caricature, his illustrations examine international affairs, human dignity, and everyday economic realities—translating complex headlines into immediate visual statements.</p>
+                    <p>His cartoons have appeared in major Swedish press such as <em>Dagens Nyheter</em>, the satirical anthology <em>Tidötiden</em>, and international syndication platforms.</p>
+                </div>
+
+                <div class="contact-card">
+                    <h3>Commissions &amp; Press Inquiries</h3>
+                    <p>Available for editorial commissions, newspaper syndication, book illustrations, and non-profit advocacy collaborations.</p>
+                    <a href="mailto:contact@ahmadqaddura.com" class="btn btn-primary">Send Email Inquiry</a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <div class="container">
+            &copy; 2026 Ahmad Qaddura &bull; Qaddura Press. All rights reserved.
+        </div>
+    </footer>
+
+</body>
+</html>
