@@ -5,6 +5,152 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Archive — Ahmad Qaddura</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* Modern Archive Enhancements (Lightweight & Self-Contained) */
+        .archive-search {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border-line, #d4d4d4);
+            background: #fff;
+            font-family: inherit;
+            font-size: 0.9rem;
+            color: var(--ink-black, #111);
+            margin-bottom: 24px;
+            box-sizing: border-box;
+            transition: border-color 0.2s ease;
+        }
+        .archive-search:focus {
+            outline: none;
+            border-color: var(--ink-black, #111);
+        }
+
+        /* Year & Month Accordion */
+        .year-group {
+            margin-bottom: 6px;
+        }
+        .year-btn, .month-btn, .all-btn {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: none;
+            border: none;
+            padding: 7px 8px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.95rem;
+            color: var(--ink-black, #111);
+            text-align: left;
+            transition: background-color 0.15s ease, color 0.15s ease;
+            border-radius: 2px;
+        }
+        .year-btn {
+            font-weight: 600;
+        }
+        .year-btn:hover, .month-btn:hover, .all-btn:hover {
+            background-color: rgba(0, 0, 0, 0.04);
+        }
+        .year-btn.active, .month-btn.active, .all-btn.active {
+            background-color: var(--ink-black, #111);
+            color: #fff;
+        }
+        .year-arrow {
+            display: inline-block;
+            font-size: 0.75rem;
+            margin-right: 6px;
+            transition: transform 0.2s ease;
+        }
+        .year-group.open .year-arrow {
+            transform: rotate(90deg);
+        }
+        .month-list {
+            list-style: none;
+            padding-left: 18px;
+            margin: 4px 0 8px 0;
+            border-left: 1px solid var(--border-line, #d4d4d4);
+            display: none;
+        }
+        .year-group.open .month-list {
+            display: block;
+            animation: fadeIn 0.2s ease;
+        }
+        .month-btn {
+            font-size: 0.88rem;
+            padding: 5px 8px;
+        }
+        .count-badge {
+            font-size: 0.78rem;
+            opacity: 0.65;
+            font-weight: 400;
+        }
+        .active .count-badge {
+            opacity: 0.9;
+        }
+
+        /* Smooth Card Fade-in */
+        .art-card {
+            animation: fadeIn 0.25s ease;
+        }
+        .art-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+            transition: transform 0.25s ease;
+        }
+        .art-frame:hover img {
+            transform: scale(1.02);
+        }
+
+        /* Lightbox Navigation Arrows */
+        .modal-nav-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(17, 17, 17, 0.75);
+            color: #fff;
+            border: none;
+            width: 38px;
+            height: 38px;
+            font-size: 1.4rem;
+            line-height: 1;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s ease;
+            z-index: 10;
+        }
+        .modal-nav-btn:hover {
+            background: #000;
+        }
+        .modal-prev { left: 10px; }
+        .modal-next { right: 10px; }
+        .modal-counter {
+            font-size: 0.8rem;
+            opacity: 0.6;
+            margin-bottom: 6px;
+        }
+
+        .empty-state {
+            grid-column: 1 / -1;
+            padding: 48px 20px;
+            text-align: center;
+            border: 1px dashed var(--border-line, #ccc);
+            color: #666;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
 </head>
 <body>
 
@@ -27,23 +173,13 @@
 
             <!-- Sidebar Filters -->
             <aside class="sidebar">
-                <div class="filter-group">
-                    <h3 class="filter-title">By Date (2026)</h3>
-                    <ul class="filter-list" id="date-filters">
-                        <li><button class="filter-btn active" data-filter="all">All Works</button></li>
-                        <li><button class="filter-btn" data-filter="2026-11">November 2026</button></li>
-                        <li><button class="filter-btn" data-filter="2026-10">October 2026</button></li>
-                        <li><button class="filter-btn" data-filter="2026-09">September 2026</button></li>
-                    </ul>
-                </div>
+                <input type="text" id="archive-search" class="archive-search" placeholder="Search cartoons..." aria-label="Search cartoons">
 
                 <div class="filter-group">
-                    <h3 class="filter-title">By Topic</h3>
-                    <ul class="filter-list" id="topic-filters">
-                        <li><button class="filter-btn" data-topic="politics">International Politics</button></li>
-                        <li><button class="filter-btn" data-topic="economy">Economy &amp; Society</button></li>
-                        <li><button class="filter-btn" data-topic="human-rights">Human Rights</button></li>
-                    </ul>
+                    <h3 class="filter-title">Archive by Date</h3>
+                    <div id="date-tree">
+                        <!-- Years and Months are built automatically here -->
+                    </div>
                 </div>
             </aside>
 
@@ -55,46 +191,7 @@
                 </div>
 
                 <div class="gallery-grid" id="archive-grid">
-
-                    <!-- Sample Entry 1 -->
-                    <article class="art-card" data-date="2026-11" data-topic="politics">
-                        <div>
-                            <div class="art-frame" onclick="openModal('Editorial Cartoon — Nov 2026', 'November 2026 • International Politics', 'Sample archive slot ready for your published work.', '')">
-                                <div class="art-placeholder">Archive Slot #1<br><small>November 2026</small></div>
-                            </div>
-                            <div class="art-meta">November 2026 &bull; Politics</div>
-                            <h3 class="art-title">Editorial Commentary — Nov 2026</h3>
-                            <p class="art-desc">Prepared slot for your November 2026 cartoon. Click frame to preview enlarged view.</p>
-                        </div>
-                        <a href="store.html" class="btn btn-outline">License Artwork</a>
-                    </article>
-
-                    <!-- Sample Entry 2 -->
-                    <article class="art-card" data-date="2026-10" data-topic="economy">
-                        <div>
-                            <div class="art-frame" onclick="openModal('Editorial Cartoon — Oct 2026', 'October 2026 • Economy & Society', 'Sample archive slot ready for your published work.', '')">
-                                <div class="art-placeholder">Archive Slot #2<br><small>October 2026</small></div>
-                            </div>
-                            <div class="art-meta">October 2026 &bull; Economy</div>
-                            <h3 class="art-title">Editorial Commentary — Oct 2026</h3>
-                            <p class="art-desc">Prepared slot for your October 2026 satire piece examining economic realities.</p>
-                        </div>
-                        <a href="store.html" class="btn btn-outline">License Artwork</a>
-                    </article>
-
-                    <!-- Sample Entry 3 -->
-                    <article class="art-card" data-date="2026-09" data-topic="human-rights">
-                        <div>
-                            <div class="art-frame" onclick="openModal('Editorial Cartoon — Sep 2026', 'September 2026 • Human Rights', 'Sample archive slot ready for your published work.', '')">
-                                <div class="art-placeholder">Archive Slot #3<br><small>September 2026</small></div>
-                            </div>
-                            <div class="art-meta">September 2026 &bull; Human Rights</div>
-                            <h3 class="art-title">Editorial Commentary — Sep 2026</h3>
-                            <p class="art-desc">Prepared slot for your September 2026 illustration on human dignity.</p>
-                        </div>
-                        <a href="store.html" class="btn btn-outline">License Artwork</a>
-                    </article>
-
+                    <!-- Cartoons are rendered automatically here -->
                 </div>
             </div>
 
@@ -102,11 +199,16 @@
     </main>
 
     <!-- Lightbox Modal for Enlarged View -->
-    <div class="modal" id="artModal" onclick="closeModal(event)">
+    <div class="modal" id="artModal" onclick="closeModal()">
         <div class="modal-content" onclick="event.stopPropagation()">
-            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <button class="modal-close" onclick="closeModal()" aria-label="Close">&times;</button>
             <div class="modal-body">
-                <div id="modal-img-container"></div>
+                <div class="modal-nav-wrapper">
+                    <button class="modal-nav-btn modal-prev" id="modalPrev" onclick="navigateModal(-1)" aria-label="Previous">&#8249;</button>
+                    <div id="modal-img-container" style="width: 100%;"></div>
+                    <button class="modal-nav-btn modal-next" id="modalNext" onclick="navigateModal(1)" aria-label="Next">&#8250;</button>
+                </div>
+                <div class="modal-counter" id="modal-counter"></div>
                 <div class="art-meta" id="modal-meta"></div>
                 <h3 class="art-title" id="modal-title" style="margin-top: 4px;"></h3>
                 <p class="art-desc" id="modal-desc"></p>
@@ -122,76 +224,232 @@
     </footer>
 
     <script>
-        const cards = document.querySelectorAll('.art-card');
-        const dateBtns = document.querySelectorAll('#date-filters .filter-btn');
-        const topicBtns = document.querySelectorAll('#topic-filters .filter-btn');
+        /* =========================================================
+           قائمة رسوماتك الكاريكاتيرية — لإضافة أي رسمة جديدة، انسخ بلوك واحد فقط!
+           ========================================================= */
+        const cartoons = [
+            {
+                title: "Editorial Commentary — Nov 2026",
+                date: "2026-11",
+                topic: "International Politics",
+                desc: "Prepared slot for your November 2026 cartoon. Click frame to preview enlarged view.",
+                image: "" // مثال لاحقاً: "cartoons/nov-cartoon.jpg"
+            },
+            {
+                title: "Editorial Commentary — Oct 2026",
+                date: "2026-10",
+                topic: "Economy & Society",
+                desc: "Prepared slot for your October 2026 satire piece examining economic realities.",
+                image: ""
+            },
+            {
+                title: "Editorial Commentary — Sep 2026",
+                date: "2026-09",
+                topic: "Human Rights",
+                desc: "Prepared slot for your September 2026 illustration on human dignity.",
+                image: ""
+            },
+            {
+                title: "Archive Sample — Dec 2025",
+                date: "2025-12",
+                topic: "Society",
+                desc: "Sample entry showing how previous years automatically organize into collapsible folders.",
+                image: ""
+            }
+        ];
+
+        const monthNames = {
+            "01": "January", "02": "February", "03": "March", "04": "April",
+            "05": "May", "06": "June", "07": "July", "08": "August",
+            "09": "September", "10": "October", "11": "November", "12": "December"
+        };
+
+        let activeFilter = "all"; // "all", "2026", or "2026-11"
+        let searchQuery = "";
+        let filteredCartoons = [];
+        let currentModalIndex = 0;
+
+        const dateTree = document.getElementById('date-tree');
+        const grid = document.getElementById('archive-grid');
         const heading = document.getElementById('archive-heading');
         const countLabel = document.getElementById('works-count');
+        const searchInput = document.getElementById('archive-search');
 
-        function updateCount(visibleCount) {
-            countLabel.textContent = visibleCount === 1 ? 'Showing 1 work' : `Showing ${visibleCount} works`;
+        function formatDateLabel(dateStr) {
+            const [year, month] = dateStr.split('-');
+            return `${monthNames[month] || month} ${year}`;
         }
 
-        dateBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                dateBtns.forEach(b => b.classList.remove('active'));
-                topicBtns.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-
-                const filter = btn.getAttribute('data-filter');
-                heading.textContent = filter === 'all' ? 'Complete Archive' : btn.textContent;
-
-                let visible = 0;
-                cards.forEach(card => {
-                    if (filter === 'all' || card.getAttribute('data-date') === filter) {
-                        card.style.display = 'flex';
-                        visible++;
-                    } else {
-                        card.style.display = 'none';
-                    }
-                });
-                updateCount(visible);
+        // Build Year -> Months Accordion Automatically
+        function buildDateTree() {
+            const structure = {};
+            cartoons.forEach(c => {
+                const [year, month] = c.date.split('-');
+                if (!structure[year]) structure[year] = { count: 0, months: {} };
+                structure[year].count++;
+                structure[year].months[month] = (structure[year].months[month] || 0) + 1;
             });
-        });
 
-        topicBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                dateBtns.forEach(b => b.classList.remove('active'));
-                topicBtns.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
+            const sortedYears = Object.keys(structure).sort((a, b) => b - a);
+            let html = `
+                <button class="all-btn active" data-filter="all">
+                    <span>All Works</span>
+                    <span class="count-badge">${cartoons.length}</span>
+                </button>
+            `;
 
-                const topic = btn.getAttribute('data-topic');
-                heading.textContent = btn.textContent;
-
-                let visible = 0;
-                cards.forEach(card => {
-                    if (card.getAttribute('data-topic') === topic) {
-                        card.style.display = 'flex';
-                        visible++;
-                    } else {
-                        card.style.display = 'none';
-                    }
-                });
-                updateCount(visible);
+            sortedYears.forEach((year, idx) => {
+                const isOpen = idx === 0 ? 'open' : ''; // Open latest year by default
+                const months = Object.keys(structure[year].months).sort((a, b) => b - a);
+                html += `
+                    <div class="year-group ${isOpen}" data-year="${year}">
+                        <button class="year-btn" data-filter="${year}">
+                            <span><span class="year-arrow">&#9656;</span>${year}</span>
+                            <span class="count-badge">${structure[year].count}</span>
+                        </button>
+                        <ul class="month-list">
+                            ${months.map(m => `
+                                <li>
+                                    <button class="month-btn" data-filter="${year}-${m}">
+                                        <span>${monthNames[m]}</span>
+                                        <span class="count-badge">${structure[year].months[m]}</span>
+                                    </button>
+                                </li>
+                            `).join('')}
+                        </ul>
+                    </div>
+                `;
             });
-        });
 
-        function openModal(title, meta, desc, imgSrc) {
-            document.getElementById('modal-title').textContent = title;
-            document.getElementById('modal-meta').textContent = meta;
-            document.getElementById('modal-desc').textContent = desc;
-            const imgContainer = document.getElementById('modal-img-container');
-            if (imgSrc) {
-                imgContainer.innerHTML = `<img src="${imgSrc}" alt="${title}">`;
-            } else {
-                imgContainer.innerHTML = `<div class="art-frame" style="height: 280px; margin-bottom: 16px;"><div class="art-placeholder">${title}<br><small>(Image will appear here once uploaded)</small></div></div>`;
+            dateTree.innerHTML = html;
+
+            // Attach click listeners
+            dateTree.querySelectorAll('button[data-filter]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const filter = btn.getAttribute('data-filter');
+
+                    // Toggle accordion if clicking a year button
+                    if (btn.classList.contains('year-btn')) {
+                        const group = btn.closest('.year-group');
+                        if (activeFilter === filter) {
+                            group.classList.toggle('open');
+                        } else {
+                            group.classList.add('open');
+                        }
+                    }
+
+                    activeFilter = filter;
+                    dateTree.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+
+                    if (filter === 'all') {
+                        heading.textContent = 'Complete Archive';
+                    } else if (filter.length === 4) {
+                        heading.textContent = `Archive — ${filter}`;
+                    } else {
+                        heading.textContent = formatDateLabel(filter);
+                    }
+
+                    renderGrid();
+                });
+            });
+        }
+
+        function renderGrid() {
+            filteredCartoons = cartoons.filter(c => {
+                const matchesDate = activeFilter === 'all' || c.date.startsWith(activeFilter);
+                const text = `${c.title} ${c.topic} ${c.desc} ${formatDateLabel(c.date)}`.toLowerCase();
+                const matchesSearch = !searchQuery || text.includes(searchQuery);
+                return matchesDate && matchesSearch;
+            });
+
+            countLabel.textContent = filteredCartoons.length === 1
+                ? 'Showing 1 work'
+                : `Showing ${filteredCartoons.length} works`;
+
+            if (filteredCartoons.length === 0) {
+                grid.innerHTML = `<div class="empty-state">No cartoons found matching your selection.</div>`;
+                return;
             }
+
+            grid.innerHTML = filteredCartoons.map((c, index) => {
+                const dateLabel = formatDateLabel(c.date);
+                const visual = c.image
+                    ? `<img src="${c.image}" alt="${c.title}" loading="lazy">`
+                    : `<div class="art-placeholder">${c.title}<br><small>${dateLabel}</small></div>`;
+
+                return `
+                    <article class="art-card">
+                        <div>
+                            <div class="art-frame" onclick="openModal(${index})">
+                                ${visual}
+                            </div>
+                            <div class="art-meta">${dateLabel} &bull; ${c.topic}</div>
+                            <h3 class="art-title">${c.title}</h3>
+                            <p class="art-desc">${c.desc}</p>
+                        </div>
+                        <a href="store.html" class="btn btn-outline">License Artwork</a>
+                    </article>
+                `;
+            }).join('');
+        }
+
+        // Live Search
+        searchInput.addEventListener('input', (e) => {
+            searchQuery = e.target.value.trim().toLowerCase();
+            renderGrid();
+        });
+
+        // Lightbox Modal with Prev/Next
+        function openModal(index) {
+            currentModalIndex = index;
+            updateModalContent();
             document.getElementById('artModal').classList.add('open');
+        }
+
+        function updateModalContent() {
+            const c = filteredCartoons[currentModalIndex];
+            if (!c) return;
+
+            const dateLabel = formatDateLabel(c.date);
+            document.getElementById('modal-title').textContent = c.title;
+            document.getElementById('modal-meta').textContent = `${dateLabel} • ${c.topic}`;
+            document.getElementById('modal-desc').textContent = c.desc;
+            document.getElementById('modal-counter').textContent = `${currentModalIndex + 1} / ${filteredCartoons.length}`;
+
+            const imgContainer = document.getElementById('modal-img-container');
+            if (c.image) {
+                imgContainer.innerHTML = `<img src="${c.image}" alt="${c.title}" style="max-height: 65vh; width: auto; max-width: 100%; margin: 0 auto 16px; display: block;">`;
+            } else {
+                imgContainer.innerHTML = `<div class="art-frame" style="height: 280px; margin-bottom: 16px;"><div class="art-placeholder">${c.title}<br><small>(Image will appear here once uploaded)</small></div></div>`;
+            }
+
+            const showArrows = filteredCartoons.length > 1 ? 'flex' : 'none';
+            document.getElementById('modalPrev').style.display = showArrows;
+            document.getElementById('modalNext').style.display = showArrows;
+        }
+
+        function navigateModal(step) {
+            if (filteredCartoons.length <= 1) return;
+            currentModalIndex = (currentModalIndex + step + filteredCartoons.length) % filteredCartoons.length;
+            updateModalContent();
         }
 
         function closeModal() {
             document.getElementById('artModal').classList.remove('open');
         }
+
+        // Keyboard support for Modal
+        document.addEventListener('keydown', (e) => {
+            if (!document.getElementById('artModal').classList.contains('open')) return;
+            if (e.key === 'Escape') closeModal();
+            if (e.key === 'ArrowRight') navigateModal(1);
+            if (e.key === 'ArrowLeft') navigateModal(-1);
+        });
+
+        // Initialize Page
+        buildDateTree();
+        renderGrid();
     </script>
 
 </body>
