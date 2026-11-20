@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Archive — Ahmad Qaddura</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <div class="masthead-meta">Gothenburg, Sweden &bull; Official Portfolio &amp; Archive</div>
+            <h1 class="site-title"><a href="index.html">Ahmad Qaddura</a></h1>
+            <p class="site-subtitle">Editorial Cartoonist &amp; Satirical Illustrator</p>
+            <nav>
+                <a href="index.html">Home</a>
+                <a href="archive.html" class="active">Archive</a>
+                <a href="store.html">Store</a>
+                <a href="about.html">About &amp; Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="archive-layout">
+
+            <!-- Sidebar Filters -->
+            <aside class="sidebar">
+                <div class="filter-group">
+                    <h3 class="filter-title">By Date (2026)</h3>
+                    <ul class="filter-list" id="date-filters">
+                        <li><button class="filter-btn active" data-filter="all">All Works</button></li>
+                        <li><button class="filter-btn" data-filter="2026-11">November 2026</button></li>
+                        <li><button class="filter-btn" data-filter="2026-10">October 2026</button></li>
+                        <li><button class="filter-btn" data-filter="2026-09">September 2026</button></li>
+                    </ul>
+                </div>
+
+                <div class="filter-group">
+                    <h3 class="filter-title">By Topic</h3>
+                    <ul class="filter-list" id="topic-filters">
+                        <li><button class="filter-btn" data-topic="politics">International Politics</button></li>
+                        <li><button class="filter-btn" data-topic="economy">Economy &amp; Society</button></li>
+                        <li><button class="filter-btn" data-topic="human-rights">Human Rights</button></li>
+                    </ul>
+                </div>
+            </aside>
+
+            <!-- Works Grid -->
+            <div>
+                <div class="section-header">
+                    <h2 class="section-title" id="archive-heading">Complete Archive</h2>
+                    <span class="section-note" id="works-count">Showing all works</span>
+                </div>
+
+                <div class="gallery-grid" id="archive-grid">
+
+                    <!-- Sample Entry 1 -->
+                    <article class="art-card" data-date="2026-11" data-topic="politics">
+                        <div>
+                            <div class="art-frame" onclick="openModal('Editorial Cartoon — Nov 2026', 'November 2026 • International Politics', 'Sample archive slot ready for your published work.', '')">
+                                <div class="art-placeholder">Archive Slot #1<br><small>November 2026</small></div>
+                            </div>
+                            <div class="art-meta">November 2026 &bull; Politics</div>
+                            <h3 class="art-title">Editorial Commentary — Nov 2026</h3>
+                            <p class="art-desc">Prepared slot for your November 2026 cartoon. Click frame to preview enlarged view.</p>
+                        </div>
+                        <a href="store.html" class="btn btn-outline">License Artwork</a>
+                    </article>
+
+                    <!-- Sample Entry 2 -->
+                    <article class="art-card" data-date="2026-10" data-topic="economy">
+                        <div>
+                            <div class="art-frame" onclick="openModal('Editorial Cartoon — Oct 2026', 'October 2026 • Economy & Society', 'Sample archive slot ready for your published work.', '')">
+                                <div class="art-placeholder">Archive Slot #2<br><small>October 2026</small></div>
+                            </div>
+                            <div class="art-meta">October 2026 &bull; Economy</div>
+                            <h3 class="art-title">Editorial Commentary — Oct 2026</h3>
+                            <p class="art-desc">Prepared slot for your October 2026 satire piece examining economic realities.</p>
+                        </div>
+                        <a href="store.html" class="btn btn-outline">License Artwork</a>
+                    </article>
+
+                    <!-- Sample Entry 3 -->
+                    <article class="art-card" data-date="2026-09" data-topic="human-rights">
+                        <div>
+                            <div class="art-frame" onclick="openModal('Editorial Cartoon — Sep 2026', 'September 2026 • Human Rights', 'Sample archive slot ready for your published work.', '')">
+                                <div class="art-placeholder">Archive Slot #3<br><small>September 2026</small></div>
+                            </div>
+                            <div class="art-meta">September 2026 &bull; Human Rights</div>
+                            <h3 class="art-title">Editorial Commentary — Sep 2026</h3>
+                            <p class="art-desc">Prepared slot for your September 2026 illustration on human dignity.</p>
+                        </div>
+                        <a href="store.html" class="btn btn-outline">License Artwork</a>
+                    </article>
+
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Lightbox Modal for Enlarged View -->
+    <div class="modal" id="artModal" onclick="closeModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <div class="modal-body">
+                <div id="modal-img-container"></div>
+                <div class="art-meta" id="modal-meta"></div>
+                <h3 class="art-title" id="modal-title" style="margin-top: 4px;"></h3>
+                <p class="art-desc" id="modal-desc"></p>
+                <a href="store.html" class="btn btn-primary">Request Press License</a>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            &copy; 2026 Ahmad Qaddura. All rights reserved.
+        </div>
+    </footer>
+
+    <script>
+        const cards = document.querySelectorAll('.art-card');
+        const dateBtns = document.querySelectorAll('#date-filters .filter-btn');
+        const topicBtns = document.querySelectorAll('#topic-filters .filter-btn');
+        const heading = document.getElementById('archive-heading');
+        const countLabel = document.getElementById('works-count');
+
+        function updateCount(visibleCount) {
+            countLabel.textContent = visibleCount === 1 ? 'Showing 1 work' : `Showing ${visibleCount} works`;
+        }
+
+        dateBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                dateBtns.forEach(b => b.classList.remove('active'));
+                topicBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                const filter = btn.getAttribute('data-filter');
+                heading.textContent = filter === 'all' ? 'Complete Archive' : btn.textContent;
+
+                let visible = 0;
+                cards.forEach(card => {
+                    if (filter === 'all' || card.getAttribute('data-date') === filter) {
+                        card.style.display = 'flex';
+                        visible++;
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+                updateCount(visible);
+            });
+        });
+
+        topicBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                dateBtns.forEach(b => b.classList.remove('active'));
+                topicBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                const topic = btn.getAttribute('data-topic');
+                heading.textContent = btn.textContent;
+
+                let visible = 0;
+                cards.forEach(card => {
+                    if (card.getAttribute('data-topic') === topic) {
+                        card.style.display = 'flex';
+                        visible++;
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+                updateCount(visible);
+            });
+        });
+
+        function openModal(title, meta, desc, imgSrc) {
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-meta').textContent = meta;
+            document.getElementById('modal-desc').textContent = desc;
+            const imgContainer = document.getElementById('modal-img-container');
+            if (imgSrc) {
+                imgContainer.innerHTML = `<img src="${imgSrc}" alt="${title}">`;
+            } else {
+                imgContainer.innerHTML = `<div class="art-frame" style="height: 280px; margin-bottom: 16px;"><div class="art-placeholder">${title}<br><small>(Image will appear here once uploaded)</small></div></div>`;
+            }
+            document.getElementById('artModal').classList.add('open');
+        }
+
+        function closeModal() {
+            document.getElementById('artModal').classList.remove('open');
+        }
+    </script>
+
+</body>
+</html>
