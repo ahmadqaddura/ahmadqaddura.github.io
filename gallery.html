@@ -187,11 +187,11 @@
             <div>
                 <div class="section-header">
                     <h2 class="section-title" id="archive-heading">Complete Gallery</h2>
-                    <span class="section-note" id="works-count">Showing all works</span>
+                    <span class="section-note" id="works-count">Loading works...</span>
                 </div>
 
                 <div class="gallery-grid" id="archive-grid">
-                    <!-- Cartoons are rendered automatically here -->
+                    <div class="empty-state">Loading gallery...</div>
                 </div>
             </div>
 
@@ -211,8 +211,7 @@
                 <div class="modal-counter" id="modal-counter"></div>
                 <div class="art-meta" id="modal-meta"></div>
                 <h3 class="art-title" id="modal-title" style="margin-top: 4px;"></h3>
-                <p class="art-desc" id="modal-desc"></p>
-                <a href="store.html" class="btn btn-primary">Request Press License</a>
+                <a href="store.html" class="btn btn-primary" style="margin-top: 12px;">Request Press License</a>
             </div>
         </div>
     </div>
@@ -224,40 +223,8 @@
     </footer>
 
     <script>
-        /* =========================================================
-           قائمة رسوماتك الكاريكاتيرية — لإضافة أي رسمة جديدة، انسخ بلوك واحد فقط!
-           صيغة التاريخ: YYYY-MM-DD (السنة-الشهر-اليوم)
-           ========================================================= */
-        const cartoons = [
-            {
-                title: "Editorial Commentary — Nov 2026",
-                date: "2026-11-20",
-                topic: "International Politics",
-                desc: "Prepared slot for your November 2026 cartoon. Click frame to preview enlarged view.",
-                image: "" // مثال لاحقاً: "cartoons/nov-cartoon.jpg"
-            },
-            {
-                title: "Editorial Commentary — Oct 2026",
-                date: "2026-10-15",
-                topic: "Economy & Society",
-                desc: "Prepared slot for your October 2026 satire piece examining economic realities.",
-                image: ""
-            },
-            {
-                title: "Editorial Commentary — Sep 2026",
-                date: "2026-09-10",
-                topic: "Human Rights",
-                desc: "Prepared slot for your September 2026 illustration on human dignity.",
-                image: ""
-            },
-            {
-                title: "Gallery Sample — Dec 2025",
-                date: "2025-12-05",
-                topic: "Society",
-                desc: "Sample entry showing how previous years automatically organize into collapsible folders.",
-                image: ""
-            }
-        ];
+        const GITHUB_API_URL = "https://api.github.com/repos/ahmadqaddura/ahmadqaddura.github.io/contents/cartoons";
+        const IMAGE_EXTENSIONS = /\.(webp|jpe?g|png|gif)$/i;
 
         const monthNames = {
             "01": "January", "02": "February", "03": "March", "04": "April",
@@ -265,10 +232,8 @@
             "09": "September", "10": "October", "11": "November", "12": "December"
         };
 
-        // ترتيب الرسومات تلقائياً من الأحدث إلى الأقدم حسب اليوم
-        cartoons.sort((a, b) => b.date.localeCompare(a.date));
-
-        let activeFilter = "all"; // "all", "2026", or "2026-11"
+        let cartoons = [];
+        let activeFilter = "all";
         let searchQuery = "";
         let filteredCartoons = [];
         let currentModalIndex = 0;
@@ -281,6 +246,7 @@
 
         function formatDateLabel(dateStr) {
             const parts = dateStr.split('-');
+            if (parts.length < 2) return dateStr;
             const year = parts[0];
             const month = monthNames[parts[1]] || parts[1];
             if (parts[2]) {
@@ -289,14 +255,60 @@
             return `${month} ${year}`;
         }
 
-        // Build Year -> Months Accordion Automatically
+        function parseCartoonFile(file) {
+            const nameNoExt = file.name.replace(IMAGE_EXTENSIONS, '');
+            const dateMatch = nameNoExt.match(/^(\d{4}-\d{2}-\d{2})(?:[_-](.+))?$/);
+
+            let date = "2026-01-01";
+            let title = "";
+
+            if (dateMatch) {
+                date = dateMatch[1];
+                if (dateMatch[2] && !/^\d+$/.test(dateMatch[2])) {
+                    title = dateMatch[2].replace(/[-_]+/g, ' ').trim();
+                } else {
+                    title = formatDateLabel(date);
+                }
+            } else {
+                title = nameNoExt.replace(/[-_]+/g, ' ').trim();
+            }
+
+            return {
+                name: file.name,
+                title: title,
+                date: date,
+                image: `cartoons/${encodeURIComponent(file.name)}`
+            };
+        }
+
+        async function loadCartoons() {
+            try {
+                const response = await fetch(GITHUB_API_URL);
+                if (!response.ok) throw new Error("Failed to load folder");
+                const files = await response.json();
+
+                cartoons = files
+                    .filter(f => f.type === "file" && IMAGE_EXTENSIONS.test(f.name))
+                    .map(parseCartoonFile)
+                    .sort((a, b) => b.date.localeCompare(a.date) || b.name.localeCompare(a.name));
+
+                buildDateTree();
+                renderGrid();
+            } catch (err) {
+                grid.innerHTML = `<div class="empty-state">Unable to load gallery right now. Please refresh the page.</div>`;
+                countLabel.textContent = "";
+            }
+        }
+
         function buildDateTree() {
             const structure = {};
             cartoons.forEach(c => {
                 const [year, month] = c.date.split('-');
                 if (!structure[year]) structure[year] = { count: 0, months: {} };
                 structure[year].count++;
-                structure[year].months[month] = (structure[year].months[month] || 0) + 1;
+                if (month) {
+                    structure[year].months[month] = (structure[year].months[month] || 0) + 1;
+                }
             });
 
             const sortedYears = Object.keys(structure).sort((a, b) => b - a);
@@ -308,7 +320,7 @@
             `;
 
             sortedYears.forEach((year, idx) => {
-                const isOpen = idx === 0 ? 'open' : ''; // Open latest year by default
+                const isOpen = idx === 0 ? 'open' : '';
                 const months = Object.keys(structure[year].months).sort((a, b) => b - a);
                 html += `
                     <div class="year-group ${isOpen}" data-year="${year}">
@@ -320,7 +332,7 @@
                             ${months.map(m => `
                                 <li>
                                     <button class="month-btn" data-filter="${year}-${m}">
-                                        <span>${monthNames[m]}</span>
+                                        <span>${monthNames[m] || m}</span>
                                         <span class="count-badge">${structure[year].months[m]}</span>
                                     </button>
                                 </li>
@@ -332,12 +344,10 @@
 
             dateTree.innerHTML = html;
 
-            // Attach click listeners
             dateTree.querySelectorAll('button[data-filter]').forEach(btn => {
                 btn.addEventListener('click', () => {
                     const filter = btn.getAttribute('data-filter');
 
-                    // Toggle accordion if clicking a year button
                     if (btn.classList.contains('year-btn')) {
                         const group = btn.closest('.year-group');
                         if (activeFilter === filter) {
@@ -348,118 +358,4 @@
                     }
 
                     activeFilter = filter;
-                    dateTree.querySelectorAll('button').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-
-                    if (filter === 'all') {
-                        heading.textContent = 'Complete Gallery';
-                    } else if (filter.length === 4) {
-                        heading.textContent = `Gallery — ${filter}`;
-                    } else {
-                        heading.textContent = formatDateLabel(filter);
-                    }
-
-                    renderGrid();
-                });
-            });
-        }
-
-        function renderGrid() {
-            filteredCartoons = cartoons.filter(c => {
-                const matchesDate = activeFilter === 'all' || c.date.startsWith(activeFilter);
-                const text = `${c.title} ${c.topic} ${c.desc} ${formatDateLabel(c.date)}`.toLowerCase();
-                const matchesSearch = !searchQuery || text.includes(searchQuery);
-                return matchesDate && matchesSearch;
-            });
-
-            countLabel.textContent = filteredCartoons.length === 1
-                ? 'Showing 1 work'
-                : `Showing ${filteredCartoons.length} works`;
-
-            if (filteredCartoons.length === 0) {
-                grid.innerHTML = `<div class="empty-state">No cartoons found matching your selection.</div>`;
-                return;
-            }
-
-            grid.innerHTML = filteredCartoons.map((c, index) => {
-                const dateLabel = formatDateLabel(c.date);
-                const visual = c.image
-                    ? `<img src="${c.image}" alt="${c.title}" loading="lazy">`
-                    : `<div class="art-placeholder">${c.title}<br><small>${dateLabel}</small></div>`;
-
-                return `
-                    <article class="art-card">
-                        <div>
-                            <div class="art-frame" onclick="openModal(${index})">
-                                ${visual}
-                            </div>
-                            <div class="art-meta">${dateLabel} &bull; ${c.topic}</div>
-                            <h3 class="art-title">${c.title}</h3>
-                            <p class="art-desc">${c.desc}</p>
-                        </div>
-                        <a href="store.html" class="btn btn-outline">License Artwork</a>
-                    </article>
-                `;
-            }).join('');
-        }
-
-        // Live Search
-        searchInput.addEventListener('input', (e) => {
-            searchQuery = e.target.value.trim().toLowerCase();
-            renderGrid();
-        });
-
-        // Lightbox Modal with Prev/Next
-        function openModal(index) {
-            currentModalIndex = index;
-            updateModalContent();
-            document.getElementById('artModal').classList.add('open');
-        }
-
-        function updateModalContent() {
-            const c = filteredCartoons[currentModalIndex];
-            if (!c) return;
-
-            const dateLabel = formatDateLabel(c.date);
-            document.getElementById('modal-title').textContent = c.title;
-            document.getElementById('modal-meta').textContent = `${dateLabel} • ${c.topic}`;
-            document.getElementById('modal-desc').textContent = c.desc;
-            document.getElementById('modal-counter').textContent = `${currentModalIndex + 1} / ${filteredCartoons.length}`;
-
-            const imgContainer = document.getElementById('modal-img-container');
-            if (c.image) {
-                imgContainer.innerHTML = `<img src="${c.image}" alt="${c.title}" style="max-height: 65vh; width: auto; max-width: 100%; margin: 0 auto 16px; display: block;">`;
-            } else {
-                imgContainer.innerHTML = `<div class="art-frame" style="height: 280px; margin-bottom: 16px;"><div class="art-placeholder">${c.title}<br><small>(Image will appear here once uploaded)</small></div></div>`;
-            }
-
-            const showArrows = filteredCartoons.length > 1 ? 'flex' : 'none';
-            document.getElementById('modalPrev').style.display = showArrows;
-            document.getElementById('modalNext').style.display = showArrows;
-        }
-
-        function navigateModal(step) {
-            if (filteredCartoons.length <= 1) return;
-            currentModalIndex = (currentModalIndex + step + filteredCartoons.length) % filteredCartoons.length;
-            updateModalContent();
-        }
-
-        function closeModal() {
-            document.getElementById('artModal').classList.remove('open');
-        }
-
-        // Keyboard support for Modal
-        document.addEventListener('keydown', (e) => {
-            if (!document.getElementById('artModal').classList.contains('open')) return;
-            if (e.key === 'Escape') closeModal();
-            if (e.key === 'ArrowRight') navigateModal(1);
-            if (e.key === 'ArrowLeft') navigateModal(-1);
-        });
-
-        // Initialize Page
-        buildDateTree();
-        renderGrid();
-    </script>
-
-</body>
-</html>
+                    dateTree.querySelectorAll('button
