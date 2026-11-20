@@ -448,3 +448,12 @@ footer {
         grid-template-columns: 1fr;
     }
 }
+.artist-portrait {
+    width: 180px;
+    height: 180px;
+    object-fit: contain;
+    background-color: #FFFFFF;
+    border: 1px solid var(--ink-black);
+    margin-bottom: 20px;
+    display: block;
+}
