@@ -20,15 +20,16 @@
         .month-btn { font-size: 0.88rem; padding: 5px 8px; }
         .count-badge { font-size: 0.78rem; opacity: 0.65; }
 
-        /* 3-Column Frameless Masonry */
+        /* 3-Column Grid with Natural Proportions */
         .gallery-grid { display: grid !important; grid-template-columns: repeat(3, 1fr); gap: 28px; align-items: start; }
         @media (max-width: 900px) { .gallery-grid { grid-template-columns: repeat(2, 1fr); } }
         @media (max-width: 580px) { .gallery-grid { grid-template-columns: 1fr; } }
-        .gallery-grid .empty-state { column-span: all; padding: 48px 20px; text-align: center; border: 1px dashed #ccc; color: #666; }
+        .gallery-grid .empty-state { grid-column: 1 / -1; padding: 48px 20px; text-align: center; border: 1px dashed #ccc; color: #666; }
 
-        .art-card { break-inside: avoid; margin-bottom: 32px; background: transparent !important; border: none !important; padding: 0 !important; box-shadow: none !important; }
+        .art-card { background: transparent !important; border: none !important; padding: 0 !important; box-shadow: none !important; }
         .art-link { display: block; text-decoration: none; color: inherit; }
-        .art-frame { height: auto !important; aspect-ratio: auto !important; border: none !important; background: transparent !important; padding: 0 !important; overflow: hidden; transition: box-shadow 0.25s; }        .art-frame:hover { box-shadow: 0 6px 20px rgba(0,0,0,0.1); }
+        .art-frame { height: auto !important; aspect-ratio: auto !important; border: none !important; background: transparent !important; padding: 0 !important; overflow: hidden; transition: box-shadow 0.25s; }
+        .art-frame:hover { box-shadow: 0 6px 20px rgba(0,0,0,0.1); }
         .art-frame img { width: 100%; height: auto !important; display: block; }
 
         .card-date { margin-top: 8px; font-size: 0.72rem; color: #777; letter-spacing: 0.03em; }
@@ -38,6 +39,13 @@
             display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
         }
         .read-more { display: inline-block; margin-top: 4px; font-size: 0.8rem; color: #111; font-weight: 600; text-decoration: underline; }
+
+        /* Pagination */
+        .pagination { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 8px; margin-top: 42px; padding-top: 24px; border-top: 1px solid #e5e5e5; }
+        .page-btn { background: #fff; border: 1px solid #d4d4d4; color: #111; padding: 7px 13px; font-family: inherit; font-size: 0.88rem; cursor: pointer; transition: all 0.15s; }
+        .page-btn:hover:not(:disabled) { border-color: #111; background: #f5f5f5; }
+        .page-btn.active { background: #111; color: #fff; border-color: #111; }
+        .page-btn:disabled { opacity: 0.35; cursor: default; }
     </style>
 </head>
 <body>
@@ -72,6 +80,7 @@
                 <div class="gallery-grid" id="archive-grid">
                     <div class="empty-state">Loading gallery...</div>
                 </div>
+                <div class="pagination" id="pagination" style="display:none;"></div>
             </div>
         </div>
     </main>
@@ -83,13 +92,15 @@
     <script>
         const API_URL = "https://api.github.com/repos/ahmadqaddura/ahmadqaddura.github.io/contents/cartoons";
         const IMG_EXT = /\.(webp|jpe?g|png|gif)$/i;
+        const PER_PAGE = 15;
         const months = {"01":"January","02":"February","03":"March","04":"April","05":"May","06":"June","07":"July","08":"August","09":"September","10":"October","11":"November","12":"December"};
 
-        let cartoons = [], activeFilter = "all", searchQuery = "";
+        let cartoons = [], txtSet = new Set(), activeFilter = "all", searchQuery = "", currentPage = 1;
         const dateTree = document.getElementById('date-tree');
         const grid = document.getElementById('archive-grid');
         const heading = document.getElementById('archive-heading');
         const countLabel = document.getElementById('works-count');
+        const paginationEl = document.getElementById('pagination');
 
         function formatDate(d) {
             const p = d.split('-');
@@ -97,31 +108,36 @@
             return p[2] ? `${parseInt(p[2],10)} ${months[p[1]]||p[1]} ${p[0]}` : `${months[p[1]]||p[1]} ${p[0]}`;
         }
 
+        async function loadMetaFor(items) {
+            await Promise.all(items.map(async c => {
+                if (c.metaLoaded || !txtSet.has(c.base + ".txt")) { c.metaLoaded = true; return; }
+                try {
+                    const r = await fetch(`cartoons/${encodeURIComponent(c.base + ".txt")}`);
+                    if (r.ok) {
+                        const lines = (await r.text()).split(/\r?\n/);
+                        if (lines[0]?.trim()) c.title = lines[0].trim();
+                        if (lines[1]?.trim()) c.tags = lines[1].trim();
+                        c.desc = lines.slice(2).join(' ').trim();
+                    }
+                } catch (_) {}
+                c.metaLoaded = true;
+            }));
+        }
+
         async function loadCartoons() {
             try {
                 const res = await fetch(API_URL);
                 const files = await res.json();
-                const txtSet = new Set(files.filter(f => /\.txt$/i.test(f.name)).map(f => f.name));
+                txtSet = new Set(files.filter(f => /\.txt$/i.test(f.name)).map(f => f.name));
 
-                const items = files.filter(f => f.type === "file" && IMG_EXT.test(f.name)).map(f => {
+                cartoons = files.filter(f => f.type === "file" && IMG_EXT.test(f.name)).map(f => {
                     const base = f.name.replace(IMG_EXT, '');
                     const m = base.match(/^(\d{4}-\d{2}-\d{2})(?:[_-](.+))?$/);
                     const date = m ? m[1] : "2026-01-01";
                     const title = (m && m[2] && !/^\d+$/.test(m[2])) ? m[2].replace(/[-_]+/g,' ').trim() : "";
-                    return { name: f.name, base, date, title, desc: "", tags: "", image: `cartoons/${encodeURIComponent(f.name)}` };
-                });
+                    return { name: f.name, base, date, title, desc: "", tags: "", metaLoaded: false, image: `cartoons/${encodeURIComponent(f.name)}` };
+                }).sort((a,b) => b.date.localeCompare(a.date) || b.name.localeCompare(a.name));
 
-                await Promise.all(items.map(async c => {
-                    if (!txtSet.has(c.base + ".txt")) return;
-                    const r = await fetch(`cartoons/${encodeURIComponent(c.base + ".txt")}`);
-                    if (!r.ok) return;
-                    const lines = (await r.text()).split(/\r?\n/);
-                    if (lines[0]?.trim()) c.title = lines[0].trim();
-                    if (lines[1]?.trim()) c.tags = lines[1].trim();
-                    c.desc = lines.slice(2).join(' ').trim();
-                }));
-
-                cartoons = items.sort((a,b) => b.date.localeCompare(a.date) || b.name.localeCompare(a.name));
                 buildDateTree();
                 renderGrid();
             } catch (e) {
@@ -153,6 +169,7 @@
                         activeFilter === f ? g.classList.toggle('open') : g.classList.add('open');
                     }
                     activeFilter = f;
+                    currentPage = 1;
                     dateTree.querySelectorAll('button').forEach(b => b.classList.remove('active'));
                     btn.classList.add('active');
                     heading.textContent = f === 'all' ? 'Complete Gallery' : (f.length === 4 ? `Gallery — ${f}` : formatDate(f));
@@ -161,16 +178,28 @@
             });
         }
 
-        function renderGrid() {
+        async function renderGrid() {
             const list = cartoons.filter(c => {
                 const okDate = activeFilter === 'all' || c.date.startsWith(activeFilter);
                 const text = `${c.title} ${c.desc} ${c.tags} ${formatDate(c.date)} ${c.date}`.toLowerCase();
                 return okDate && (!searchQuery || text.includes(searchQuery));
             });
-            countLabel.textContent = list.length === 1 ? 'Showing 1 work' : `Showing ${list.length} works`;
-            if (!list.length) { grid.innerHTML = `<div class="empty-state">No cartoons found.</div>`; return; }
 
-            grid.innerHTML = list.map(c => {
+            countLabel.textContent = list.length === 1 ? 'Showing 1 work' : `Showing ${list.length} works`;
+            if (!list.length) {
+                grid.innerHTML = `<div class="empty-state">No cartoons found.</div>`;
+                paginationEl.style.display = 'none';
+                return;
+            }
+
+            const totalPages = Math.ceil(list.length / PER_PAGE);
+            if (currentPage > totalPages) currentPage = totalPages;
+            const start = (currentPage - 1) * PER_PAGE;
+            const pageItems = list.slice(start, start + PER_PAGE);
+
+            await loadMetaFor(pageItems);
+
+            grid.innerHTML = pageItems.map(c => {
                 const url = `cartoon.html?id=${encodeURIComponent(c.name)}`;
                 return `
                     <article class="art-card">
@@ -182,12 +211,35 @@
                         </a>
                     </article>`;
             }).join('');
+
+            renderPagination(totalPages);
+        }
+
+        function renderPagination(totalPages) {
+            if (totalPages <= 1) { paginationEl.style.display = 'none'; return; }
+            paginationEl.style.display = 'flex';
+            let html = `<button class="page-btn" ${currentPage===1?'disabled':''} data-page="${currentPage-1}">&larr; Previous</button>`;
+            for (let i = 1; i <= totalPages; i++) {
+                html += `<button class="page-btn ${i===currentPage?'active':''}" data-page="${i}">${i}</button>`;
+            }
+            html += `<button class="page-btn" ${currentPage===totalPages?'disabled':''} data-page="${currentPage+1}">Next &rarr;</button>`;
+            paginationEl.innerHTML = html;
+
+            paginationEl.querySelectorAll('button[data-page]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    currentPage = parseInt(btn.getAttribute('data-page'), 10);
+                    renderGrid();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
+            });
         }
 
         document.getElementById('archive-search').addEventListener('input', e => {
             searchQuery = e.target.value.trim().toLowerCase();
+            currentPage = 1;
             renderGrid();
         });
+
         loadCartoons();
     </script>
 </body>
