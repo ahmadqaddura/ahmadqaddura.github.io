@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cartoon — Ahmad Qaddura</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .cartoon-wrap { max-width: 860px; margin: 32px auto 60px; }
+        .top-nav {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 18px; font-size: 0.9rem;
+        }
+        .top-nav a { color: #111; text-decoration: none; }
+        .top-nav a:hover { text-decoration: underline; }
+        .pager-links { display: flex; gap: 18px; }
+        .pager-links .disabled { opacity: 0.3; pointer-events: none; }
+
+        .cartoon-stage img {
+            width: 100%; max-height: 82vh; object-fit: contain;
+            display: block; margin: 0 auto 18px;
+        }
+        .cartoon-date { font-size: 0.78rem; color: #777; margin-bottom: 6px; letter-spacing: 0.03em; }
+        .cartoon-title { font-size: 1.85rem; font-weight: 700; color: #111; margin: 0 0 16px; line-height: 1.25; }
+        .cartoon-desc { font-size: 1rem; line-height: 1.7; color: #222; white-space: pre-line; margin-bottom: 20px; }
+
+        .tags-wrap { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+        .tag-pill {
+            background: #999; color: #fff; font-size: 0.78rem;
+            padding: 3px 12px; border-radius: 14px; text-decoration: none;
+        }
+        .purchase-btn {
+            display: inline-block; padding: 10px 22px; border: 1px solid #111;
+            color: #111; text-decoration: none; font-size: 0.9rem; transition: all 0.2s ease;
+        }
+        .purchase-btn:hover { background: #111; color: #fff; }
+
+        .more-section { margin-top: 56px; padding-top: 28px; border-top: 1px solid #e0e0e0; }
+        .more-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 20px; }
+        .more-header h3 { font-size: 1.25rem; margin: 0; color: #111; }
+        .more-header a { font-size: 0.88rem; color: #b22222; text-decoration: underline; }
+        .more-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+        .more-item img {
+            width: 100%; aspect-ratio: 4 / 3; object-fit: cover;
+            display: block; transition: opacity 0.2s ease;
+        }
+        .more-item:hover img { opacity: 0.85; }
+        @media (max-width: 700px) { .more-grid { grid-template-columns: repeat(2, 1fr); } }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="masthead-meta">Gothenburg, Sweden &bull; Official Portfolio &amp; Gallery</div>
+            <h1 class="site-title"><a href="index.html">Ahmad Qaddura</a></h1>
+            <p class="site-subtitle">Editorial Cartoonist &amp; Satirical Illustrator</p>
+            <nav>
+                <a href="index.html">Home</a>
+                <a href="gallery.html" class="active">Gallery</a>
+                <a href="store.html">Store</a>
+                <a href="about.html">About &amp; Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="cartoon-wrap">
+            <div class="top-nav">
+                <a href="gallery.html">&larr; Back to Gallery</a>
+                <div class="pager-links">
+                    <a id="newer-link" href="#">&larr; Newer</a>
+                    <a id="older-link" href="#">Older &rarr;</a>
+                </div>
+            </div>
+
+            <div id="cartoon-content">
+                <p style="text-align:center; color:#666; padding:40px 0;">Loading cartoon...</p>
+            </div>
+
+            <section class="more-section" id="more-section" style="display:none;">
+                <div class="more-header">
+                    <h3>More from the Archive</h3>
+                    <a href="gallery.html">See all</a>
+                </div>
+                <div class="more-grid" id="more-grid"></div>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">&copy; 2026 Ahmad Qaddura. All rights reserved.</div>
+    </footer>
+
+    <script>
+        const API_URL = "https://api.github.com/repos/ahmadqaddura/ahmadqaddura.github.io/contents/cartoons";
+        const IMG_EXT = /\.(webp|jpe?g|png|gif)$/i;
+        const months = {"01":"January","02":"February","03":"March","04":"April","05":"May","06":"June","07":"July","08":"August","09":"September","10":"October","11":"November","12":"December"};
+
+        function formatDate(d) {
+            const p = d.split('-');
+            return p.length === 3 ? `${parseInt(p[2],10)} ${months[p[1]]||p[1]} ${p[0]}` : d;
+        }
+
+        function parseFile(f) {
+            const base = f.name.replace(IMG_EXT, '');
+            const m = base.match(/^(\d{4}-\d{2}-\d{2})(?:[_-](.+))?$/);
+            const date = m ? m[1] : "2026-01-01";
+            const fallbackTitle = (m && m[2] && !/^\d+$/.test(m[2])) ? m[2].replace(/[-_]+/g,' ').trim() : "";
+            return { name: f.name, base, date, title: fallbackTitle, image: `cartoons/${encodeURIComponent(f.name)}` };
+        }
+
+        async function init() {
+            try {
+                const res = await fetch(API_URL);
+                const files = await res.json();
+                const txtSet = new Set(files.filter(f => /\.txt$/i.test(f.name)).map(f => f.name));
+                const list = files.filter(f => f.type === "file" && IMG_EXT.test(f.name))
+                    .map(parseFile).sort((a,b) => b.date.localeCompare(a.date) || b.name.localeCompare(a.name));
+
+                const id = new URLSearchParams(location.search).get('id');
+                let idx = list.findIndex(c => c.name === id);
+                if (idx === -1) idx = 0;
+                const current = list[idx];
+                if (!current) return;
+
+                let title = current.title, tags = [], desc = "";
+                if (txtSet.has(current.base + ".txt")) {
+                    const txtRes = await fetch(`cartoons/${encodeURIComponent(current.base + ".txt")}`);
+                    if (txtRes.ok) {
+                        const lines = (await txtRes.text()).split(/\r?\n/);
+                        if (lines[0]?.trim()) title = lines[0].trim();
+                        if (lines[1]?.trim()) tags = lines[1].trim().split(/[\s,]+/).map(t => t.replace(/^#/, '')).filter(Boolean);
+                        desc = lines.slice(2).join('\n').trim();
+                    }
+                }
+
+                document.title = `${title || formatDate(current.date)} — Ahmad Qaddura`;
+                const newer = document.getElementById('newer-link');
+                const older = document.getElementById('older-link');
+                if (idx > 0) newer.href = `cartoon.html?id=${encodeURIComponent(list[idx-1].name)}`;
+                else newer.classList.add('disabled');
+                if (idx < list.length - 1) older.href = `cartoon.html?id=${encodeURIComponent(list[idx+1].name)}`;
+                else older.classList.add('disabled');
+
+                document.getElementById('cartoon-content').innerHTML = `
+                    <div class="cartoon-stage"><img src="${current.image}" alt="${title || current.name}"></div>
+                    <div class="cartoon-date">${formatDate(current.date)}</div>
+                    ${title ? `<h2 class="cartoon-title">${title}</h2>` : ''}
+                    ${desc ? `<div class="cartoon-desc">${desc}</div>` : ''}
+                    ${tags.length ? `<div class="tags-wrap">${tags.map(t => `<span class="tag-pill">${t}</span>`).join('')}</div>` : ''}
+                    <a href="store.html" class="purchase-btn">Purchase / License Cartoon &rarr;</a>
+                `;
+
+                const others = list.filter((_, i) => i !== idx).slice(0, 4);
+                if (others.length) {
+                    document.getElementById('more-section').style.display = 'block';
+                    document.getElementById('more-grid').innerHTML = others.map(c => `
+                        <a class="more-item" href="cartoon.html?id=${encodeURIComponent(c.name)}">
+                            <img src="${c.image}" alt="${c.title || c.date}" loading="lazy">
+                        </a>
+                    `).join('');
+                }
+            } catch (e) {
+                document.getElementById('cartoon-content').innerHTML = `<p style="text-align:center;">Unable to load cartoon.</p>`;
+            }
+        }
+        init();
+    </script>
+</body>
+</html>
