@@ -108,6 +108,56 @@
             from { opacity: 0; transform: translateY(4px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        /* Editorial Masonry Style (3 Columns, Natural Proportions, No Frames) */
+        .gallery-grid {
+            display: block !important;
+            column-count: 3;
+            column-gap: 24px;
+        }
+        @media (max-width: 900px) {
+            .gallery-grid { column-count: 2; }
+        }
+        @media (max-width: 580px) {
+            .gallery-grid { column-count: 1; }
+        }
+        .gallery-grid .empty-state {
+            column-span: all;
+        }
+        .art-card {
+            break-inside: avoid;
+            margin-bottom: 28px;
+            background: transparent !important;
+            border: none !important;
+            padding: 0 !important;
+            box-shadow: none !important;
+        }
+        .art-frame {
+            height: auto !important;
+            aspect-ratio: auto !important;
+            border: none !important;
+            background: transparent !important;
+            padding: 0 !important;
+            overflow: hidden;
+            cursor: pointer;
+            transition: box-shadow 0.25s ease;
+        }
+        .art-frame:hover {
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        }
+        .art-frame img {
+            width: 100%;
+            height: auto !important;
+            display: block;
+        }
+        .art-card .art-meta {
+            margin-top: 8px;
+            font-size: 0.78rem;
+            letter-spacing: 0.04em;
+            color: #666;
+        }
+        .art-card .btn-outline {
+            display: none !important;
+        }
     </style>
 </head>
 <body>
