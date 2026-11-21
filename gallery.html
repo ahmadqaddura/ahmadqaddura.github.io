@@ -6,162 +6,42 @@
     <title>Gallery — Ahmad Qaddura</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        .archive-search {
-            width: 100%;
-            padding: 10px 12px;
-            border: 1px solid var(--border-line, #d4d4d4);
-            background: #fff;
-            font-family: inherit;
-            font-size: 0.9rem;
-            color: var(--ink-black, #111);
-            margin-bottom: 24px;
-            box-sizing: border-box;
-            transition: border-color 0.2s ease;
-        }
-        .archive-search:focus {
-            outline: none;
-            border-color: var(--ink-black, #111);
-        }
+        .archive-search { width: 100%; padding: 10px 12px; border: 1px solid #d4d4d4; background: #fff; font-family: inherit; font-size: 0.9rem; margin-bottom: 24px; box-sizing: border-box; }
+        .archive-search:focus { outline: none; border-color: #111; }
         .year-group { margin-bottom: 6px; }
-        .year-btn, .month-btn, .all-btn {
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: none;
-            border: none;
-            padding: 7px 8px;
-            cursor: pointer;
-            font-family: inherit;
-            font-size: 0.95rem;
-            color: var(--ink-black, #111);
-            text-align: left;
-            transition: background-color 0.15s ease, color 0.15s ease;
-            border-radius: 2px;
-        }
+        .year-btn, .month-btn, .all-btn { width: 100%; display: flex; justify-content: space-between; align-items: center; background: none; border: none; padding: 7px 8px; cursor: pointer; font-family: inherit; font-size: 0.95rem; color: #111; text-align: left; border-radius: 2px; }
         .year-btn { font-weight: 600; }
-        .year-btn:hover, .month-btn:hover, .all-btn:hover { background-color: rgba(0, 0, 0, 0.04); }
-        .year-btn.active, .month-btn.active, .all-btn.active { background-color: var(--ink-black, #111); color: #fff; }
-        .year-arrow {
-            display: inline-block;
-            font-size: 0.75rem;
-            margin-right: 6px;
-            transition: transform 0.2s ease;
-        }
+        .year-btn:hover, .month-btn:hover, .all-btn:hover { background: rgba(0,0,0,0.04); }
+        .year-btn.active, .month-btn.active, .all-btn.active { background: #111; color: #fff; }
+        .year-arrow { display: inline-block; font-size: 0.75rem; margin-right: 6px; transition: transform 0.2s; }
         .year-group.open .year-arrow { transform: rotate(90deg); }
-        .month-list {
-            list-style: none;
-            padding-left: 18px;
-            margin: 4px 0 8px 0;
-            border-left: 1px solid var(--border-line, #d4d4d4);
-            display: none;
-        }
-        .year-group.open .month-list { display: block; animation: fadeIn 0.2s ease; }
+        .month-list { list-style: none; padding-left: 18px; margin: 4px 0 8px; border-left: 1px solid #d4d4d4; display: none; }
+        .year-group.open .month-list { display: block; }
         .month-btn { font-size: 0.88rem; padding: 5px 8px; }
-        .count-badge { font-size: 0.78rem; opacity: 0.65; font-weight: 400; }
-        .active .count-badge { opacity: 0.9; }
-        .art-card { animation: fadeIn 0.25s ease; }
-        .art-frame img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            display: block;
-            transition: transform 0.25s ease;
+        .count-badge { font-size: 0.78rem; opacity: 0.65; }
+
+        /* 3-Column Frameless Masonry */
+        .gallery-grid { display: block !important; column-count: 3; column-gap: 26px; }
+        @media (max-width: 900px) { .gallery-grid { column-count: 2; } }
+        @media (max-width: 580px) { .gallery-grid { column-count: 1; } }
+        .gallery-grid .empty-state { column-span: all; padding: 48px 20px; text-align: center; border: 1px dashed #ccc; color: #666; }
+
+        .art-card { break-inside: avoid; margin-bottom: 32px; background: transparent !important; border: none !important; padding: 0 !important; box-shadow: none !important; }
+        .art-link { display: block; text-decoration: none; color: inherit; }
+        .art-frame { height: auto !important; border: none !important; background: transparent !important; padding: 0 !important; overflow: hidden; transition: box-shadow 0.25s; }
+        .art-frame:hover { box-shadow: 0 6px 20px rgba(0,0,0,0.1); }
+        .art-frame img { width: 100%; height: auto !important; display: block; }
+
+        .card-date { margin-top: 8px; font-size: 0.72rem; color: #777; letter-spacing: 0.03em; }
+        .card-title { margin: 4px 0 5px; font-size: 1.05rem; font-weight: 700; color: #111; line-height: 1.3; }
+        .card-excerpt {
+            font-size: 0.86rem; color: #444; line-height: 1.45; margin: 0;
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
         }
-        .art-frame:hover img { transform: scale(1.02); }
-        .modal-nav-wrapper {
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .modal-nav-btn {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(17, 17, 17, 0.75);
-            color: #fff;
-            border: none;
-            width: 38px;
-            height: 38px;
-            font-size: 1.4rem;
-            line-height: 1;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background 0.2s ease;
-            z-index: 10;
-        }
-        .modal-nav-btn:hover { background: #000; }
-        .modal-prev { left: 10px; }
-        .modal-next { right: 10px; }
-        .modal-counter { font-size: 0.8rem; opacity: 0.6; margin-bottom: 6px; }
-        .empty-state {
-            grid-column: 1 / -1;
-            padding: 48px 20px;
-            text-align: center;
-            border: 1px dashed var(--border-line, #ccc);
-            color: #666;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(4px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        /* Editorial Masonry Style (3 Columns, Natural Proportions, No Frames) */
-        .gallery-grid {
-            display: block !important;
-            column-count: 3;
-            column-gap: 24px;
-        }
-        @media (max-width: 900px) {
-            .gallery-grid { column-count: 2; }
-        }
-        @media (max-width: 580px) {
-            .gallery-grid { column-count: 1; }
-        }
-        .gallery-grid .empty-state {
-            column-span: all;
-        }
-        .art-card {
-            break-inside: avoid;
-            margin-bottom: 28px;
-            background: transparent !important;
-            border: none !important;
-            padding: 0 !important;
-            box-shadow: none !important;
-        }
-        .art-frame {
-            height: auto !important;
-            aspect-ratio: auto !important;
-            border: none !important;
-            background: transparent !important;
-            padding: 0 !important;
-            overflow: hidden;
-            cursor: pointer;
-            transition: box-shadow 0.25s ease;
-        }
-        .art-frame:hover {
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-        }
-        .art-frame img {
-            width: 100%;
-            height: auto !important;
-            display: block;
-        }
-        .art-card .art-meta {
-            margin-top: 8px;
-            font-size: 0.78rem;
-            letter-spacing: 0.04em;
-            color: #666;
-        }
-        .art-card .btn-outline {
-            display: none !important;
-        }
+        .read-more { display: inline-block; margin-top: 4px; font-size: 0.8rem; color: #111; font-weight: 600; text-decoration: underline; }
     </style>
 </head>
 <body>
-
     <header>
         <div class="container">
             <div class="masthead-meta">Gothenburg, Sweden &bull; Official Portfolio &amp; Gallery</div>
@@ -179,13 +59,12 @@
     <main class="container">
         <div class="archive-layout">
             <aside class="sidebar">
-                <input type="text" id="archive-search" class="archive-search" placeholder="Search cartoons..." aria-label="Search cartoons">
+                <input type="text" id="archive-search" class="archive-search" placeholder="Search cartoons...">
                 <div class="filter-group">
                     <h3 class="filter-title">Browse by Date</h3>
                     <div id="date-tree"></div>
                 </div>
             </aside>
-
             <div>
                 <div class="section-header">
                     <h2 class="section-title" id="archive-heading">Complete Gallery</h2>
@@ -198,223 +77,119 @@
         </div>
     </main>
 
-    <div class="modal" id="artModal" onclick="closeModal()">
-        <div class="modal-content" onclick="event.stopPropagation()">
-            <button class="modal-close" onclick="closeModal()" aria-label="Close">&times;</button>
-            <div class="modal-body">
-                <div class="modal-nav-wrapper">
-                    <button class="modal-nav-btn modal-prev" id="modalPrev" onclick="navigateModal(-1)" aria-label="Previous">&#8249;</button>
-                    <div id="modal-img-container" style="width: 100%;"></div>
-                    <button class="modal-nav-btn modal-next" id="modalNext" onclick="navigateModal(1)" aria-label="Next">&#8250;</button>
-                </div>
-                <div class="modal-counter" id="modal-counter"></div>
-                <div class="art-meta" id="modal-meta"></div>
-                <h3 class="art-title" id="modal-title" style="margin-top: 4px;"></h3>
-                <a href="store.html" class="btn btn-primary" style="margin-top: 12px;">Request Press License</a>
-            </div>
-        </div>
-    </div>
-
     <footer>
         <div class="container">&copy; 2026 Ahmad Qaddura. All rights reserved.</div>
     </footer>
 
     <script>
-        const GITHUB_API_URL = "https://api.github.com/repos/ahmadqaddura/ahmadqaddura.github.io/contents/cartoons";
-        const IMAGE_EXTENSIONS = /\.(webp|jpe?g|png|gif)$/i;
-        const monthNames = {
-            "01": "January", "02": "February", "03": "March", "04": "April",
-            "05": "May", "06": "June", "07": "July", "08": "August",
-            "09": "September", "10": "October", "11": "November", "12": "December"
-        };
+        const API_URL = "https://api.github.com/repos/ahmadqaddura/ahmadqaddura.github.io/contents/cartoons";
+        const IMG_EXT = /\.(webp|jpe?g|png|gif)$/i;
+        const months = {"01":"January","02":"February","03":"March","04":"April","05":"May","06":"June","07":"July","08":"August","09":"September","10":"October","11":"November","12":"December"};
 
-        let cartoons = [];
-        let activeFilter = "all";
-        let searchQuery = "";
-        let filteredCartoons = [];
-        let currentModalIndex = 0;
-
+        let cartoons = [], activeFilter = "all", searchQuery = "";
         const dateTree = document.getElementById('date-tree');
         const grid = document.getElementById('archive-grid');
         const heading = document.getElementById('archive-heading');
         const countLabel = document.getElementById('works-count');
-        const searchInput = document.getElementById('archive-search');
 
-        function formatDateLabel(dateStr) {
-            const parts = dateStr.split('-');
-            if (parts.length < 2) return dateStr;
-            const year = parts[0];
-            const month = monthNames[parts[1]] || parts[1];
-            return parts[2] ? `${parseInt(parts[2], 10)} ${month} ${year}` : `${month} ${year}`;
-        }
-
-        function parseCartoonFile(file) {
-            const nameNoExt = file.name.replace(IMAGE_EXTENSIONS, '');
-            const dateMatch = nameNoExt.match(/^(\d{4}-\d{2}-\d{2})(?:[_-](.+))?$/);
-            let date = "2026-01-01";
-            let title = "";
-
-            if (dateMatch) {
-                date = dateMatch[1];
-                title = (dateMatch[2] && !/^\d+$/.test(dateMatch[2]))
-                    ? dateMatch[2].replace(/[-_]+/g, ' ').trim()
-                    : formatDateLabel(date);
-            } else {
-                title = nameNoExt.replace(/[-_]+/g, ' ').trim();
-            }
-
-            return {
-                name: file.name,
-                title: title,
-                date: date,
-                image: `cartoons/${encodeURIComponent(file.name)}`
-            };
+        function formatDate(d) {
+            const p = d.split('-');
+            if (p.length < 2) return d;
+            return p[2] ? `${parseInt(p[2],10)} ${months[p[1]]||p[1]} ${p[0]}` : `${months[p[1]]||p[1]} ${p[0]}`;
         }
 
         async function loadCartoons() {
             try {
-                const response = await fetch(GITHUB_API_URL);
-                if (!response.ok) throw new Error("Failed to load folder");
-                const files = await response.json();
+                const res = await fetch(API_URL);
+                const files = await res.json();
+                const txtSet = new Set(files.filter(f => /\.txt$/i.test(f.name)).map(f => f.name));
 
-                cartoons = files
-                    .filter(f => f.type === "file" && IMAGE_EXTENSIONS.test(f.name))
-                    .map(parseCartoonFile)
-                    .sort((a, b) => b.date.localeCompare(a.date) || b.name.localeCompare(a.name));
+                const items = files.filter(f => f.type === "file" && IMG_EXT.test(f.name)).map(f => {
+                    const base = f.name.replace(IMG_EXT, '');
+                    const m = base.match(/^(\d{4}-\d{2}-\d{2})(?:[_-](.+))?$/);
+                    const date = m ? m[1] : "2026-01-01";
+                    const title = (m && m[2] && !/^\d+$/.test(m[2])) ? m[2].replace(/[-_]+/g,' ').trim() : "";
+                    return { name: f.name, base, date, title, desc: "", tags: "", image: `cartoons/${encodeURIComponent(f.name)}` };
+                });
 
+                await Promise.all(items.map(async c => {
+                    if (!txtSet.has(c.base + ".txt")) return;
+                    const r = await fetch(`cartoons/${encodeURIComponent(c.base + ".txt")}`);
+                    if (!r.ok) return;
+                    const lines = (await r.text()).split(/\r?\n/);
+                    if (lines[0]?.trim()) c.title = lines[0].trim();
+                    if (lines[1]?.trim()) c.tags = lines[1].trim();
+                    c.desc = lines.slice(2).join(' ').trim();
+                }));
+
+                cartoons = items.sort((a,b) => b.date.localeCompare(a.date) || b.name.localeCompare(a.name));
                 buildDateTree();
                 renderGrid();
-            } catch (err) {
-                grid.innerHTML = `<div class="empty-state">Unable to load gallery right now. Please refresh the page.</div>`;
-                countLabel.textContent = "";
+            } catch (e) {
+                grid.innerHTML = `<div class="empty-state">Unable to load gallery right now.</div>`;
             }
         }
 
         function buildDateTree() {
-            const structure = {};
+            const s = {};
             cartoons.forEach(c => {
-                const [year, month] = c.date.split('-');
-                if (!structure[year]) structure[year] = { count: 0, months: {} };
-                structure[year].count++;
-                if (month) structure[year].months[month] = (structure[year].months[month] || 0) + 1;
+                const [y, m] = c.date.split('-');
+                if (!s[y]) s[y] = { count: 0, months: {} };
+                s[y].count++;
+                if (m) s[y].months[m] = (s[y].months[m] || 0) + 1;
             });
-
-            const sortedYears = Object.keys(structure).sort((a, b) => b - a);
+            const years = Object.keys(s).sort((a,b) => b - a);
             let html = `<button class="all-btn active" data-filter="all"><span>All Works</span><span class="count-badge">${cartoons.length}</span></button>`;
-
-            sortedYears.forEach((year, idx) => {
-                const isOpen = idx === 0 ? 'open' : '';
-                const months = Object.keys(structure[year].months).sort((a, b) => b - a);
-                html += `
-                    <div class="year-group ${isOpen}" data-year="${year}">
-                        <button class="year-btn" data-filter="${year}">
-                            <span><span class="year-arrow">&#9656;</span>${year}</span>
-                            <span class="count-badge">${structure[year].count}</span>
-                        </button>
-                        <ul class="month-list">
-                            ${months.map(m => `<li><button class="month-btn" data-filter="${year}-${m}"><span>${monthNames[m] || m}</span><span class="count-badge">${structure[year].months[m]}</span></button></li>`).join('')}
-                        </ul>
-                    </div>`;
+            years.forEach((y, i) => {
+                const ms = Object.keys(s[y].months).sort((a,b) => b - a);
+                html += `<div class="year-group ${i===0?'open':''}"><button class="year-btn" data-filter="${y}"><span><span class="year-arrow">&#9656;</span>${y}</span><span class="count-badge">${s[y].count}</span></button><ul class="month-list">${ms.map(m => `<li><button class="month-btn" data-filter="${y}-${m}"><span>${months[m]||m}</span><span class="count-badge">${s[y].months[m]}</span></button></li>`).join('')}</ul></div>`;
             });
-
             dateTree.innerHTML = html;
 
             dateTree.querySelectorAll('button[data-filter]').forEach(btn => {
                 btn.addEventListener('click', () => {
-                    const filter = btn.getAttribute('data-filter');
+                    const f = btn.getAttribute('data-filter');
                     if (btn.classList.contains('year-btn')) {
-                        const group = btn.closest('.year-group');
-                        if (activeFilter === filter) group.classList.toggle('open');
-                        else group.classList.add('open');
+                        const g = btn.closest('.year-group');
+                        activeFilter === f ? g.classList.toggle('open') : g.classList.add('open');
                     }
-                    activeFilter = filter;
+                    activeFilter = f;
                     dateTree.querySelectorAll('button').forEach(b => b.classList.remove('active'));
                     btn.classList.add('active');
-
-                    if (filter === 'all') heading.textContent = 'Complete Gallery';
-                    else if (filter.length === 4) heading.textContent = `Gallery — ${filter}`;
-                    else heading.textContent = formatDateLabel(filter);
-
+                    heading.textContent = f === 'all' ? 'Complete Gallery' : (f.length === 4 ? `Gallery — ${f}` : formatDate(f));
                     renderGrid();
                 });
             });
         }
 
         function renderGrid() {
-            filteredCartoons = cartoons.filter(c => {
-                const matchesDate = activeFilter === 'all' || c.date.startsWith(activeFilter);
-                const text = `${c.title} ${formatDateLabel(c.date)} ${c.date}`.toLowerCase();
-                const matchesSearch = !searchQuery || text.includes(searchQuery);
-                return matchesDate && matchesSearch;
+            const list = cartoons.filter(c => {
+                const okDate = activeFilter === 'all' || c.date.startsWith(activeFilter);
+                const text = `${c.title} ${c.desc} ${c.tags} ${formatDate(c.date)} ${c.date}`.toLowerCase();
+                return okDate && (!searchQuery || text.includes(searchQuery));
             });
+            countLabel.textContent = list.length === 1 ? 'Showing 1 work' : `Showing ${list.length} works`;
+            if (!list.length) { grid.innerHTML = `<div class="empty-state">No cartoons found.</div>`; return; }
 
-            countLabel.textContent = filteredCartoons.length === 1 ? 'Showing 1 work' : `Showing ${filteredCartoons.length} works`;
-
-            if (filteredCartoons.length === 0) {
-                grid.innerHTML = `<div class="empty-state">No cartoons found matching your selection.</div>`;
-                return;
-            }
-
-            grid.innerHTML = filteredCartoons.map((c, index) => {
-                const dateLabel = formatDateLabel(c.date);
+            grid.innerHTML = list.map(c => {
+                const url = `cartoon.html?id=${encodeURIComponent(c.name)}`;
                 return `
                     <article class="art-card">
-                        <div>
-                            <div class="art-frame" onclick="openModal(${index})">
-                                <img src="${c.image}" alt="${c.title}" loading="lazy">
-                            </div>
-                            <div class="art-meta">${dateLabel}</div>
-                            ${c.title !== dateLabel ? `<h3 class="art-title">${c.title}</h3>` : ''}
-                        </div>
-                        <a href="store.html" class="btn btn-outline">License Artwork</a>
+                        <a href="${url}" class="art-link">
+                            <div class="art-frame"><img src="${c.image}" alt="${c.title || c.date}" loading="lazy"></div>
+                            <div class="card-date">${formatDate(c.date)}</div>
+                            ${c.title ? `<h3 class="card-title">${c.title}</h3>` : ''}
+                            ${c.desc ? `<p class="card-excerpt">${c.desc}</p><span class="read-more">Read more</span>` : ''}
+                        </a>
                     </article>`;
             }).join('');
         }
 
-        searchInput.addEventListener('input', (e) => {
+        document.getElementById('archive-search').addEventListener('input', e => {
             searchQuery = e.target.value.trim().toLowerCase();
             renderGrid();
         });
-
-        function openModal(index) {
-            currentModalIndex = index;
-            updateModalContent();
-            document.getElementById('artModal').classList.add('open');
-        }
-
-        function updateModalContent() {
-            const c = filteredCartoons[currentModalIndex];
-            if (!c) return;
-            const dateLabel = formatDateLabel(c.date);
-            document.getElementById('modal-meta').textContent = dateLabel;
-            document.getElementById('modal-title').textContent = c.title !== dateLabel ? c.title : '';
-            document.getElementById('modal-counter').textContent = `${currentModalIndex + 1} / ${filteredCartoons.length}`;
-            document.getElementById('modal-img-container').innerHTML = `<img src="${c.image}" alt="${c.title}" style="max-height: 70vh; width: auto; max-width: 100%; margin: 0 auto 16px; display: block;">`;
-
-            const showArrows = filteredCartoons.length > 1 ? 'flex' : 'none';
-            document.getElementById('modalPrev').style.display = showArrows;
-            document.getElementById('modalNext').style.display = showArrows;
-        }
-
-        function navigateModal(step) {
-            if (filteredCartoons.length <= 1) return;
-            currentModalIndex = (currentModalIndex + step + filteredCartoons.length) % filteredCartoons.length;
-            updateModalContent();
-        }
-
-        function closeModal() {
-            document.getElementById('artModal').classList.remove('open');
-        }
-
-        document.addEventListener('keydown', (e) => {
-            if (!document.getElementById('artModal').classList.contains('open')) return;
-            if (e.key === 'Escape') closeModal();
-            if (e.key === 'ArrowRight') navigateModal(1);
-            if (e.key === 'ArrowLeft') navigateModal(-1);
-        });
-
         loadCartoons();
     </script>
-
 </body>
 </html>
