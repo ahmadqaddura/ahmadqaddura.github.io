@@ -2,11 +2,13 @@
 
 :root {
     --bg-paper: #FAF8F5;
+    --bg-paper-alt: #F2EFE9;
     --ink-black: #141414;
     --ink-gray: #525252;
     --border-line: #DCD8D0;
     --card-bg: #FFFFFF;
     --accent-hover: #2E2E2E;
+    --accent-red: #9B1C1C;
 }
 
 * {
@@ -21,6 +23,7 @@ body {
     font-family: 'Inter', sans-serif;
     line-height: 1.65;
     -webkit-font-smoothing: antialiased;
+    border-top: 3px solid var(--accent-red);
 }
 
 .container {
@@ -31,7 +34,7 @@ body {
 
 /* Header & Navigation */
 header {
-    border-bottom: 2px solid var(--ink-black);
+    border-bottom: 4px double var(--ink-black);
     padding: 36px 0 22px;
     text-align: center;
 }
@@ -90,7 +93,7 @@ nav a {
 nav a:hover,
 nav a.active {
     color: var(--ink-black);
-    border-bottom-color: var(--ink-black);
+    border-bottom-color: var(--accent-red);
 }
 
 /* Sections */
@@ -306,7 +309,7 @@ h2.section-title {
 }
 
 .pub-item {
-    border-left: 2px solid var(--ink-black);
+    border-left: 2px solid var(--accent-red);
     padding-left: 16px;
 }
 
@@ -431,6 +434,7 @@ footer {
     text-align: center;
     font-size: 0.85rem;
     color: var(--ink-gray);
+    background-color: var(--bg-paper-alt);
     border-top: 1px solid var(--border-line);
 }
 
