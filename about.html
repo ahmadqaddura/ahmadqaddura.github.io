@@ -5,14 +5,132 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About &amp; Contact — Ahmad Qaddura</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1.65fr 1fr;
+            gap: 56px;
+            padding: 48px 0 64px;
+            align-items: start;
+        }
+
+        .artist-portrait {
+            width: 170px;
+            height: auto;
+            border: none;
+            background: transparent;
+            margin-bottom: 24px;
+            display: block;
+        }
+
+        .about-text p {
+            font-size: 1rem;
+            line-height: 1.75;
+            color: #222;
+            margin-bottom: 16px;
+        }
+
+        .about-subheading {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin: 36px 0 16px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid var(--ink-black);
+        }
+
+        .books-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 8px 0;
+        }
+
+        .books-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border-line);
+            font-size: 0.95rem;
+            color: #222;
+        }
+
+        .books-list li:last-child {
+            border-bottom: none;
+        }
+
+        .books-list .book-meta {
+            color: var(--ink-gray);
+            font-size: 0.88rem;
+        }
+
+        /* Frameless Contact Sidebar matching Gallery Sidebar */
+        .contact-card {
+            background: transparent;
+            border: none;
+            border-left: 1px solid var(--border-line);
+            padding: 0 0 0 36px;
+            height: fit-content;
+        }
+
+        .contact-card h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 14px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid var(--ink-black);
+        }
+
+        .contact-card p {
+            font-size: 0.92rem;
+            color: var(--ink-gray);
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .contact-meta {
+            margin-bottom: 24px;
+            font-size: 0.92rem;
+            line-height: 1.8;
+            color: #222;
+        }
+
+        .contact-btn {
+            display: inline-block;
+            width: 100%;
+            text-align: center;
+            padding: 10px 22px;
+            border: 1px solid #111;
+            color: #111;
+            background: transparent;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+
+        .contact-btn.disabled {
+            opacity: 0.55;
+            cursor: not-allowed;
+        }
+
+        @media (max-width: 820px) {
+            .about-grid {
+                grid-template-columns: 1fr;
+                gap: 36px;
+            }
+            .contact-card {
+                border-left: none;
+                border-top: 1px solid var(--border-line);
+                padding: 28px 0 0 0;
+            }
+        }
+    </style>
 </head>
 <body>
 
     <header>
         <div class="container">
-            <div class="masthead-meta">Gothenburg, Sweden &bull; Official Portfolio &amp; Archive</div>
+            <div class="masthead-meta">Gothenburg, Sweden &bull; Official Portfolio &amp; Gallery</div>
             <h1 class="site-title"><a href="index.html">Ahmad Qaddura</a></h1>
-            <p class="site-subtitle">Editorial Cartoonist</p>
+            <p class="site-subtitle">Editorial Cartoonist &amp; Satirical Illustrator</p>
             <nav>
                 <a href="index.html">Home</a>
                 <a href="gallery.html">Gallery</a>
@@ -27,22 +145,22 @@
 
             <!-- Artist Biography -->
             <div class="about-text">
-                <h2 class="section-title" style="margin-bottom: 20px;">About</h2>
+                <h2 class="section-title" style="margin-bottom: 24px;">About</h2>
                 <img src="avatar.png" alt="Ahmad Qaddura" class="artist-portrait">
                 <p>Born in 1988 in a Palestinian refugee camp in Syria, <strong>Ahmad Qaddura</strong> began drawing political cartoons during the early years of the Syrian Revolution. His earliest works were inspired by <strong>Handala</strong>, the iconic character created by the late Palestinian cartoonist <strong>Naji al-Ali</strong>.</p>
                 <p>Because of one of his cartoons and his participation in the Syrian Revolution, he was pursued by the Syrian regime's security forces and forced to flee the country. He embarked on a perilous 13-day sea journey from Turkey to Europe aboard migrant boats, eventually making his way to Sweden, where he now lives.</p>
                 <p>Today, Ahmad works as a <strong>Mechanical &amp; Piping Designer</strong> alongside his work as a <strong>freelance editorial cartoonist</strong>. He is a member of international cartoon networks and platforms including <strong>Cartooning for Peace</strong>, <strong>Cartoon Movement</strong>, and <strong>CartoonStock</strong>.</p>
                 <p>His cartoons have been published in Swedish newspapers such as <em>Dagens Nyheter</em> and <em>Proletären</em>, as well as in the Swedish anti-war satirical publication <em>Larm</em>.</p>
 
-                <h3 style="font-family: 'Playfair Display', serif; font-size: 1.3rem; margin: 32px 0 14px;">Books (with Tecknaruppropet)</h3>
-                <ul style="margin: 0 0 28px 20px; color: var(--ink-black); line-height: 1.8;">
-                    <li><em>Tecknaruppropet mot kärnvapen och Nato</em> — Tecknaruppropet &amp; Galago (2022)</li>
-                    <li><em>Palestinaboken: tecknare i solidaritet</em> — Tecknaruppropet (2024)</li>
-                    <li><em>Kampen fortsätter. Befria Palestina!</em> — Tecknaruppropet (2025)</li>
-                    <li><em>Historien om Sverige: Tidötiden 2022–2026</em> — Tecknaruppropet (2026)</li>
+                <h3 class="about-subheading">Books (with Tecknaruppropet)</h3>
+                <ul class="books-list">
+                    <li><em>Tecknaruppropet mot kärnvapen och Nato</em> <span class="book-meta">— Tecknaruppropet &amp; Galago (2022)</span></li>
+                    <li><em>Palestinaboken: tecknare i solidaritet</em> <span class="book-meta">— Tecknaruppropet (2024)</span></li>
+                    <li><em>Kampen fortsätter. Befria Palestina!</em> <span class="book-meta">— Tecknaruppropet (2025)</span></li>
+                    <li><em>Historien om Sverige: Tidötiden 2022–2026</em> <span class="book-meta">— Tecknaruppropet (2026)</span></li>
                 </ul>
 
-                <h3 style="font-family: 'Playfair Display', serif; font-size: 1.3rem; margin: 32px 0 14px;">Publications &amp; Networks</h3>
+                <h3 class="about-subheading">Publications &amp; Networks</h3>
                 <div class="published-list">
                     <div class="pub-item">
                         <div class="pub-name">Dagens Nyheter &amp; Proletären</div>
@@ -67,19 +185,19 @@
                 </div>
             </div>
 
-            <!-- Contact Card -->
-            <div class="contact-card">
+            <!-- Frameless Contact Sidebar -->
+            <aside class="contact-card">
                 <h3>Press &amp; Inquiries</h3>
                 <p>For editorial commissions, syndication, or licensing inquiries:</p>
                 
-                <div style="margin-bottom: 20px; font-size: 0.92rem;">
+                <div class="contact-meta">
                     <strong>Location:</strong> Gothenburg, Sweden<br>
                     <strong>Email:</strong> <span style="color: var(--ink-gray);">—</span>
                 </div>
 
-                <!-- Add your email address to href="mailto:..." once your domain is ready -->
-                <a href="#" class="btn btn-primary" style="width: 100%; text-align: center; opacity: 0.65; cursor: not-allowed;" onclick="return false;" aria-disabled="true" title="Email coming soon">Send Email</a>
-            </div>
+                <!-- Add your email address to href="mailto:..." and remove the "disabled" class once your domain is ready -->
+                <a href="#" class="contact-btn disabled" onclick="return false;" aria-disabled="true" title="Email coming soon">Send Email</a>
+            </aside>
 
         </div>
     </main>
