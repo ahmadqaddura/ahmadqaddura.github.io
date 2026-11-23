@@ -61,22 +61,30 @@
             font-size: 0.88rem;
         }
 
-        /* Frameless Contact Sidebar matching Gallery Sidebar */
+        /* Warm Paper Contact Panel matching Home Page Band */
         .contact-card {
-            background: transparent;
+            background: var(--bg-paper-alt);
             border: none;
-            border-left: 1px solid var(--border-line);
-            padding: 0 0 0 36px;
+            padding: 32px 30px;
             height: fit-content;
+        }
+
+        .contact-kicker {
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--accent-red);
+            margin-bottom: 6px;
         }
 
         .contact-card h3 {
             font-family: 'Playfair Display', serif;
-            font-size: 1.15rem;
+            font-size: 1.3rem;
             font-weight: 700;
             margin-bottom: 14px;
-            padding-bottom: 6px;
-            border-bottom: 1px solid var(--ink-black);
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-line);
         }
 
         .contact-card p {
@@ -117,9 +125,7 @@
                 gap: 36px;
             }
             .contact-card {
-                border-left: none;
-                border-top: 1px solid var(--border-line);
-                padding: 28px 0 0 0;
+                padding: 28px 24px;
             }
         }
     </style>
@@ -185,9 +191,10 @@
                 </div>
             </div>
 
-            <!-- Frameless Contact Sidebar -->
+            <!-- Warm Paper Contact Panel -->
             <aside class="contact-card">
-                <h3>Press &amp; Inquiries</h3>
+                <div class="contact-kicker">Get in Touch</div>
+                <h3>Contact</h3>
                 <p>For editorial commissions, syndication, or licensing inquiries:</p>
                 
                 <div class="contact-meta">
