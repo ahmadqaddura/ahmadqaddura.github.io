@@ -67,7 +67,7 @@
             <aside class="sidebar">
                 <input type="text" id="archive-search" class="archive-search" placeholder="Search cartoons...">
                 <div class="filter-group">
-                    <h3 class="filter-title">Browse by Date</h3>
+                    <h3 class="filter-title">Browse by Year</h3>
                     <div id="date-tree"></div>
                 </div>
             </aside>
@@ -161,33 +161,26 @@
         }
 
         function buildDateTree() {
-            const s = {};
+            const counts = {};
             cartoons.forEach(c => {
-                const [y, m] = c.date.split('-');
-                if (!s[y]) s[y] = { count: 0, months: {} };
-                s[y].count++;
-                if (m) s[y].months[m] = (s[y].months[m] || 0) + 1;
+                const y = c.date.split('-')[0];
+                if (y) counts[y] = (counts[y] || 0) + 1;
             });
-            const years = Object.keys(s).sort((a,b) => b - a);
+            const years = Object.keys(counts).sort((a, b) => b - a);
             let html = `<button class="all-btn active" data-filter="all"><span>All Works</span><span class="count-badge">${cartoons.length}</span></button>`;
-            years.forEach((y, i) => {
-                const ms = Object.keys(s[y].months).sort((a,b) => b - a);
-                html += `<div class="year-group ${i===0?'open':''}"><button class="year-btn" data-filter="${y}"><span><span class="year-arrow">&#9656;</span>${y}</span><span class="count-badge">${s[y].count}</span></button><ul class="month-list">${ms.map(m => `<li><button class="month-btn" data-filter="${y}-${m}"><span>${months[m]||m}</span><span class="count-badge">${s[y].months[m]}</span></button></li>`).join('')}</ul></div>`;
+            years.forEach(y => {
+                html += `<div class="year-group"><button class="year-btn" data-filter="${y}"><span>${y}</span><span class="count-badge">${counts[y]}</span></button></div>`;
             });
             dateTree.innerHTML = html;
 
             dateTree.querySelectorAll('button[data-filter]').forEach(btn => {
                 btn.addEventListener('click', () => {
                     const f = btn.getAttribute('data-filter');
-                    if (btn.classList.contains('year-btn')) {
-                        const g = btn.closest('.year-group');
-                        activeFilter === f ? g.classList.toggle('open') : g.classList.add('open');
-                    }
                     activeFilter = f;
                     currentPage = 1;
                     dateTree.querySelectorAll('button').forEach(b => b.classList.remove('active'));
                     btn.classList.add('active');
-                    heading.textContent = f === 'all' ? 'Complete Gallery' : (f.length === 4 ? `Gallery — ${f}` : formatDate(f));
+                    heading.textContent = f === 'all' ? 'Complete Gallery' : `Gallery — ${f}`;
                     renderGrid();
                 });
             });
