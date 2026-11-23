@@ -40,6 +40,41 @@
         .editorial-btn.primary:hover {
             background: #2E2E2E;
         }
+        .platform-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 32px;
+        }
+        .platform-card {
+            display: block;
+            text-decoration: none;
+            color: inherit;
+            border-top: 1px solid var(--ink-black);
+            padding-top: 16px;
+            transition: opacity 0.2s ease;
+        }
+        .platform-card:hover {
+            opacity: 0.72;
+        }
+        .platform-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #111;
+            margin-bottom: 6px;
+        }
+        .platform-desc {
+            font-size: 0.9rem;
+            color: var(--ink-gray);
+            line-height: 1.55;
+            margin-bottom: 12px;
+        }
+        .platform-link {
+            font-size: 0.84rem;
+            font-weight: 600;
+            color: #111;
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -112,6 +147,34 @@
 
             <div class="center-action">
                 <a href="gallery.html" class="editorial-btn">View Complete Gallery &rarr;</a>
+            </div>
+        </section>
+
+        <!-- International Platforms & Licensing -->
+        <section style="border-bottom: none;">
+            <div class="section-header">
+                <h2 class="section-title">International Platforms &amp; Licensing</h2>
+                <span class="section-note">Follow my work or license cartoons internationally</span>
+            </div>
+
+            <div class="platform-grid">
+                <a href="https://www.cartoonmovement.com/cartoonist/15945" target="_blank" rel="noopener" class="platform-card">
+                    <div class="platform-name">Cartoon Movement</div>
+                    <p class="platform-desc">International editorial cartoon platform &amp; press syndication.</p>
+                    <span class="platform-link">View Profile &rarr;</span>
+                </a>
+
+                <a href="https://www.cartoonstock.com/cartoonists/ahmadqaddura" target="_blank" rel="noopener" class="platform-card">
+                    <div class="platform-name">CartoonStock</div>
+                    <p class="platform-desc">Global library for press &amp; commercial cartoon licensing.</p>
+                    <span class="platform-link">View Profile &rarr;</span>
+                </a>
+
+                <a href="https://www.cartooningforpeace.org/en/dessinateurs/ahmad-qaddura/" target="_blank" rel="noopener" class="platform-card">
+                    <div class="platform-name">Cartooning for Peace</div>
+                    <p class="platform-desc">International network of editorial cartoonists.</p>
+                    <span class="platform-link">View Profile &rarr;</span>
+                </a>
             </div>
         </section>
 
