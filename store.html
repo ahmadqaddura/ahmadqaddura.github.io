@@ -5,6 +5,56 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Store &amp; Licensing — Ahmad Qaddura</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        .store-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 44px;
+        }
+        .store-box {
+            background: transparent;
+            border: none;
+            border-top: 1px solid var(--ink-black);
+            padding: 20px 0 0 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .store-box h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.35rem;
+            margin: 4px 0 12px;
+            color: #111;
+        }
+        .store-box p {
+            font-size: 0.95rem;
+            line-height: 1.7;
+            color: #444;
+            margin-bottom: 24px;
+        }
+        .editorial-btn {
+            display: inline-block;
+            padding: 10px 22px;
+            border: 1px solid #111;
+            color: #111;
+            background: transparent;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+            align-self: flex-start;
+        }
+        .editorial-btn:hover {
+            background: #111;
+            color: #fff;
+        }
+        .editorial-btn.primary {
+            background: #111;
+            color: #fff;
+        }
+        .editorial-btn.primary:hover {
+            background: #2E2E2E;
+        }
+    </style>
 </head>
 <body>
 
@@ -38,7 +88,7 @@
                         <p>High-resolution print-ready artwork (300 DPI) with non-exclusive usage rights for a single newspaper issue, magazine article, blog post, or academic presentation.</p>
                     </div>
                     <!-- Replace # with your Fourthwall digital license product link -->
-                    <a href="#" target="_blank" class="btn btn-primary">Acquire Digital License &rarr;</a>
+                    <a href="#" target="_blank" class="editorial-btn primary">Acquire Digital License &rarr;</a>
                 </div>
 
                 <div class="store-box">
@@ -47,7 +97,7 @@
                         <h3>Custom &amp; Syndication Rights</h3>
                         <p>Need recurring syndication, book anthology rights, or an exclusive commissioned editorial cartoon tailored to your publication's upcoming issue?</p>
                     </div>
-                    <a href="about.html" class="btn btn-outline">Inquire for Custom Rights</a>
+                    <a href="about.html" class="editorial-btn">Inquire for Custom Rights</a>
                 </div>
             </div>
         </section>
@@ -67,7 +117,7 @@
                 </div>
                 <div>
                     <!-- Replace # with your main Fourthwall store URL -->
-                    <a href="#" target="_blank" class="btn btn-outline">Visit Qaddura Press Store &rarr;</a>
+                    <a href="#" target="_blank" class="editorial-btn">Visit Qaddura Press Store &rarr;</a>
                 </div>
             </div>
         </section>

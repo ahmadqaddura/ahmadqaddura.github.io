@@ -3,8 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ahmad Qaddura — Editorial Cartoonist & Illustrator</title>
+    <title>Ahmad Qaddura — Editorial Cartoonist &amp; Illustrator</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        .art-card {
+            background: transparent;
+            border: none;
+            padding: 0;
+        }
+        .art-frame {
+            border: 1px solid var(--border-line);
+            background: #F3F0EA;
+            transition: box-shadow 0.25s;
+        }
+        .art-frame:hover {
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+        }
+        .editorial-btn {
+            display: inline-block;
+            padding: 10px 22px;
+            border: 1px solid #111;
+            color: #111;
+            background: transparent;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+        .editorial-btn:hover {
+            background: #111;
+            color: #fff;
+        }
+        .editorial-btn.primary {
+            background: #111;
+            color: #fff;
+        }
+        .editorial-btn.primary:hover {
+            background: #2E2E2E;
+        }
+    </style>
 </head>
 <body>
 
@@ -26,7 +62,7 @@
         <!-- Intro Statement -->
         <div class="hero-intro">
             <p>Editorial cartoons and visual commentary on international politics, social realities, and human dignity.</p>
-            <a href="archive.html" class="btn btn-primary">Explore Full Archive &rarr;</a>
+            <a href="gallery.html" class="editorial-btn primary">Explore Full Gallery &rarr;</a>
         </div>
 
         <!-- Featured Works -->
@@ -75,7 +111,7 @@
             </div>
 
             <div class="center-action">
-                <a href="archive.html" class="btn btn-outline">View Complete Monthly Archive &rarr;</a>
+                <a href="gallery.html" class="editorial-btn">View Complete Gallery &rarr;</a>
             </div>
         </section>
 
