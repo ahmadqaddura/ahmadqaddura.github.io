@@ -438,6 +438,33 @@ footer {
     border-top: 1px solid var(--border-line);
 }
 
+.social-links {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 22px;
+    margin-bottom: 16px;
+}
+
+.social-links a {
+    color: var(--ink-gray);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.social-links a:hover {
+    color: var(--accent-red);
+    transform: translateY(-1px);
+}
+
+.social-links svg {
+    width: 19px;
+    height: 19px;
+    fill: currentColor;
+}
+
 @media (max-width: 820px) {
     .archive-layout {
         grid-template-columns: 1fr;
