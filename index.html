@@ -79,28 +79,25 @@
             border-color: var(--accent-red);
             color: #fff;
         }
-        .platforms-band {
-            background-color: var(--bg-paper-alt);
-            padding: 40px 44px;
-            margin: 44px 0 64px;
-            border: none;
-        }
         .platform-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 36px;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 28px;
         }
         .platform-card {
-            display: block;
-            text-decoration: none;
-            color: inherit;
-            border-top: 1px solid var(--border-line);
-            padding-top: 16px;
-            transition: opacity 0.2s ease;
+            border: none;
+            border-top: 2px solid var(--ink-black);
+            padding: 32px 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.2s ease;
         }
         .platform-card:hover {
-            opacity: 0.78;
+            transform: translateY(-2px);
         }
+        .tone-sand  { background-color: #F2ECE1; }
+        .tone-slate { background-color: #EAEFF2; }
         .platform-kicker {
             font-size: 0.72rem;
             font-weight: 600;
@@ -111,27 +108,16 @@
         }
         .platform-name {
             font-family: 'Playfair Display', serif;
-            font-size: 1.25rem;
+            font-size: 1.35rem;
             font-weight: 700;
             color: #111;
-            margin-bottom: 6px;
+            margin: 4px 0 12px;
         }
         .platform-desc {
-            font-size: 0.9rem;
-            color: var(--ink-gray);
-            line-height: 1.55;
-            margin-bottom: 12px;
-        }
-        .platform-link {
-            font-size: 0.84rem;
-            font-weight: 600;
-            color: var(--accent-red);
-            text-decoration: underline;
-        }
-        @media (max-width: 640px) {
-            .platforms-band {
-                padding: 28px 22px;
-            }
+            font-size: 0.95rem;
+            color: #3A3A3A;
+            line-height: 1.7;
+            margin-bottom: 26px;
         }
     </style>
 </head>
@@ -175,26 +161,30 @@
         </section>
 
         <!-- International Platforms & Licensing -->
-        <section class="platforms-band">
+        <section style="border-bottom: none;">
             <div class="section-header">
                 <h2 class="section-title">International Platforms &amp; Licensing</h2>
                 <span class="section-note">Follow my work or license cartoons internationally</span>
             </div>
 
             <div class="platform-grid">
-                <a href="https://www.cartoonmovement.com/cartoonist/15945" target="_blank" rel="noopener" class="platform-card">
-                    <div class="platform-kicker">Syndication</div>
-                    <div class="platform-name">Cartoon Movement</div>
-                    <p class="platform-desc">International editorial cartoon platform &amp; press syndication.</p>
-                    <span class="platform-link">View Profile &rarr;</span>
-                </a>
+                <div class="platform-card tone-sand">
+                    <div>
+                        <div class="platform-kicker">Syndication</div>
+                        <div class="platform-name">Cartoon Movement</div>
+                        <p class="platform-desc">International editorial cartoon platform &amp; press syndication.</p>
+                    </div>
+                    <a href="https://www.cartoonmovement.com/cartoonist/15945" target="_blank" rel="noopener" class="editorial-btn" style="align-self: flex-start;">View Profile &rarr;</a>
+                </div>
 
-                <a href="https://www.cartoonstock.com/cartoonists/ahmadqaddura" target="_blank" rel="noopener" class="platform-card">
-                    <div class="platform-kicker">Press Licensing</div>
-                    <div class="platform-name">CartoonStock</div>
-                    <p class="platform-desc">Global library for press &amp; commercial cartoon licensing.</p>
-                    <span class="platform-link">View Profile &rarr;</span>
-                </a>
+                <div class="platform-card tone-slate">
+                    <div>
+                        <div class="platform-kicker">Press Licensing</div>
+                        <div class="platform-name">CartoonStock</div>
+                        <p class="platform-desc">Global library for press &amp; commercial cartoon licensing.</p>
+                    </div>
+                    <a href="https://www.cartoonstock.com/cartoonists/ahmadqaddura" target="_blank" rel="noopener" class="editorial-btn" style="align-self: flex-start;">View Profile &rarr;</a>
+                </div>
             </div>
         </section>
 
