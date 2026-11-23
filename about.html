@@ -110,7 +110,9 @@
             color: #fff;
             background: #111;
             text-decoration: none;
+            font-family: inherit;
             font-size: 0.9rem;
+            cursor: pointer;
             transition: all 0.2s ease;
         }
 
@@ -118,6 +120,31 @@
             background: var(--accent-red);
             border-color: var(--accent-red);
             color: #fff;
+        }
+
+        .contact-btn-secondary {
+            margin-top: 10px;
+            background: transparent;
+            color: #111;
+        }
+
+        .contact-btn-secondary:hover {
+            background: #111;
+            border-color: #111;
+            color: #fff;
+        }
+
+        .contact-btn-secondary.copied {
+            background: #1E6B3A;
+            border-color: #1E6B3A;
+            color: #fff;
+        }
+
+        .email-display {
+            user-select: all;
+            -webkit-user-select: all;
+            border-bottom: 1px solid var(--border-line);
+            color: #111;
         }
 
         .contact-btn.disabled {
@@ -205,11 +232,11 @@
                 
                 <div class="contact-meta">
                     <strong>Location:</strong> Gothenburg, Sweden<br>
-                    <strong>Email:</strong> <a href="mailto:contact@ahmadqaddura.com" style="color: inherit; text-decoration: none; border-bottom: 1px solid var(--border-line);">contact@ahmadqaddura.com</a>
+                    <strong>Email:</strong> <span class="email-display">contact@ahmadqaddura.com</span>
                 </div>
 
                 <a href="mailto:contact@ahmadqaddura.com" class="contact-btn">Send Email</a>
-                <button type="button" id="copy-email-btn" class="contact-btn" style="margin-top: 10px; background: transparent; color: #111;" onclick="copyEmail(this)">Copy Email Address</button>
+                <button type="button" id="copy-email-btn" class="contact-btn contact-btn-secondary" onclick="copyEmail(this)">Copy Email Address</button>
             </aside>
 
         </div>
@@ -239,8 +266,12 @@
         function copyEmail(btn) {
             const email = 'contact@ahmadqaddura.com';
             const done = () => {
-                btn.textContent = 'Email Copied ✓';
-                setTimeout(() => { btn.textContent = 'Copy Email Address'; }, 2000);
+                btn.classList.add('copied');
+                btn.textContent = 'Copied ✓  contact@ahmadqaddura.com';
+                setTimeout(() => {
+                    btn.classList.remove('copied');
+                    btn.textContent = 'Copy Email Address';
+                }, 2500);
             };
             if (navigator.clipboard && window.isSecureContext) {
                 navigator.clipboard.writeText(email).then(done).catch(() => fallbackCopy(email, done));
@@ -251,11 +282,16 @@
         function fallbackCopy(text, cb) {
             const ta = document.createElement('textarea');
             ta.value = text;
+            ta.setAttribute('readonly', '');
             ta.style.position = 'fixed';
-            ta.style.opacity = '0';
+            ta.style.left = '-9999px';
             document.body.appendChild(ta);
+            ta.focus();
             ta.select();
-            try { document.execCommand('copy'); cb(); } catch (_) {}
+            ta.setSelectionRange(0, 99999);
+            try {
+                if (document.execCommand('copy')) cb();
+            } catch (_) {}
             document.body.removeChild(ta);
         }
     </script>
