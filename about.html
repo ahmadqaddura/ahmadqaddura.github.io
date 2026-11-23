@@ -209,6 +209,7 @@
                 </div>
 
                 <a href="mailto:contact@ahmadqaddura.com" class="contact-btn">Send Email</a>
+                <button type="button" id="copy-email-btn" class="contact-btn" style="margin-top: 10px; background: transparent; color: #111;" onclick="navigator.clipboard.writeText('contact@ahmadqaddura.com').then(() => { this.textContent = 'Email Copied ✓'; setTimeout(() => this.textContent = 'Copy Email Address', 2000); });">Copy Email Address</button>
             </aside>
 
         </div>
