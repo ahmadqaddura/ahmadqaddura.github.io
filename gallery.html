@@ -20,11 +20,10 @@
         .month-btn { font-size: 0.88rem; padding: 5px 8px; }
         .count-badge { font-size: 0.78rem; opacity: 0.65; }
 
-        /* 3-Column Grid with Natural Proportions */
-        .gallery-grid { display: grid !important; grid-template-columns: repeat(3, 1fr); gap: 28px; align-items: start; }
-        @media (max-width: 900px) { .gallery-grid { grid-template-columns: repeat(2, 1fr); } }
-        @media (max-width: 580px) { .gallery-grid { grid-template-columns: 1fr; } }
-        .gallery-grid .empty-state { grid-column: 1 / -1; padding: 48px 20px; text-align: center; border: 1px dashed #ccc; color: #666; }
+        /* Responsive Masonry Columns with Natural Proportions */
+        .gallery-grid { display: flex !important; gap: 28px; align-items: flex-start; }
+        .masonry-col { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 32px; }
+        .gallery-grid .empty-state { width: 100%; padding: 48px 20px; text-align: center; border: 1px dashed #ccc; color: #666; }
 
         .art-card { background: transparent !important; border: none !important; padding: 0 !important; box-shadow: none !important; }
         .art-link { display: block; text-decoration: none; color: inherit; }
@@ -186,6 +185,61 @@
             });
         }
 
+        let lastPageItems = [], lastColCount = 0;
+
+        function getColCount() {
+            if (window.innerWidth <= 580) return 1;
+            if (window.innerWidth <= 900) return 2;
+            return 3;
+        }
+
+        function measureRatios(items) {
+            return Promise.all(items.map(c => {
+                if (c.ratio) return Promise.resolve();
+                return new Promise(resolve => {
+                    const img = new Image();
+                    img.onload = () => {
+                        c.ratio = (img.naturalWidth && img.naturalHeight) ? (img.naturalHeight / img.naturalWidth) : 1;
+                        resolve();
+                    };
+                    img.onerror = () => { c.ratio = 1; resolve(); };
+                    img.src = c.image;
+                });
+            }));
+        }
+
+        function cardHTML(c) {
+            const url = `cartoon.html?id=${encodeURIComponent(c.name)}`;
+            return `
+                <article class="art-card">
+                    <a href="${url}" class="art-link">
+                        <div class="art-frame"><img src="${c.image}" alt="${c.title || c.date}" loading="lazy"></div>
+                        <div class="card-date">${formatDate(c.date)}</div>
+                        ${c.title ? `<h3 class="card-title">${c.title}</h3>` : ''}
+                        ${c.desc ? `<p class="card-excerpt">${c.desc}</p><span class="read-more">Read more</span>` : ''}
+                    </a>
+                </article>`;
+        }
+
+        function layoutMasonry(items) {
+            const colCount = getColCount();
+            lastColCount = colCount;
+            const cols = Array.from({ length: colCount }, () => []);
+            const heights = new Array(colCount).fill(0);
+
+            items.forEach(c => {
+                let shortest = 0;
+                for (let i = 1; i < colCount; i++) {
+                    if (heights[i] < heights[shortest]) shortest = i;
+                }
+                cols[shortest].push(c);
+                const textWeight = (c.title ? 0.16 : 0) + (c.desc ? 0.28 : 0) + 0.12;
+                heights[shortest] += (c.ratio || 1) + textWeight;
+            });
+
+            grid.innerHTML = cols.map(col => `<div class="masonry-col">${col.map(cardHTML).join('')}</div>`).join('');
+        }
+
         async function renderGrid() {
             const list = cartoons.filter(c => {
                 const okDate = activeFilter === 'all' || c.date.startsWith(activeFilter);
@@ -195,6 +249,7 @@
 
             countLabel.textContent = list.length === 1 ? 'Showing 1 work' : `Showing ${list.length} works`;
             if (!list.length) {
+                lastPageItems = [];
                 grid.innerHTML = `<div class="empty-state">No cartoons found.</div>`;
                 paginationEl.style.display = 'none';
                 return;
@@ -204,24 +259,18 @@
             if (currentPage > totalPages) currentPage = totalPages;
             const start = (currentPage - 1) * PER_PAGE;
             const pageItems = list.slice(start, start + PER_PAGE);
+            lastPageItems = pageItems;
 
-            await loadMetaFor(pageItems);
-
-            grid.innerHTML = pageItems.map(c => {
-                const url = `cartoon.html?id=${encodeURIComponent(c.name)}`;
-                return `
-                    <article class="art-card">
-                        <a href="${url}" class="art-link">
-                            <div class="art-frame"><img src="${c.image}" alt="${c.title || c.date}" loading="lazy"></div>
-                            <div class="card-date">${formatDate(c.date)}</div>
-                            ${c.title ? `<h3 class="card-title">${c.title}</h3>` : ''}
-                            ${c.desc ? `<p class="card-excerpt">${c.desc}</p><span class="read-more">Read more</span>` : ''}
-                        </a>
-                    </article>`;
-            }).join('');
-
+            await Promise.all([loadMetaFor(pageItems), measureRatios(pageItems)]);
+            layoutMasonry(pageItems);
             renderPagination(totalPages);
         }
+
+        window.addEventListener('resize', () => {
+            if (lastPageItems.length && getColCount() !== lastColCount) {
+                layoutMasonry(lastPageItems);
+            }
+        });
 
         function renderPagination(totalPages) {
             if (totalPages <= 1) { paginationEl.style.display = 'none'; return; }
