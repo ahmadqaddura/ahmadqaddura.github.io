@@ -161,6 +161,42 @@
             font-size: 0.92rem;
             padding: 12px 0;
         }
+        .store-top-header {
+            align-items: center;
+        }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 40px;
+            padding-top: 24px;
+            border-top: 1px solid #e5e5e5;
+        }
+        .page-btn {
+            background: #fff;
+            border: 1px solid #d4d4d4;
+            color: #111;
+            padding: 7px 13px;
+            font-family: inherit;
+            font-size: 0.88rem;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .page-btn:hover:not(:disabled) {
+            border-color: #111;
+            background: #f5f5f5;
+        }
+        .page-btn.active {
+            background: #111;
+            color: #fff;
+            border-color: #111;
+        }
+        .page-btn:disabled {
+            opacity: 0.35;
+            cursor: default;
+        }
     </style>
 </head>
 <body>
@@ -180,20 +216,21 @@
 
     <main class="container">
 
-        <!-- Live Products from Fourthwall -->
+        <!-- Live Products from Official Online Store -->
         <section id="featured-products-section">
-            <div class="section-header">
-                <h2 class="section-title">Featured Products</h2>
-                <span class="section-note" id="products-count">Official shop &bull; shop.ahmadqaddura.com</span>
+            <div class="section-header store-top-header">
+                <div>
+                    <h2 class="section-title">Official Online Store</h2>
+                    <span class="section-note" id="products-count">Selected apparel, mugs, prints &amp; downloads</span>
+                </div>
+                <a href="https://shop.ahmadqaddura.com" target="_blank" rel="noopener" class="editorial-btn">Visit Online Store &rarr;</a>
             </div>
 
             <div class="products-grid" id="fourthwall-grid">
-                <p class="products-status">Loading products from the official shop...</p>
+                <p class="products-status">Loading products from the official store...</p>
             </div>
 
-            <div class="center-action">
-                <a href="https://shop.ahmadqaddura.com" target="_blank" rel="noopener" class="editorial-btn">View Full Shop &rarr;</a>
-            </div>
+            <div class="pagination" id="products-pagination" style="display:none;"></div>
         </section>
 
         <!-- Official Merchandise Store Links -->
@@ -230,8 +267,8 @@
                 <div class="store-box tone-slate">
                     <div>
                         <div class="store-kicker">Direct Artist Store &bull; Prints &amp; Licenses</div>
-                        <h3>Fourthwall</h3>
-                        <p>Buy high-resolution digital licenses, original artwork files, and selected printed apparel directly from my official Fourthwall shop.</p>
+                        <h3>Official Online Store</h3>
+                        <p>Buy high-resolution digital licenses, original artwork files, and selected printed apparel directly from my official store at shop.ahmadqaddura.com.</p>
                         <div class="merch-icons">
                             <span class="merch-tag">
                                 <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
@@ -247,7 +284,7 @@
                             </span>
                         </div>
                     </div>
-                    <a href="https://shop.ahmadqaddura.com" target="_blank" rel="noopener" class="editorial-btn">Shop on Fourthwall &rarr;</a>
+                    <a href="https://shop.ahmadqaddura.com" target="_blank" rel="noopener" class="editorial-btn">Visit Official Store &rarr;</a>
                 </div>
             </div>
         </section>
@@ -303,12 +340,15 @@
     </footer>
 
     <script>
-        (async function loadFourthwallProducts() {
+        (async function loadStoreProducts() {
             const TOKEN = "ptkn_91ae9a45-4678-4533-8f20-d6a4fe4c3c77";
             const SHOP_BASE = "https://shop.ahmadqaddura.com";
-            const API_URL = `https://storefront-api.fourthwall.com/v1/collections/all/products?storefront_token=${TOKEN}&size=50`;
+            const PER_PAGE = 12;
             const grid = document.getElementById("fourthwall-grid");
             const section = document.getElementById("featured-products-section");
+            const paginationEl = document.getElementById("products-pagination");
+            let allItems = [];
+            let currentPage = 1;
 
             function esc(str) {
                 return String(str || "").replace(/[&<>"']/g, m => ({
@@ -328,18 +368,13 @@
                 }
             }
 
-            try {
-                const res = await fetch(API_URL);
-                if (!res.ok) throw new Error("API error");
-                const data = await res.json();
-                const items = (data.results || []).filter(p => !p.state || p.state.type !== "SOLD_OUT");
+            function renderPage() {
+                const totalPages = Math.ceil(allItems.length / PER_PAGE);
+                if (currentPage > totalPages) currentPage = totalPages;
+                const start = (currentPage - 1) * PER_PAGE;
+                const pageItems = allItems.slice(start, start + PER_PAGE);
 
-                if (!items.length) {
-                    section.style.display = "none";
-                    return;
-                }
-
-                grid.innerHTML = items.map(p => {
+                grid.innerHTML = pageItems.map(p => {
                     const img = (p.images && p.images[0] && p.images[0].url)
                         || (p.variants && p.variants[0] && p.variants[0].images && p.variants[0].images[0] && p.variants[0].images[0].url)
                         || "";
@@ -360,6 +395,47 @@
                         </a>
                     `;
                 }).join("");
+
+                if (totalPages <= 1) {
+                    paginationEl.style.display = "none";
+                    return;
+                }
+                paginationEl.style.display = "flex";
+                let html = `<button class="page-btn" ${currentPage === 1 ? "disabled" : ""} data-page="${currentPage - 1}">&larr; Previous</button>`;
+                for (let i = 1; i <= totalPages; i++) {
+                    html += `<button class="page-btn ${i === currentPage ? "active" : ""}" data-page="${i}">${i}</button>`;
+                }
+                html += `<button class="page-btn" ${currentPage === totalPages ? "disabled" : ""} data-page="${currentPage + 1}">Next &rarr;</button>`;
+                paginationEl.innerHTML = html;
+
+                paginationEl.querySelectorAll("button[data-page]").forEach(btn => {
+                    btn.addEventListener("click", () => {
+                        currentPage = parseInt(btn.getAttribute("data-page"), 10);
+                        renderPage();
+                        section.scrollIntoView({ behavior: "smooth", block: "start" });
+                    });
+                });
+            }
+
+            try {
+                let page = 0;
+                let hasMore = true;
+                while (hasMore && page < 20) {
+                    const res = await fetch(`https://storefront-api.fourthwall.com/v1/collections/all/products?storefront_token=${TOKEN}&page=${page}&size=50`);
+                    if (!res.ok) throw new Error("API error");
+                    const data = await res.json();
+                    const batch = (data.results || []).filter(p => !p.state || p.state.type !== "SOLD_OUT");
+                    allItems.push(...batch);
+                    hasMore = Boolean(data.paging && data.paging.hasNextPage);
+                    page++;
+                }
+
+                if (!allItems.length) {
+                    section.style.display = "none";
+                    return;
+                }
+
+                renderPage();
             } catch (_) {
                 section.style.display = "none";
             }
