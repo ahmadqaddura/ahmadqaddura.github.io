@@ -98,13 +98,21 @@ def make_slug(base: str) -> str:
     return slug or "cartoon"
 
 
+DATE_BASE_RE = re.compile(r"^(\d{4})[-_.](\d{2})[-_.](\d{2})(?:[\s._-]+(.+)|([a-zA-Z]))?$")
+
+
+def normalize_key(stem: str) -> str:
+    """Normalize filename stem so '-', '_', '.', spaces, and case all match."""
+    return re.sub(r"[\s._-]+", "-", stem.strip().lower()).strip("-")
+
+
 def suffix_sort_key(item: dict):
     base = item["base"]
     date = item["date"]
-    m = re.match(r"^(\d{4}-\d{2}-\d{2})(?:[_-](.+)|([a-zA-Z]))?$", base)
+    m = DATE_BASE_RE.match(base.strip())
     if not m:
         return (date, 0, base.lower())
-    suffix = (m.group(2) or m.group(3) or "").strip()
+    suffix = (m.group(4) or m.group(5) or "").strip()
     if not suffix:
         return (date, 0, "")
     if re.fullmatch(r"\d+", suffix):
@@ -119,13 +127,20 @@ def load_cartoons():
     if not CARTOONS_DIR.is_dir():
         return items
 
+    txt_by_exact = {}
+    txt_by_norm = {}
+    for entry in sorted(CARTOONS_DIR.iterdir()):
+        if entry.is_file() and entry.suffix.lower() == ".txt":
+            txt_by_exact[entry.stem.lower()] = entry
+            txt_by_norm.setdefault(normalize_key(entry.stem), entry)
+
     for p in sorted(CARTOONS_DIR.iterdir()):
         if not p.is_file() or not IMG_RE.search(p.name):
             continue
         base = IMG_RE.sub("", p.name)
-        m = re.match(r"^(\d{4}-\d{2}-\d{2})(?:[_-](.+)|([a-zA-Z]))?$", base)
-        date = m.group(1) if m else "2026-01-01"
-        suffix = (m.group(2) or m.group(3) or "").strip() if m else ""
+        m = DATE_BASE_RE.match(base.strip())
+        date = f"{m.group(1)}-{m.group(2)}-{m.group(3)}" if m else "2026-01-01"
+        suffix = (m.group(4) or m.group(5) or "").strip() if m else ""
         fallback_title = ""
         if suffix and not re.fullmatch(r"(?:\d+|[a-zA-Z])", suffix):
             fallback_title = re.sub(r"[-_]+", " ", suffix).strip()
@@ -133,17 +148,7 @@ def load_cartoons():
         title = fallback_title
         tags = []
         desc = ""
-        txt_path = None
-        for cand in (CARTOONS_DIR / f"{base}.txt", CARTOONS_DIR / f"{base}.TXT"):
-            if cand.is_file():
-                txt_path = cand
-                break
-        if txt_path is None:
-            base_lower = base.lower()
-            for entry in CARTOONS_DIR.iterdir():
-                if entry.is_file() and entry.suffix.lower() == ".txt" and entry.stem.lower() == base_lower:
-                    txt_path = entry
-                    break
+        txt_path = txt_by_exact.get(base.lower()) or txt_by_norm.get(normalize_key(base))
         if txt_path is not None:
             raw_lines = txt_path.read_text(encoding="utf-8-sig", errors="replace").splitlines()
             # Drop leading blank lines
