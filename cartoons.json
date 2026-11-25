@@ -4,8 +4,12 @@
     "base": "2026-11-25",
     "slug": "2026-11-25",
     "date": "2026-11-25",
-    "title": "",
-    "tags": [],
+    "title": "Political Dialogue",
+    "tags": [
+      "Political",
+      "Dialogue",
+      "Fika"
+    ],
     "desc": "",
     "image": "cartoons/2026-11-25.webp",
     "page": "c/2026-11-25.html",
