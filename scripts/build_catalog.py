@@ -257,7 +257,7 @@ def render_cartoon_page(items, idx: int) -> str:
     if others:
         cards = "".join(
             f'''<a class="more-item" href="{quote(o['slug'])}.html">
-                <img src="../{o['image']}" alt="{html.escape(o['title'] or o['date'], quote=True)}" loading="lazy">
+                <img src="../{o['image']}" alt="{html.escape(o['title'] or o['date'], quote=True)}"{f' width="{o["width"]}" height="{o["height"]}"' if o.get("width") and o.get("height") else ""} loading="lazy" decoding="async">
                 <div class="more-item-title">{html.escape(o['title'] or format_date(o['date']))}</div>
             </a>'''
             for o in others
@@ -270,6 +270,15 @@ def render_cartoon_page(items, idx: int) -> str:
                 </div>
                 <div class="more-grid">{cards}</div>
             </section>'''
+
+    og_dims_html = ""
+    if c.get("width") and c.get("height"):
+        og_dims_html = (
+            f'\n    <meta property="og:image:width" content="{c["width"]}">'
+            f'\n    <meta property="og:image:height" content="{c["height"]}">'
+        )
+    main_dims_attr = f' width="{c["width"]}" height="{c["height"]}"' if c.get("width") and c.get("height") else ""
+    date_line_html = f'<div class="cartoon-date">{date_formatted}</div>' if c["title"] else ""
 
     ld_json = json.dumps({
         "@context": "https://schema.org",
@@ -303,7 +312,8 @@ def render_cartoon_page(items, idx: int) -> str:
     <meta property="og:url" content="{canonical}">
     <meta property="og:title" content="{title_esc} — Ahmad Qaddura">
     <meta property="og:description" content="{desc_meta_esc}">
-    <meta property="og:image" content="{img_abs}">
+    <meta property="og:image" content="{img_abs}">{og_dims_html}
+    <meta property="og:image:alt" content="{title_esc}">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@qadduracartoon">
     <meta name="twitter:title" content="{title_esc} — Ahmad Qaddura">
@@ -312,6 +322,9 @@ def render_cartoon_page(items, idx: int) -> str:
     <script type="application/ld+json">
 {ld_json}
     </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../style.css">
 </head>
 <body>
@@ -340,10 +353,10 @@ def render_cartoon_page(items, idx: int) -> str:
 
             <article>
                 <div class="cartoon-stage">
-                    <img id="main-cartoon-img" src="{img_rel}" alt="{title_esc}" title="Click to zoom">
+                    <img id="main-cartoon-img" src="{img_rel}" alt="{title_esc}"{main_dims_attr} fetchpriority="high" decoding="async" tabindex="0" role="button" aria-label="Zoom cartoon: {title_esc}" title="Click to zoom">
                     <span class="zoom-hint">Click image to zoom</span>
                 </div>
-                <div class="cartoon-date">{date_formatted}</div>
+                {date_line_html}
                 <h2 class="cartoon-title">{title_esc}</h2>
                 {desc_html}
                 {tags_html}
@@ -447,11 +460,12 @@ def render_cartoon_page(items, idx: int) -> str:
             const mainImg = document.getElementById("main-cartoon-img");
             const box = document.getElementById("zoom-lightbox");
             const closeBtn = document.getElementById("zoom-close");
+            function openZoom() {{ box.classList.add("open"); document.body.style.overflow = "hidden"; }}
             function closeZoom() {{ box.classList.remove("open"); document.body.style.overflow = ""; }}
             if (mainImg && box) {{
-                mainImg.addEventListener("click", () => {{
-                    box.classList.add("open");
-                    document.body.style.overflow = "hidden";
+                mainImg.addEventListener("click", openZoom);
+                mainImg.addEventListener("keydown", (e) => {{
+                    if (e.key === "Enter" || e.key === " ") {{ e.preventDefault(); openZoom(); }}
                 }});
                 closeBtn.addEventListener("click", closeZoom);
                 box.addEventListener("click", (e) => {{ if (e.target === box) closeZoom(); }});

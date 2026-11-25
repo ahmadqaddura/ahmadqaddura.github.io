@@ -14,6 +14,9 @@
     <meta property="og:title" content="Political Dialogue — Ahmad Qaddura">
     <meta property="og:description" content="Editorial cartoon &#x27;Political Dialogue&#x27; by Ahmad Qaddura (25 November 2026).">
     <meta property="og:image" content="https://ahmadqaddura.com/cartoons/2026-11-25.webp">
+    <meta property="og:image:width" content="1599">
+    <meta property="og:image:height" content="899">
+    <meta property="og:image:alt" content="Political Dialogue">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@qadduracartoon">
     <meta name="twitter:title" content="Political Dialogue — Ahmad Qaddura">
@@ -37,6 +40,9 @@
   "keywords": "Political, Dialogue, Fika"
 }
     </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../style.css">
 </head>
 <body>
@@ -65,7 +71,7 @@
 
             <article>
                 <div class="cartoon-stage">
-                    <img id="main-cartoon-img" src="../cartoons/2026-11-25.webp" alt="Political Dialogue" title="Click to zoom">
+                    <img id="main-cartoon-img" src="../cartoons/2026-11-25.webp" alt="Political Dialogue" width="1599" height="899" fetchpriority="high" decoding="async" tabindex="0" role="button" aria-label="Zoom cartoon: Political Dialogue" title="Click to zoom">
                     <span class="zoom-hint">Click image to zoom</span>
                 </div>
                 <div class="cartoon-date">25 November 2026</div>
@@ -102,16 +108,16 @@
                     <a href="../gallery.html">See all</a>
                 </div>
                 <div class="more-grid"><a class="more-item" href="2026-11-25-2.html">
-                <img src="../cartoons/2026-11-25-2.webp" alt="How did you ever think you&#x27;d last forever?!" loading="lazy">
+                <img src="../cartoons/2026-11-25-2.webp" alt="How did you ever think you&#x27;d last forever?!" width="1599" height="1131" loading="lazy" decoding="async">
                 <div class="more-item-title">How did you ever think you&#x27;d last forever?!</div>
             </a><a class="more-item" href="2026-11-23.html">
-                <img src="../cartoons/2026-11-23.webp" alt="The Sale Trap" loading="lazy">
+                <img src="../cartoons/2026-11-23.webp" alt="The Sale Trap" width="1500" height="844" loading="lazy" decoding="async">
                 <div class="more-item-title">The Sale Trap</div>
             </a><a class="more-item" href="2026-11-22.html">
-                <img src="../cartoons/2026-11-22.webp" alt="&quot;I am the man of the house&quot;" loading="lazy">
+                <img src="../cartoons/2026-11-22.webp" alt="&quot;I am the man of the house&quot;" width="1061" height="1500" loading="lazy" decoding="async">
                 <div class="more-item-title">&quot;I am the man of the house&quot;</div>
             </a><a class="more-item" href="2026-11-21.html">
-                <img src="../cartoons/2026-11-21.webp" alt="The Occupation" loading="lazy">
+                <img src="../cartoons/2026-11-21.webp" alt="The Occupation" width="1500" height="2121" loading="lazy" decoding="async">
                 <div class="more-item-title">The Occupation</div>
             </a></div>
             </section>
@@ -191,11 +197,12 @@
             const mainImg = document.getElementById("main-cartoon-img");
             const box = document.getElementById("zoom-lightbox");
             const closeBtn = document.getElementById("zoom-close");
+            function openZoom() { box.classList.add("open"); document.body.style.overflow = "hidden"; }
             function closeZoom() { box.classList.remove("open"); document.body.style.overflow = ""; }
             if (mainImg && box) {
-                mainImg.addEventListener("click", () => {
-                    box.classList.add("open");
-                    document.body.style.overflow = "hidden";
+                mainImg.addEventListener("click", openZoom);
+                mainImg.addEventListener("keydown", (e) => {
+                    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openZoom(); }
                 });
                 closeBtn.addEventListener("click", closeZoom);
                 box.addEventListener("click", (e) => { if (e.target === box) closeZoom(); });

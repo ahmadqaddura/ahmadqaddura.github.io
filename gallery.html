@@ -8,6 +8,16 @@
     <link rel="canonical" href="https://ahmadqaddura.com/gallery.html">
     <link rel="icon" type="image/png" href="avatar.png">
     <link rel="apple-touch-icon" href="avatar.png">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://ahmadqaddura.com/gallery.html">
+    <meta property="og:title" content="Gallery — Ahmad Qaddura">
+    <meta property="og:description" content="Complete editorial cartoon gallery and archive by Palestinian–Swedish cartoonist Ahmad Qaddura. Browse cartoons by year or keyword.">
+    <meta property="og:image" content="https://ahmadqaddura.com/avatar.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@qadduracartoon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <style>
         .archive-search { width: 100%; padding: 10px 12px; border: 1px solid #d4d4d4; background: #fff; font-family: inherit; font-size: 0.9rem; margin-bottom: 24px; box-sizing: border-box; }
@@ -24,11 +34,11 @@
         .masonry-col { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 32px; }
         .gallery-grid .empty-state { width: 100%; padding: 48px 20px; text-align: center; border: 1px dashed #ccc; color: #666; }
 
-        .art-card { background: transparent !important; border: none !important; padding: 0 !important; box-shadow: none !important; }
+        .art-card { background: transparent; border: none; padding: 0; }
         .art-link { display: block; text-decoration: none; color: inherit; }
-        .art-frame { height: auto !important; aspect-ratio: auto !important; border: none !important; background: transparent !important; padding: 0 !important; overflow: hidden; transition: box-shadow 0.25s; }
+        .art-frame { overflow: hidden; background: #F3F0EA; transition: box-shadow 0.25s; }
         .art-frame:hover { box-shadow: 0 6px 20px rgba(0,0,0,0.1); }
-        .art-frame img { width: 100%; height: auto !important; display: block; }
+        .art-frame img { width: 100%; height: auto; display: block; }
 
         .card-date { margin-top: 8px; font-size: 0.72rem; color: #777; letter-spacing: 0.03em; }
         .card-title { margin: 4px 0 5px; font-size: 1.05rem; font-weight: 700; color: #111; line-height: 1.3; }
@@ -37,13 +47,6 @@
             display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
         }
         .read-more { display: inline-block; margin-top: 4px; font-size: 0.8rem; color: var(--accent-red); font-weight: 600; text-decoration: underline; }
-
-        /* Pagination */
-        .pagination { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 8px; margin-top: 42px; padding-top: 24px; border-top: 1px solid #e5e5e5; }
-        .page-btn { background: #fff; border: 1px solid #d4d4d4; color: #111; padding: 7px 13px; font-family: inherit; font-size: 0.88rem; cursor: pointer; transition: all 0.15s; }
-        .page-btn:hover:not(:disabled) { border-color: #111; background: #f5f5f5; }
-        .page-btn.active { background: #111; color: #fff; border-color: #111; }
-        .page-btn:disabled { opacity: 0.35; cursor: default; }
 
         .clear-filter-btn {
             background: none; border: none; padding: 0; margin-left: 10px;
@@ -136,15 +139,18 @@
 
         async function loadCartoons() {
             try {
-                const res = await fetch("cartoons.json");
+                const res = await fetch("cartoons.json", { cache: "no-cache" });
                 if (!res.ok) throw new Error("Failed to load cartoons.json");
                 const raw = await res.json();
-                cartoons = raw.map(c => ({
-                    ...c,
-                    tagsText: Array.isArray(c.tags) ? c.tags.join(" ") : String(c.tags || ""),
-                    descClean: String(c.desc || "").replace(/\s+/g, " ").trim(),
-                    ratio: (c.width && c.height) ? (c.height / c.width) : null
-                }));
+                cartoons = raw.map(c => {
+                    const tagList = Array.isArray(c.tags) ? c.tags : [];
+                    return {
+                        ...c,
+                        tagsText: tagList.map(t => `${t} #${t}`).join(" "),
+                        descClean: String(c.desc || "").replace(/\s+/g, " ").trim(),
+                        ratio: (c.width && c.height) ? (c.height / c.width) : null
+                    };
+                });
 
                 // Read optional ?q= search query (e.g., from clicking a tag pill)
                 const initialQ = new URLSearchParams(location.search).get("q");
@@ -209,10 +215,11 @@
         function cardHTML(c) {
             const url = c.page || `cartoon.html?id=${encodeURIComponent(c.name)}`;
             const alt = escHtml(c.title || c.date);
+            const dims = (c.width && c.height) ? ` width="${c.width}" height="${c.height}"` : "";
             return `
                 <article class="art-card">
                     <a href="${escHtml(url)}" class="art-link">
-                        <div class="art-frame"><img src="${escHtml(c.image)}" alt="${alt}" loading="lazy"></div>
+                        <div class="art-frame"><img src="${escHtml(c.image)}" alt="${alt}"${dims} loading="lazy" decoding="async"></div>
                         <div class="card-date">${escHtml(formatDate(c.date))}</div>
                         ${c.title ? `<h3 class="card-title">${escHtml(c.title)}</h3>` : ''}
                         ${c.descClean ? `<p class="card-excerpt">${escHtml(c.descClean)}</p><span class="read-more">Read more</span>` : ''}
@@ -261,10 +268,11 @@
         async function renderGrid() {
             updateHeading();
 
+            const normalizedQ = searchQuery.replace(/^#+/, "");
             const list = cartoons.filter(c => {
                 const okDate = activeFilter === 'all' || String(c.date || "").startsWith(activeFilter);
                 const text = `${c.title} ${c.descClean} ${c.tagsText} ${formatDate(c.date)} ${c.date}`.toLowerCase();
-                return okDate && (!searchQuery || text.includes(searchQuery));
+                return okDate && (!searchQuery || text.includes(searchQuery) || (normalizedQ && text.includes(normalizedQ)));
             });
 
             countLabel.textContent = list.length === 1 ? 'Showing 1 work' : `Showing ${list.length} works`;

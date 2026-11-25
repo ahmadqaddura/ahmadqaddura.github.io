@@ -37,6 +37,9 @@
       ]
     }
     </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <style>
         .art-card {
@@ -97,21 +100,6 @@
             font-weight: 600;
             text-decoration: underline;
         }
-        .editorial-btn {
-            display: inline-block;
-            padding: 10px 22px;
-            border: 1px solid #111;
-            color: #fff;
-            background: #111;
-            text-decoration: none;
-            font-size: 0.9rem;
-            transition: all 0.2s ease;
-        }
-        .editorial-btn:hover {
-            background: var(--accent-red);
-            border-color: var(--accent-red);
-            color: #fff;
-        }
         .platform-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
@@ -129,8 +117,6 @@
         .platform-card:hover {
             transform: translateY(-2px);
         }
-        .tone-sand  { background-color: #F2ECE1; }
-        .tone-slate { background-color: #EAEFF2; }
         .platform-kicker {
             font-size: 0.72rem;
             font-weight: 600;
@@ -331,7 +317,7 @@
             }
 
             try {
-                const res = await fetch("cartoons.json");
+                const res = await fetch("cartoons.json", { cache: "no-cache" });
                 if (!res.ok) throw new Error("Catalog fetch failed");
                 const items = await res.json();
                 const latest = items.slice(0, 3);
@@ -345,10 +331,11 @@
                     const url = c.page || `cartoon.html?id=${encodeURIComponent(c.name)}`;
                     const alt = escHtml(c.title || c.date);
                     const descText = (c.desc || "").replace(/\s+/g, " ").trim();
+                    const dims = (c.width && c.height) ? ` width="${c.width}" height="${c.height}"` : "";
                     return `
                         <article class="art-card">
                             <a href="${escHtml(url)}" class="art-link">
-                                <div class="art-frame"><img src="${escHtml(c.image)}" alt="${alt}" loading="lazy"></div>
+                                <div class="art-frame"><img src="${escHtml(c.image)}" alt="${alt}"${dims} decoding="async"></div>
                                 <div class="card-date">${escHtml(formatDate(c.date))}</div>
                                 ${c.title ? `<h3 class="card-title">${escHtml(c.title)}</h3>` : ''}
                                 ${descText ? `<p class="card-excerpt">${escHtml(descText)}</p><span class="read-more">Read more</span>` : ''}
