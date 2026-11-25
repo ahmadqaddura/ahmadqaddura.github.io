@@ -98,6 +98,22 @@ def make_slug(base: str) -> str:
     return slug or "cartoon"
 
 
+def suffix_sort_key(item: dict):
+    base = item["base"]
+    date = item["date"]
+    m = re.match(r"^(\d{4}-\d{2}-\d{2})(?:[_-](.+)|([a-zA-Z]))?$", base)
+    if not m:
+        return (date, 0, base.lower())
+    suffix = (m.group(2) or m.group(3) or "").strip()
+    if not suffix:
+        return (date, 0, "")
+    if re.fullmatch(r"\d+", suffix):
+        return (date, int(suffix), "")
+    if re.fullmatch(r"[a-zA-Z]", suffix):
+        return (date, ord(suffix.lower()) - ord("a") + 1, suffix.lower())
+    return (date, 1, suffix.lower())
+
+
 def load_cartoons():
     items = []
     if not CARTOONS_DIR.is_dir():
@@ -107,11 +123,12 @@ def load_cartoons():
         if not p.is_file() or not IMG_RE.search(p.name):
             continue
         base = IMG_RE.sub("", p.name)
-        m = re.match(r"^(\d{4}-\d{2}-\d{2})(?:[_-](.+))?$", base)
+        m = re.match(r"^(\d{4}-\d{2}-\d{2})(?:[_-](.+)|([a-zA-Z]))?$", base)
         date = m.group(1) if m else "2026-01-01"
+        suffix = (m.group(2) or m.group(3) or "").strip() if m else ""
         fallback_title = ""
-        if m and m.group(2) and not re.fullmatch(r"\d+", m.group(2)):
-            fallback_title = re.sub(r"[-_]+", " ", m.group(2)).strip()
+        if suffix and not re.fullmatch(r"(?:\d+|[a-zA-Z])", suffix):
+            fallback_title = re.sub(r"[-_]+", " ", suffix).strip()
 
         title = fallback_title
         tags = []
@@ -187,7 +204,7 @@ def load_cartoons():
         else:
             seen[s] = 1
 
-    items.sort(key=lambda c: (c["date"], c["name"]), reverse=True)
+    items.sort(key=suffix_sort_key, reverse=True)
     return items
 
 
