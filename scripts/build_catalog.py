@@ -116,16 +116,49 @@ def load_cartoons():
         title = fallback_title
         tags = []
         desc = ""
-        txt_path = CARTOONS_DIR / f"{base}.txt"
-        if txt_path.is_file():
-            lines = txt_path.read_text(encoding="utf-8", errors="replace").splitlines()
-            if lines and lines[0].strip():
-                title = lines[0].strip()
-            if len(lines) >= 2 and lines[1].strip():
-                raw_tags = re.split(r"[\s,]+", lines[1].strip())
-                tags = [t.lstrip("#").strip() for t in raw_tags if t.lstrip("#").strip()]
-            if len(lines) >= 3:
-                desc = "\n".join(lines[2:]).strip()
+        txt_path = None
+        for cand in (CARTOONS_DIR / f"{base}.txt", CARTOONS_DIR / f"{base}.TXT"):
+            if cand.is_file():
+                txt_path = cand
+                break
+        if txt_path is None:
+            base_lower = base.lower()
+            for entry in CARTOONS_DIR.iterdir():
+                if entry.is_file() and entry.suffix.lower() == ".txt" and entry.stem.lower() == base_lower:
+                    txt_path = entry
+                    break
+        if txt_path is not None:
+            raw_lines = txt_path.read_text(encoding="utf-8-sig", errors="replace").splitlines()
+            # Drop leading blank lines
+            while raw_lines and not raw_lines[0].strip():
+                raw_lines.pop(0)
+            if raw_lines:
+                title = raw_lines[0].strip()
+                rest = raw_lines[1:]
+                tag_line_idx = None
+                for idx, line in enumerate(rest):
+                    stripped = line.strip()
+                    if stripped and stripped.startswith("#"):
+                        tokens = re.split(r"[\s,]+", stripped)
+                        if tokens and all(t.startswith("#") for t in tokens):
+                            tag_line_idx = idx
+                            break
+                if tag_line_idx is not None:
+                    raw_tags = re.split(r"[\s,]+", rest[tag_line_idx].strip())
+                    tags = [t.lstrip("#").strip() for t in raw_tags if t.lstrip("#").strip()]
+                    desc_lines = [l for i, l in enumerate(rest) if i != tag_line_idx]
+                    desc = "\n".join(desc_lines).strip()
+                else:
+                    while rest and not rest[0].strip():
+                        rest.pop(0)
+                    if rest:
+                        candidate_tags = rest[0].strip()
+                        if candidate_tags.startswith("#") or (len(rest) >= 2 and len(candidate_tags.split()) <= 10 and not candidate_tags.endswith(".")):
+                            raw_tags = re.split(r"[\s,]+", candidate_tags)
+                            tags = [t.lstrip("#").strip() for t in raw_tags if t.lstrip("#").strip()]
+                            desc = "\n".join(rest[1:]).strip()
+                        else:
+                            desc = "\n".join(rest).strip()
 
         w, h = get_image_size(p)
         slug = make_slug(base)
