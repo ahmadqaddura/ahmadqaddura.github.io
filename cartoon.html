@@ -4,49 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cartoon — Ahmad Qaddura</title>
+    <meta name="description" content="Editorial cartoon by Ahmad Qaddura, Palestinian–Swedish editorial cartoonist based in Gothenburg, Sweden.">
+    <link rel="icon" type="image/png" href="avatar.png">
+    <link rel="apple-touch-icon" href="avatar.png">
     <link rel="stylesheet" href="style.css">
-    <style>
-        .cartoon-wrap { max-width: 860px; margin: 32px auto 60px; }
-        .top-nav {
-            display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 18px; font-size: 0.9rem;
-        }
-        .top-nav a { color: #111; text-decoration: none; }
-        .top-nav a:hover { text-decoration: underline; }
-        .pager-links { display: flex; gap: 18px; }
-        .pager-links .disabled { opacity: 0.3; pointer-events: none; }
-
-        .cartoon-stage img {
-            width: 100%; max-height: 82vh; object-fit: contain;
-            display: block; margin: 0 auto 18px;
-        }
-        .cartoon-date { font-size: 0.78rem; color: #777; margin-bottom: 6px; letter-spacing: 0.03em; }
-        .cartoon-title { font-size: 1.85rem; font-weight: 700; color: #111; margin: 0 0 16px; line-height: 1.25; }
-        .cartoon-desc { font-size: 1rem; line-height: 1.7; color: #222; white-space: pre-line; margin-bottom: 20px; }
-
-        .tags-wrap { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
-        .tag-pill {
-            background: #999; color: #fff; font-size: 0.78rem;
-            padding: 3px 12px; border-radius: 14px; text-decoration: none;
-        }
-        .purchase-btn {
-            display: inline-block; padding: 10px 22px; border: 1px solid #111;
-            color: #111; text-decoration: none; font-size: 0.9rem; transition: all 0.2s ease;
-        }
-        .purchase-btn:hover { background: #111; color: #fff; }
-
-        .more-section { margin-top: 56px; padding-top: 28px; border-top: 1px solid #e0e0e0; }
-        .more-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 20px; }
-        .more-header h3 { font-size: 1.25rem; margin: 0; color: #111; }
-        .more-header a { font-size: 0.88rem; color: #b22222; text-decoration: underline; }
-        .more-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
-        .more-item img {
-            width: 100%; aspect-ratio: 4 / 3; object-fit: cover;
-            display: block; transition: opacity 0.2s ease;
-        }
-        .more-item:hover img { opacity: 0.85; }
-        @media (max-width: 700px) { .more-grid { grid-template-columns: repeat(2, 1fr); } }
-    </style>
 </head>
 <body>
     <header>
@@ -78,13 +39,18 @@
 
             <section class="more-section" id="more-section" style="display:none;">
                 <div class="more-header">
-                    <h3>More from the Archive</h3>
+                    <h3>More from the Gallery</h3>
                     <a href="gallery.html">See all</a>
                 </div>
                 <div class="more-grid" id="more-grid"></div>
             </section>
         </div>
     </main>
+
+    <div id="zoom-lightbox" class="zoom-lightbox" role="dialog" aria-modal="true" aria-label="Zoomed cartoon">
+        <button type="button" class="zoom-close" id="zoom-close" aria-label="Close zoom">&times;</button>
+        <img id="zoom-img" src="" alt="">
+    </div>
 
     <footer>
         <div class="container">
@@ -107,71 +73,98 @@
     </footer>
 
     <script>
-        const API_URL = "https://api.github.com/repos/ahmadqaddura/ahmadqaddura.github.io/contents/cartoons";
-        const IMG_EXT = /\.(webp|jpe?g|png|gif)$/i;
         const months = {"01":"January","02":"February","03":"March","04":"April","05":"May","06":"June","07":"July","08":"August","09":"September","10":"October","11":"November","12":"December"};
+        const SITE_URL = "https://ahmadqaddura.com";
 
-        function formatDate(d) {
-            const p = d.split('-');
-            return p.length === 3 ? `${parseInt(p[2],10)} ${months[p[1]]||p[1]} ${p[0]}` : d;
+        function escHtml(str) {
+            return String(str || "").replace(/[&<>"']/g, m => ({
+                "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+            }[m]));
         }
 
-        function parseFile(f) {
-            const base = f.name.replace(IMG_EXT, '');
-            const m = base.match(/^(\d{4}-\d{2}-\d{2})(?:[_-](.+))?$/);
-            const date = m ? m[1] : "2026-01-01";
-            const fallbackTitle = (m && m[2] && !/^\d+$/.test(m[2])) ? m[2].replace(/[-_]+/g,' ').trim() : "";
-            return { name: f.name, base, date, title: fallbackTitle, image: `cartoons/${encodeURIComponent(f.name)}` };
+        function formatDate(d) {
+            const p = String(d || "").split('-');
+            return p.length === 3 ? `${parseInt(p[2], 10)} ${months[p[1]] || p[1]} ${p[0]}` : d;
         }
 
         async function init() {
             try {
-                const res = await fetch(API_URL);
-                const files = await res.json();
-                const txtSet = new Set(files.filter(f => /\.txt$/i.test(f.name)).map(f => f.name));
-                const list = files.filter(f => f.type === "file" && IMG_EXT.test(f.name))
-                    .map(parseFile).sort((a,b) => b.date.localeCompare(a.date) || b.name.localeCompare(a.name));
+                const res = await fetch("cartoons.json");
+                if (!res.ok) throw new Error("Catalog fetch failed");
+                const list = await res.json();
 
                 const id = new URLSearchParams(location.search).get('id');
-                let idx = list.findIndex(c => c.name === id);
+                let idx = list.findIndex(c => c.name === id || c.base === id || c.slug === id);
                 if (idx === -1) idx = 0;
                 const current = list[idx];
                 if (!current) return;
 
-                let title = current.title, tags = [], desc = "";
-                if (txtSet.has(current.base + ".txt")) {
-                    const txtRes = await fetch(`cartoons/${encodeURIComponent(current.base + ".txt")}`);
-                    if (txtRes.ok) {
-                        const lines = (await txtRes.text()).split(/\r?\n/);
-                        if (lines[0]?.trim()) title = lines[0].trim();
-                        if (lines[1]?.trim()) tags = lines[1].trim().split(/[\s,]+/).map(t => t.replace(/^#/, '')).filter(Boolean);
-                        desc = lines.slice(2).join('\n').trim();
-                    }
+                // Redirect seamlessly to the dedicated static SEO/share page when available
+                if (current.page) {
+                    window.location.replace(current.page);
+                    return;
                 }
 
-                document.title = `${title || formatDate(current.date)} — Ahmad Qaddura`;
+                const title = current.title || formatDate(current.date);
+                const tags = Array.isArray(current.tags) ? current.tags : [];
+                const desc = current.desc || "";
+                const shareUrl = `${SITE_URL}/cartoon.html?id=${encodeURIComponent(current.name)}`;
+                const shareText = `${title} — Cartoon by Ahmad Qaddura`;
+
+                document.title = `${title} — Ahmad Qaddura`;
                 const newer = document.getElementById('newer-link');
                 const older = document.getElementById('older-link');
-                if (idx > 0) newer.href = `cartoon.html?id=${encodeURIComponent(list[idx-1].name)}`;
+                if (idx > 0) newer.href = list[idx - 1].page || `cartoon.html?id=${encodeURIComponent(list[idx - 1].name)}`;
                 else newer.classList.add('disabled');
-                if (idx < list.length - 1) older.href = `cartoon.html?id=${encodeURIComponent(list[idx+1].name)}`;
+                if (idx < list.length - 1) older.href = list[idx + 1].page || `cartoon.html?id=${encodeURIComponent(list[idx + 1].name)}`;
                 else older.classList.add('disabled');
 
                 document.getElementById('cartoon-content').innerHTML = `
-                    <div class="cartoon-stage"><img src="${current.image}" alt="${title || current.name}"></div>
-                    <div class="cartoon-date">${formatDate(current.date)}</div>
-                    ${title ? `<h2 class="cartoon-title">${title}</h2>` : ''}
-                    ${desc ? `<div class="cartoon-desc">${desc}</div>` : ''}
-                    ${tags.length ? `<div class="tags-wrap">${tags.map(t => `<span class="tag-pill">${t}</span>`).join('')}</div>` : ''}
-                    <a href="store.html" class="purchase-btn">Purchase / License Cartoon &rarr;</a>
+                    <div class="cartoon-stage">
+                        <img id="main-cartoon-img" src="${escHtml(current.image)}" alt="${escHtml(title)}" title="Click to zoom">
+                        <span class="zoom-hint">Click image to zoom</span>
+                    </div>
+                    <div class="cartoon-date">${escHtml(formatDate(current.date))}</div>
+                    <h2 class="cartoon-title">${escHtml(title)}</h2>
+                    ${desc ? `<div class="cartoon-desc">${escHtml(desc)}</div>` : ''}
+                    ${tags.length ? `<div class="tags-wrap">${tags.map(t => `<a class="tag-pill" href="gallery.html?q=${encodeURIComponent(t)}">#${escHtml(t)}</a>`).join('')}</div>` : ''}
+                    <div class="cartoon-actions">
+                        <a href="store.html" class="purchase-btn">Purchase / License Cartoon &rarr;</a>
+                        <div class="share-bar" aria-label="Share this cartoon">
+                            <span class="share-label">Share:</span>
+                            <a href="https://api.whatsapp.com/send?text=${encodeURIComponent(shareText + ' ' + shareUrl)}" target="_blank" rel="noopener" class="share-btn">WhatsApp</a>
+                            <a href="https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}&via=qadduracartoon" target="_blank" rel="noopener" class="share-btn">X</a>
+                            <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}" target="_blank" rel="noopener" class="share-btn">Facebook</a>
+                            <button type="button" id="copy-link-btn" class="share-btn">Copy Link</button>
+                        </div>
+                    </div>
                 `;
+
+                const box = document.getElementById('zoom-lightbox');
+                const zImg = document.getElementById('zoom-img');
+                zImg.src = current.image;
+                zImg.alt = title;
+                const closeZoom = () => { box.classList.remove('open'); document.body.style.overflow = ''; };
+                document.getElementById('main-cartoon-img').addEventListener('click', () => { box.classList.add('open'); document.body.style.overflow = 'hidden'; });
+                document.getElementById('zoom-close').addEventListener('click', closeZoom);
+                box.addEventListener('click', e => { if (e.target === box) closeZoom(); });
+
+                const copyBtn = document.getElementById('copy-link-btn');
+                copyBtn.addEventListener('click', () => {
+                    navigator.clipboard?.writeText(shareUrl).then(() => {
+                        copyBtn.classList.add('copied');
+                        copyBtn.textContent = 'Copied ✓';
+                        setTimeout(() => { copyBtn.classList.remove('copied'); copyBtn.textContent = 'Copy Link'; }, 2200);
+                    });
+                });
 
                 const others = list.filter((_, i) => i !== idx).slice(0, 4);
                 if (others.length) {
                     document.getElementById('more-section').style.display = 'block';
                     document.getElementById('more-grid').innerHTML = others.map(c => `
-                        <a class="more-item" href="cartoon.html?id=${encodeURIComponent(c.name)}">
-                            <img src="${c.image}" alt="${c.title || c.date}" loading="lazy">
+                        <a class="more-item" href="${escHtml(c.page || `cartoon.html?id=${encodeURIComponent(c.name)}`)}">
+                            <img src="${escHtml(c.image)}" alt="${escHtml(c.title || c.date)}" loading="lazy">
+                            <div class="more-item-title">${escHtml(c.title || formatDate(c.date))}</div>
                         </a>
                     `).join('');
                 }

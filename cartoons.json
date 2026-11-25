@@ -1,0 +1,104 @@
+[
+  {
+    "name": "2026-11-23.webp",
+    "base": "2026-11-23",
+    "slug": "2026-11-23",
+    "date": "2026-11-23",
+    "title": "The Sale Trap",
+    "tags": [
+      "sale",
+      "consumerism",
+      "marketing"
+    ],
+    "desc": "With all the advertising surrounding us today, do we really only buy what we actually need, or do companies succeed in luring consumers into buying whatever they want to sell? Or is it something that both sides benefit from?",
+    "image": "cartoons/2026-11-23.webp",
+    "page": "c/2026-11-23.html",
+    "width": 1500,
+    "height": 844
+  },
+  {
+    "name": "2026-11-22.webp",
+    "base": "2026-11-22",
+    "slug": "2026-11-22",
+    "date": "2026-11-22",
+    "title": "\"I am the man of the house\"",
+    "tags": [
+      "Gaza",
+      "Children_of_Gaza",
+      "FreePalestine"
+    ],
+    "desc": "When Doghmosh’s father saw his son dragging the water jerrycan from afar, he asked, \"Who told you to go fill it up?\" Doghmosh replied, \"I’m the man of the house, I fill it up.\"",
+    "image": "cartoons/2026-11-22.webp",
+    "page": "c/2026-11-22.html",
+    "width": 1061,
+    "height": 1500
+  },
+  {
+    "name": "2026-11-21.webp",
+    "base": "2026-11-21",
+    "slug": "2026-11-21",
+    "date": "2026-11-21",
+    "title": "The Occupation",
+    "tags": [
+      "Palestine",
+      "Occupation",
+      "EditorialCartoon"
+    ],
+    "desc": "The illusion of power collapsed before everyone's eyes, and the world will never forget seeing the occupier beneath the feet of the indigenous people.\nCartoon: Ahmad Qaddura",
+    "image": "cartoons/2026-11-21.webp",
+    "page": "c/2026-11-21.html",
+    "width": 1500,
+    "height": 2121
+  },
+  {
+    "name": "2026-11-15.webp",
+    "base": "2026-11-15",
+    "slug": "2026-11-15",
+    "date": "2026-11-15",
+    "title": "Standing Against the Bulldozer",
+    "tags": [
+      "FreePalestine",
+      "Freedom"
+    ],
+    "desc": "Bulldozer removes Palestinian flag in a village north of Ramallah.\nCartoon: Ahmad Qaddura",
+    "image": "cartoons/2026-11-15.webp",
+    "page": "c/2026-11-15.html",
+    "width": 1500,
+    "height": 2121
+  },
+  {
+    "name": "2026-11-12.webp",
+    "base": "2026-11-12",
+    "slug": "2026-11-12",
+    "date": "2026-11-12",
+    "title": "The Cost of War",
+    "tags": [
+      "War",
+      "USPolitics",
+      "AntiWar",
+      "Satire"
+    ],
+    "desc": "Taxpayer money and soldiers' lives spent on endless foreign wars, while the people at home pay the price.\nCartoon: Ahmad Qaddura",
+    "image": "cartoons/2026-11-12.webp",
+    "page": "c/2026-11-12.html",
+    "width": 1500,
+    "height": 1061
+  },
+  {
+    "name": "2026-11-11.webp",
+    "base": "2026-11-11",
+    "slug": "2026-11-11",
+    "date": "2026-11-11",
+    "title": "Election Promises",
+    "tags": [
+      "Sweden",
+      "Politics",
+      "ElectionPromises"
+    ],
+    "desc": "Where campaign promises go right after election day.\nCartoon: Ahmad Qaddura",
+    "image": "cartoons/2026-11-11.webp",
+    "page": "c/2026-11-11.html",
+    "width": 1500,
+    "height": 1061
+  }
+]

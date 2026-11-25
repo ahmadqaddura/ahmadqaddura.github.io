@@ -6,20 +6,17 @@
     <title>Gallery — Ahmad Qaddura</title>
     <meta name="description" content="Complete editorial cartoon gallery and archive by Palestinian–Swedish cartoonist Ahmad Qaddura. Browse cartoons by year or keyword.">
     <link rel="canonical" href="https://ahmadqaddura.com/gallery.html">
+    <link rel="icon" type="image/png" href="avatar.png">
+    <link rel="apple-touch-icon" href="avatar.png">
     <link rel="stylesheet" href="style.css">
     <style>
         .archive-search { width: 100%; padding: 10px 12px; border: 1px solid #d4d4d4; background: #fff; font-family: inherit; font-size: 0.9rem; margin-bottom: 24px; box-sizing: border-box; }
         .archive-search:focus { outline: none; border-color: #111; }
         .year-group { margin-bottom: 6px; }
-        .year-btn, .month-btn, .all-btn { width: 100%; display: flex; justify-content: space-between; align-items: center; background: none; border: none; padding: 7px 8px; cursor: pointer; font-family: inherit; font-size: 0.95rem; color: #111; text-align: left; border-radius: 2px; }
+        .year-btn, .all-btn { width: 100%; display: flex; justify-content: space-between; align-items: center; background: none; border: none; padding: 7px 8px; cursor: pointer; font-family: inherit; font-size: 0.95rem; color: #111; text-align: left; border-radius: 2px; }
         .year-btn { font-weight: 600; }
-        .year-btn:hover, .month-btn:hover, .all-btn:hover { background: rgba(0,0,0,0.04); }
-        .year-btn.active, .month-btn.active, .all-btn.active { background: #111; color: #fff; }
-        .year-arrow { display: inline-block; font-size: 0.75rem; margin-right: 6px; transition: transform 0.2s; }
-        .year-group.open .year-arrow { transform: rotate(90deg); }
-        .month-list { list-style: none; padding-left: 18px; margin: 4px 0 8px; border-left: 1px solid #d4d4d4; display: none; }
-        .year-group.open .month-list { display: block; }
-        .month-btn { font-size: 0.88rem; padding: 5px 8px; }
+        .year-btn:hover, .all-btn:hover { background: rgba(0,0,0,0.04); }
+        .year-btn.active, .all-btn.active { background: #111; color: #fff; }
         .count-badge { font-size: 0.78rem; opacity: 0.65; }
 
         /* Responsive Masonry Columns with Natural Proportions */
@@ -47,6 +44,12 @@
         .page-btn:hover:not(:disabled) { border-color: #111; background: #f5f5f5; }
         .page-btn.active { background: #111; color: #fff; border-color: #111; }
         .page-btn:disabled { opacity: 0.35; cursor: default; }
+
+        .clear-filter-btn {
+            background: none; border: none; padding: 0; margin-left: 10px;
+            font-family: inherit; font-size: 0.85rem; font-weight: 600;
+            color: var(--accent-red); text-decoration: underline; cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -66,7 +69,7 @@
     <main class="container">
         <div class="archive-layout">
             <aside class="sidebar">
-                <input type="text" id="archive-search" class="archive-search" placeholder="Search cartoons...">
+                <input type="text" id="archive-search" class="archive-search" placeholder="Search cartoons or tags...">
                 <div class="filter-group">
                     <h3 class="filter-title">Browse by Year</h3>
                     <div id="date-tree"></div>
@@ -106,53 +109,49 @@
     </footer>
 
     <script>
-        const API_URL = "https://api.github.com/repos/ahmadqaddura/ahmadqaddura.github.io/contents/cartoons";
-        const IMG_EXT = /\.(webp|jpe?g|png|gif)$/i;
         const PER_PAGE = 15;
         const months = {"01":"January","02":"February","03":"March","04":"April","05":"May","06":"June","07":"July","08":"August","09":"September","10":"October","11":"November","12":"December"};
 
-        let cartoons = [], txtSet = new Set(), activeFilter = "all", searchQuery = "", currentPage = 1;
+        let cartoons = [], activeFilter = "all", searchQuery = "", currentPage = 1;
+        let lastPageItems = [], lastColCount = 0;
+
+        const searchInput = document.getElementById('archive-search');
         const dateTree = document.getElementById('date-tree');
         const grid = document.getElementById('archive-grid');
         const heading = document.getElementById('archive-heading');
         const countLabel = document.getElementById('works-count');
         const paginationEl = document.getElementById('pagination');
 
-        function formatDate(d) {
-            const p = d.split('-');
-            if (p.length < 2) return d;
-            return p[2] ? `${parseInt(p[2],10)} ${months[p[1]]||p[1]} ${p[0]}` : `${months[p[1]]||p[1]} ${p[0]}`;
+        function escHtml(str) {
+            return String(str || "").replace(/[&<>"']/g, m => ({
+                "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+            }[m]));
         }
 
-        async function loadMetaFor(items) {
-            await Promise.all(items.map(async c => {
-                if (c.metaLoaded || !txtSet.has(c.base + ".txt")) { c.metaLoaded = true; return; }
-                try {
-                    const r = await fetch(`cartoons/${encodeURIComponent(c.base + ".txt")}`);
-                    if (r.ok) {
-                        const lines = (await r.text()).split(/\r?\n/);
-                        if (lines[0]?.trim()) c.title = lines[0].trim();
-                        if (lines[1]?.trim()) c.tags = lines[1].trim();
-                        c.desc = lines.slice(2).join(' ').trim();
-                    }
-                } catch (_) {}
-                c.metaLoaded = true;
-            }));
+        function formatDate(d) {
+            const p = String(d || "").split('-');
+            if (p.length < 2) return d;
+            return p[2] ? `${parseInt(p[2], 10)} ${months[p[1]] || p[1]} ${p[0]}` : `${months[p[1]] || p[1]} ${p[0]}`;
         }
 
         async function loadCartoons() {
             try {
-                const res = await fetch(API_URL);
-                const files = await res.json();
-                txtSet = new Set(files.filter(f => /\.txt$/i.test(f.name)).map(f => f.name));
+                const res = await fetch("cartoons.json");
+                if (!res.ok) throw new Error("Failed to load cartoons.json");
+                const raw = await res.json();
+                cartoons = raw.map(c => ({
+                    ...c,
+                    tagsText: Array.isArray(c.tags) ? c.tags.join(" ") : String(c.tags || ""),
+                    descClean: String(c.desc || "").replace(/\s+/g, " ").trim(),
+                    ratio: (c.width && c.height) ? (c.height / c.width) : null
+                }));
 
-                cartoons = files.filter(f => f.type === "file" && IMG_EXT.test(f.name)).map(f => {
-                    const base = f.name.replace(IMG_EXT, '');
-                    const m = base.match(/^(\d{4}-\d{2}-\d{2})(?:[_-](.+))?$/);
-                    const date = m ? m[1] : "2026-01-01";
-                    const title = (m && m[2] && !/^\d+$/.test(m[2])) ? m[2].replace(/[-_]+/g,' ').trim() : "";
-                    return { name: f.name, base, date, title, desc: "", tags: "", metaLoaded: false, image: `cartoons/${encodeURIComponent(f.name)}` };
-                }).sort((a,b) => b.date.localeCompare(a.date) || b.name.localeCompare(a.name));
+                // Read optional ?q= search query (e.g., from clicking a tag pill)
+                const initialQ = new URLSearchParams(location.search).get("q");
+                if (initialQ) {
+                    searchInput.value = initialQ;
+                    searchQuery = initialQ.trim().toLowerCase();
+                }
 
                 buildDateTree();
                 renderGrid();
@@ -164,13 +163,13 @@
         function buildDateTree() {
             const counts = {};
             cartoons.forEach(c => {
-                const y = c.date.split('-')[0];
+                const y = String(c.date || "").split('-')[0];
                 if (y) counts[y] = (counts[y] || 0) + 1;
             });
             const years = Object.keys(counts).sort((a, b) => b - a);
             let html = `<button class="all-btn active" data-filter="all"><span>All Works</span><span class="count-badge">${cartoons.length}</span></button>`;
             years.forEach(y => {
-                html += `<div class="year-group"><button class="year-btn" data-filter="${y}"><span>${y}</span><span class="count-badge">${counts[y]}</span></button></div>`;
+                html += `<div class="year-group"><button class="year-btn" data-filter="${escHtml(y)}"><span>${escHtml(y)}</span><span class="count-badge">${counts[y]}</span></button></div>`;
             });
             dateTree.innerHTML = html;
 
@@ -181,13 +180,10 @@
                     currentPage = 1;
                     dateTree.querySelectorAll('button').forEach(b => b.classList.remove('active'));
                     btn.classList.add('active');
-                    heading.textContent = f === 'all' ? 'Complete Gallery' : `Gallery — ${f}`;
                     renderGrid();
                 });
             });
         }
-
-        let lastPageItems = [], lastColCount = 0;
 
         function getColCount() {
             if (window.innerWidth <= 580) return 1;
@@ -195,7 +191,7 @@
             return 3;
         }
 
-        function measureRatios(items) {
+        function ensureRatios(items) {
             return Promise.all(items.map(c => {
                 if (c.ratio) return Promise.resolve();
                 return new Promise(resolve => {
@@ -211,14 +207,15 @@
         }
 
         function cardHTML(c) {
-            const url = `cartoon.html?id=${encodeURIComponent(c.name)}`;
+            const url = c.page || `cartoon.html?id=${encodeURIComponent(c.name)}`;
+            const alt = escHtml(c.title || c.date);
             return `
                 <article class="art-card">
-                    <a href="${url}" class="art-link">
-                        <div class="art-frame"><img src="${c.image}" alt="${c.title || c.date}" loading="lazy"></div>
-                        <div class="card-date">${formatDate(c.date)}</div>
-                        ${c.title ? `<h3 class="card-title">${c.title}</h3>` : ''}
-                        ${c.desc ? `<p class="card-excerpt">${c.desc}</p><span class="read-more">Read more</span>` : ''}
+                    <a href="${escHtml(url)}" class="art-link">
+                        <div class="art-frame"><img src="${escHtml(c.image)}" alt="${alt}" loading="lazy"></div>
+                        <div class="card-date">${escHtml(formatDate(c.date))}</div>
+                        ${c.title ? `<h3 class="card-title">${escHtml(c.title)}</h3>` : ''}
+                        ${c.descClean ? `<p class="card-excerpt">${escHtml(c.descClean)}</p><span class="read-more">Read more</span>` : ''}
                     </a>
                 </article>`;
         }
@@ -235,24 +232,45 @@
                     if (heights[i] < heights[shortest]) shortest = i;
                 }
                 cols[shortest].push(c);
-                const textWeight = (c.title ? 0.16 : 0) + (c.desc ? 0.28 : 0) + 0.12;
+                const textWeight = (c.title ? 0.16 : 0) + (c.descClean ? 0.28 : 0) + 0.12;
                 heights[shortest] += (c.ratio || 1) + textWeight;
             });
 
             grid.innerHTML = cols.map(col => `<div class="masonry-col">${col.map(cardHTML).join('')}</div>`).join('');
         }
 
+        function updateHeading() {
+            const baseTitle = activeFilter === 'all' ? 'Complete Gallery' : `Gallery — ${activeFilter}`;
+            if (searchQuery) {
+                heading.innerHTML = `${escHtml(baseTitle)} <span style="font-size:1rem;font-weight:400;color:var(--ink-gray);">(${escHtml(searchInput.value.trim())})</span><button type="button" class="clear-filter-btn" id="clear-search-btn">Clear</button>`;
+                const clearBtn = document.getElementById('clear-search-btn');
+                if (clearBtn) {
+                    clearBtn.addEventListener('click', () => {
+                        searchInput.value = "";
+                        searchQuery = "";
+                        currentPage = 1;
+                        history.replaceState(null, "", "gallery.html");
+                        renderGrid();
+                    });
+                }
+            } else {
+                heading.textContent = baseTitle;
+            }
+        }
+
         async function renderGrid() {
+            updateHeading();
+
             const list = cartoons.filter(c => {
-                const okDate = activeFilter === 'all' || c.date.startsWith(activeFilter);
-                const text = `${c.title} ${c.desc} ${c.tags} ${formatDate(c.date)} ${c.date}`.toLowerCase();
+                const okDate = activeFilter === 'all' || String(c.date || "").startsWith(activeFilter);
+                const text = `${c.title} ${c.descClean} ${c.tagsText} ${formatDate(c.date)} ${c.date}`.toLowerCase();
                 return okDate && (!searchQuery || text.includes(searchQuery));
             });
 
             countLabel.textContent = list.length === 1 ? 'Showing 1 work' : `Showing ${list.length} works`;
             if (!list.length) {
                 lastPageItems = [];
-                grid.innerHTML = `<div class="empty-state">No cartoons found.</div>`;
+                grid.innerHTML = `<div class="empty-state">No cartoons found matching your search.</div>`;
                 paginationEl.style.display = 'none';
                 return;
             }
@@ -263,7 +281,7 @@
             const pageItems = list.slice(start, start + PER_PAGE);
             lastPageItems = pageItems;
 
-            await Promise.all([loadMetaFor(pageItems), measureRatios(pageItems)]);
+            await ensureRatios(pageItems);
             layoutMasonry(pageItems);
             renderPagination(totalPages);
         }
@@ -277,11 +295,11 @@
         function renderPagination(totalPages) {
             if (totalPages <= 1) { paginationEl.style.display = 'none'; return; }
             paginationEl.style.display = 'flex';
-            let html = `<button class="page-btn" ${currentPage===1?'disabled':''} data-page="${currentPage-1}">&larr; Previous</button>`;
+            let html = `<button class="page-btn" ${currentPage === 1 ? 'disabled' : ''} data-page="${currentPage - 1}">&larr; Previous</button>`;
             for (let i = 1; i <= totalPages; i++) {
-                html += `<button class="page-btn ${i===currentPage?'active':''}" data-page="${i}">${i}</button>`;
+                html += `<button class="page-btn ${i === currentPage ? 'active' : ''}" data-page="${i}">${i}</button>`;
             }
-            html += `<button class="page-btn" ${currentPage===totalPages?'disabled':''} data-page="${currentPage+1}">Next &rarr;</button>`;
+            html += `<button class="page-btn" ${currentPage === totalPages ? 'disabled' : ''} data-page="${currentPage + 1}">Next &rarr;</button>`;
             paginationEl.innerHTML = html;
 
             paginationEl.querySelectorAll('button[data-page]').forEach(btn => {
@@ -293,7 +311,7 @@
             });
         }
 
-        document.getElementById('archive-search').addEventListener('input', e => {
+        searchInput.addEventListener('input', e => {
             searchQuery = e.target.value.trim().toLowerCase();
             currentPage = 1;
             renderGrid();
