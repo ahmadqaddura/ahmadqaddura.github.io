@@ -134,5 +134,18 @@
     "page": "c/2026-11-11.html",
     "width": 1500,
     "height": 1061
+  },
+  {
+    "name": "2026-11-08.webp",
+    "base": "2026-11-08",
+    "slug": "2026-11-08",
+    "date": "2026-11-08",
+    "title": "",
+    "tags": [],
+    "desc": "",
+    "image": "cartoons/2026-11-08.webp",
+    "page": "c/2026-11-08.html",
+    "width": 1500,
+    "height": 1061
   }
 ]
