@@ -499,6 +499,7 @@ def render_cartoon_page(items, idx: int) -> str:
             }});
         }})();
     </script>
+    <!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{{"token": "d12ed25463bf4b4b93b94e63c3727be0"}}'></script><!-- End Cloudflare Web Analytics -->
 </body>
 </html>
 '''
