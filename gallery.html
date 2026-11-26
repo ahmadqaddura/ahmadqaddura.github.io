@@ -111,6 +111,7 @@
         </div>
     </footer>
 
+    <script src="stats.js"></script>
     <script>
         const PER_PAGE = 15;
         const months = {"01":"January","02":"February","03":"March","04":"April","05":"May","06":"June","07":"July","08":"August","09":"September","10":"October","11":"November","12":"December"};
@@ -214,13 +215,32 @@
 
         function cardHTML(c) {
             const url = c.page || `cartoon.html?id=${encodeURIComponent(c.name)}`;
+            const slug = c.slug || c.base || c.name;
             const alt = escHtml(c.title || c.date);
+            const shareTitle = escHtml(`${c.title || formatDate(c.date)} — Cartoon by Ahmad Qaddura`);
+            const shareUrl = escHtml(`https://ahmadqaddura.com/${url}`);
             const dims = (c.width && c.height) ? ` width="${c.width}" height="${c.height}"` : "";
+            const heart = (window.CartoonStats && window.CartoonStats.heartSvg) || "";
+            const shareIcon = (window.CartoonStats && window.CartoonStats.shareSvg) || "";
             return `
                 <article class="art-card">
                     <a href="${escHtml(url)}" class="art-link">
                         <div class="art-frame"><img src="${escHtml(c.image)}" alt="${alt}"${dims} loading="lazy" decoding="async"></div>
-                        <div class="card-date">${escHtml(formatDate(c.date))}</div>
+                    </a>
+                    <div class="card-meta-row">
+                        <span class="card-date">${escHtml(formatDate(c.date))}</span>
+                        <div class="card-engage">
+                            <button type="button" class="engage-btn like-btn" data-like-slug="${escHtml(slug)}" aria-label="Like cartoon" aria-pressed="false" title="Like">
+                                ${heart}
+                                <span class="engage-count" data-like-count="${escHtml(slug)}"></span>
+                            </button>
+                            <button type="button" class="engage-btn share-quick-btn" data-share-slug="${escHtml(slug)}" data-share-title="${shareTitle}" data-share-url="${shareUrl}" aria-label="Share cartoon" title="Share">
+                                ${shareIcon}
+                                <span class="engage-count" data-share-count="${escHtml(slug)}"></span>
+                            </button>
+                        </div>
+                    </div>
+                    <a href="${escHtml(url)}" class="art-link">
                         ${c.title ? `<h3 class="card-title">${escHtml(c.title)}</h3>` : ''}
                         ${c.descClean ? `<p class="card-excerpt">${escHtml(c.descClean)}</p><span class="read-more">Read more</span>` : ''}
                     </a>
@@ -244,6 +264,7 @@
             });
 
             grid.innerHTML = cols.map(col => `<div class="masonry-col">${col.map(cardHTML).join('')}</div>`).join('');
+            if (window.CartoonStats) window.CartoonStats.sync(grid);
         }
 
         function updateHeading() {
