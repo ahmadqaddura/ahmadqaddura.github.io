@@ -1,0 +1,1319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery Admin — Ahmad Qaddura</title>
+    <meta name="robots" content="noindex, nofollow, noarchive">
+    <link rel="icon" type="image/png" href="avatar.png">
+    <link rel="apple-touch-icon" href="avatar.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .admin-shell {
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 28px 24px 64px;
+        }
+        .admin-topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 14px;
+            padding-bottom: 18px;
+            border-bottom: 3px double var(--ink-black);
+            margin-bottom: 28px;
+        }
+        .admin-brand h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            line-height: 1.15;
+            color: var(--ink-black);
+        }
+        .admin-brand p {
+            font-size: 0.84rem;
+            color: var(--ink-gray);
+            margin-top: 2px;
+        }
+        .topbar-actions {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .btn-outline-sm, .btn-solid-sm, .btn-danger-sm {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            font-family: inherit;
+            font-size: 0.84rem;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.18s ease;
+            border: 1px solid var(--ink-black);
+        }
+        .btn-solid-sm {
+            background: var(--ink-black);
+            color: #fff;
+        }
+        .btn-solid-sm:hover:not(:disabled) {
+            background: var(--accent-red);
+            border-color: var(--accent-red);
+        }
+        .btn-outline-sm {
+            background: #fff;
+            color: var(--ink-black);
+            border-color: var(--border-line);
+        }
+        .btn-outline-sm:hover:not(:disabled) {
+            border-color: var(--ink-black);
+            background: var(--bg-paper-alt);
+        }
+        .btn-danger-sm {
+            background: #fff;
+            color: var(--accent-red);
+            border-color: #E3C2C2;
+        }
+        .btn-danger-sm:hover:not(:disabled) {
+            background: var(--accent-red);
+            border-color: var(--accent-red);
+            color: #fff;
+        }
+        button:disabled {
+            opacity: 0.55;
+            cursor: not-allowed;
+        }
+
+        /* Login Screen */
+        .login-wrap {
+            max-width: 440px;
+            margin: 56px auto 80px;
+            background: #F2ECE1;
+            border-top: 2px solid var(--ink-black);
+            padding: 36px 32px;
+        }
+        .login-kicker {
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--accent-red);
+            margin-bottom: 6px;
+        }
+        .login-wrap h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            margin-bottom: 8px;
+        }
+        .login-wrap p {
+            font-size: 0.9rem;
+            color: var(--ink-gray);
+            margin-bottom: 22px;
+        }
+        .field {
+            margin-bottom: 16px;
+        }
+        .field label {
+            display: block;
+            font-size: 0.76rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+            color: var(--ink-gray);
+            margin-bottom: 6px;
+        }
+        .field input[type="text"],
+        .field input[type="password"],
+        .field input[type="date"],
+        .field textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border-line);
+            background: #fff;
+            color: var(--ink-black);
+            font-family: inherit;
+            font-size: 0.94rem;
+            transition: border-color 0.18s;
+        }
+        .field input:focus,
+        .field textarea:focus {
+            outline: none;
+            border-color: var(--ink-black);
+        }
+        .field textarea {
+            min-height: 96px;
+            resize: vertical;
+            line-height: 1.55;
+        }
+        .field-hint {
+            font-size: 0.78rem;
+            color: var(--ink-gray);
+            margin-top: 5px;
+        }
+        .password-row {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .password-row input {
+            padding-inline-end: 64px;
+        }
+        .toggle-pw {
+            position: absolute;
+            inset-inline-end: 8px;
+            background: none;
+            border: none;
+            color: var(--ink-gray);
+            font-family: inherit;
+            font-size: 0.78rem;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 4px 6px;
+        }
+        .toggle-pw:hover { color: var(--ink-black); }
+        .remember-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.86rem;
+            color: #333;
+            margin-bottom: 18px;
+            cursor: pointer;
+        }
+        .full-btn {
+            width: 100%;
+            justify-content: center;
+            padding: 11px 18px;
+            font-size: 0.92rem;
+        }
+
+        /* Alerts & Toast */
+        .alert {
+            display: none;
+            padding: 12px 15px;
+            margin-bottom: 18px;
+            font-size: 0.88rem;
+            line-height: 1.5;
+            border-inline-start: 3px solid transparent;
+        }
+        .alert.show { display: block; }
+        .alert.error {
+            background: #FBECEB;
+            border-inline-start-color: var(--accent-red);
+            color: #7A1414;
+        }
+        .alert.success {
+            background: #E8F3EC;
+            border-inline-start-color: #1E6B3A;
+            color: #164E2A;
+        }
+        .alert.info {
+            background: #F2ECE1;
+            border-inline-start-color: var(--ink-black);
+            color: #222;
+        }
+
+        /* Stats Strip & Toolbar */
+        .summary-strip {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+        .summary-box {
+            background: #F2ECE1;
+            border-top: 2px solid var(--ink-black);
+            padding: 14px 18px;
+        }
+        .summary-box.tone-slate { background: #EAEFF2; }
+        .summary-box.tone-sage { background: #EBF0EA; }
+        .summary-label {
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--ink-gray);
+        }
+        .summary-num {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.65rem;
+            font-weight: 700;
+            color: var(--ink-black);
+            line-height: 1.25;
+            margin-top: 2px;
+        }
+
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .search-box {
+            flex: 1;
+            min-width: 220px;
+            max-width: 380px;
+            padding: 9px 12px;
+            border: 1px solid var(--border-line);
+            background: #fff;
+            font-family: inherit;
+            font-size: 0.9rem;
+        }
+        .search-box:focus { outline: none; border-color: var(--ink-black); }
+
+        /* Admin Cards List */
+        .admin-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(min(100%, 310px), 1fr));
+            gap: 22px;
+        }
+        .admin-card {
+            background: #fff;
+            border: 1px solid var(--border-line);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: border-color 0.2s ease;
+        }
+        .admin-card:hover {
+            border-color: var(--ink-black);
+        }
+        .admin-thumb {
+            aspect-ratio: 16 / 10;
+            background: var(--bg-paper-alt);
+            overflow: hidden;
+            position: relative;
+        }
+        .admin-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .pending-badge {
+            position: absolute;
+            top: 8px;
+            inset-inline-end: 8px;
+            background: rgba(20, 20, 20, 0.85);
+            color: #fff;
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 3px 8px;
+        }
+        .admin-card-body {
+            padding: 14px 16px 12px;
+            flex: 1;
+        }
+        .admin-card-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.75rem;
+            color: var(--ink-gray);
+            margin-bottom: 5px;
+        }
+        .admin-card-stats {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-variant-numeric: tabular-nums;
+        }
+        .admin-card-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.08rem;
+            font-weight: 700;
+            color: var(--ink-black);
+            line-height: 1.3;
+            margin-bottom: 6px;
+        }
+        .admin-card-desc {
+            font-size: 0.84rem;
+            color: #444;
+            line-height: 1.45;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+        .admin-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+        .admin-tag {
+            font-size: 0.72rem;
+            background: var(--bg-paper-alt);
+            color: #333;
+            padding: 2px 8px;
+            border-radius: 999px;
+        }
+        .admin-card-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 11px 16px;
+            border-top: 1px solid var(--border-line);
+            background: var(--bg-paper);
+        }
+        .admin-card-actions .btn-outline-sm,
+        .admin-card-actions .btn-danger-sm {
+            padding: 6px 11px;
+            font-size: 0.79rem;
+        }
+        .admin-card-actions .spacer {
+            flex: 1;
+        }
+
+        /* Editor & Confirm Modal */
+        .modal-backdrop {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 1500;
+            background: rgba(16, 16, 16, 0.72);
+            align-items: flex-start;
+            justify-content: center;
+            padding: 28px 16px;
+            overflow-y: auto;
+        }
+        .modal-backdrop.open {
+            display: flex;
+        }
+        .modal-panel {
+            background: var(--bg-paper);
+            border-top: 3px solid var(--accent-red);
+            width: 100%;
+            max-width: 600px;
+            padding: 26px 26px 24px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+            margin: auto 0;
+        }
+        .modal-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-line);
+        }
+        .modal-head h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+        }
+        .modal-x {
+            background: none;
+            border: none;
+            font-size: 1.6rem;
+            line-height: 1;
+            color: var(--ink-gray);
+            cursor: pointer;
+            padding: 2px 6px;
+        }
+        .modal-x:hover { color: var(--ink-black); }
+
+        .drop-zone {
+            border: 1.5px dashed #B5AEA2;
+            background: #fff;
+            padding: 20px 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.2s, background 0.2s;
+        }
+        .drop-zone.dragover {
+            border-color: var(--accent-red);
+            background: #FDF4F4;
+        }
+        .drop-zone input {
+            display: none;
+        }
+        .drop-zone-label {
+            font-size: 0.9rem;
+            color: var(--ink-black);
+            font-weight: 600;
+        }
+        .drop-zone-sub {
+            font-size: 0.78rem;
+            color: var(--ink-gray);
+            margin-top: 4px;
+        }
+        .preview-box {
+            margin-top: 12px;
+            display: none;
+            text-align: center;
+        }
+        .preview-box.show { display: block; }
+        .preview-box img {
+            max-width: 100%;
+            max-height: 240px;
+            object-fit: contain;
+            border: 1px solid var(--border-line);
+            background: var(--bg-paper-alt);
+        }
+        .preview-meta {
+            font-size: 0.76rem;
+            color: #1E6B3A;
+            margin-top: 6px;
+            font-weight: 500;
+        }
+        .tag-preview {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 7px;
+        }
+        .modal-foot {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+            padding-top: 14px;
+            border-top: 1px solid var(--border-line);
+        }
+        .delete-preview {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: #fff;
+            border: 1px solid var(--border-line);
+            padding: 12px;
+            margin: 14px 0 18px;
+        }
+        .delete-preview img {
+            width: 84px;
+            height: 60px;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+        .empty-admin {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 48px 20px;
+            border: 1px dashed var(--border-line);
+            color: var(--ink-gray);
+        }
+
+        [dir="rtl"] .admin-brand h1,
+        [dir="rtl"] .login-wrap h2,
+        [dir="rtl"] .modal-head h2,
+        [dir="rtl"] .admin-card-title {
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+
+        @media (max-width: 640px) {
+            .admin-shell { padding: 18px 16px 48px; }
+            .login-wrap { padding: 26px 20px; margin: 28px auto; }
+            .summary-strip { grid-template-columns: 1fr; gap: 10px; }
+            .modal-panel { padding: 20px 18px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-shell">
+        <!-- Top Bar -->
+        <header class="admin-topbar" style="border-top:none; padding-top:0; text-align:start;">
+            <div class="admin-brand">
+                <h1 data-i18n="brandTitle">Gallery Manager</h1>
+                <p data-i18n="brandSub">Ahmad Qaddura &bull; Private Admin Panel</p>
+            </div>
+            <div class="topbar-actions">
+                <button type="button" id="lang-btn" class="btn-outline-sm">عربي</button>
+                <a href="gallery.html" target="_blank" rel="noopener" class="btn-outline-sm" data-i18n="viewSite">View Gallery ↗</a>
+                <button type="button" id="new-btn" class="btn-solid-sm" style="display:none;" data-i18n="newCartoon">+ New Cartoon</button>
+                <button type="button" id="logout-btn" class="btn-outline-sm" style="display:none;" data-i18n="logout">Log Out</button>
+            </div>
+        </header>
+
+        <!-- Login View -->
+        <section id="login-view" style="border-bottom:none; padding:0;">
+            <div class="login-wrap">
+                <div class="login-kicker" data-i18n="adminOnly">Admin Access Only</div>
+                <h2 data-i18n="signInTitle">Sign In to Gallery</h2>
+                <p data-i18n="signInDesc">Enter your admin password to publish, edit, or delete cartoons in your gallery.</p>
+
+                <div id="login-alert" class="alert error" role="alert"></div>
+
+                <form id="login-form">
+                    <div class="field">
+                        <label for="pw-input" data-i18n="passwordLabel">Admin Password</label>
+                        <div class="password-row">
+                            <input type="password" id="pw-input" required autocomplete="current-password" placeholder="••••••••">
+                            <button type="button" id="toggle-pw" class="toggle-pw" data-i18n="show">Show</button>
+                        </div>
+                    </div>
+
+                    <label class="remember-row">
+                        <input type="checkbox" id="remember-me" checked>
+                        <span data-i18n="rememberMe">Keep me signed in on this device (7 days)</span>
+                    </label>
+
+                    <button type="submit" id="login-submit" class="btn-solid-sm full-btn" data-i18n="signInBtn">Sign In</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- Dashboard View -->
+        <main id="dashboard-view" style="display:none;">
+            <div id="dash-alert" class="alert" role="status" aria-live="polite"></div>
+
+            <div class="summary-strip">
+                <div class="summary-box">
+                    <div class="summary-label" data-i18n="totalCartoons">Total Cartoons</div>
+                    <div class="summary-num" id="stat-total">—</div>
+                </div>
+                <div class="summary-box tone-slate">
+                    <div class="summary-label" data-i18n="totalLikes">Total Likes</div>
+                    <div class="summary-num" id="stat-likes">—</div>
+                </div>
+                <div class="summary-box tone-sage">
+                    <div class="summary-label" data-i18n="totalShares">Total Shares</div>
+                    <div class="summary-num" id="stat-shares">—</div>
+                </div>
+            </div>
+
+            <div class="toolbar">
+                <input type="text" id="admin-search" class="search-box" placeholder="Search cartoons by title, tag, or date...">
+                <button type="button" id="refresh-btn" class="btn-outline-sm" data-i18n="refresh">Refresh</button>
+            </div>
+
+            <div class="admin-grid" id="admin-grid">
+                <div class="empty-admin" data-i18n="loading">Loading cartoons...</div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Publish / Edit Modal -->
+    <div id="editor-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="editor-title">
+        <div class="modal-panel">
+            <div class="modal-head">
+                <h2 id="editor-title">New Cartoon</h2>
+                <button type="button" class="modal-x" id="editor-close" aria-label="Close">&times;</button>
+            </div>
+
+            <div id="editor-alert" class="alert error" role="alert"></div>
+
+            <form id="editor-form">
+                <input type="hidden" id="edit-mode" value="create">
+                <input type="hidden" id="edit-base" value="">
+                <input type="hidden" id="edit-old-image" value="">
+
+                <div class="field">
+                    <label data-i18n="imageLabel">Cartoon Image</label>
+                    <div class="drop-zone" id="drop-zone">
+                        <input type="file" id="file-input" accept="image/webp,image/png,image/jpeg,image/gif">
+                        <div class="drop-zone-label" id="drop-label" data-i18n="dropLabel">Click to choose image or drag &amp; drop here</div>
+                        <div class="drop-zone-sub" data-i18n="dropSub">PNG &amp; JPG are automatically optimized to high-quality WebP</div>
+                    </div>
+                    <div class="preview-box" id="preview-box">
+                        <img id="preview-img" src="" alt="Preview">
+                        <div class="preview-meta" id="preview-meta"></div>
+                    </div>
+                </div>
+
+                <div class="field" id="date-field-wrap">
+                    <label for="f-date" data-i18n="dateLabel">Cartoon Date</label>
+                    <input type="date" id="f-date" required>
+                    <div class="field-hint" id="date-hint" data-i18n="dateHint">Choose any date (today or an older date). Multiple cartoons on the same date are numbered automatically (-2, -3).</div>
+                </div>
+
+                <div class="field">
+                    <label for="f-title" data-i18n="titleLabel">Title</label>
+                    <input type="text" id="f-title" required placeholder="e.g. Political Dialogue">
+                </div>
+
+                <div class="field">
+                    <label for="f-tags" data-i18n="tagsLabel">Hashtags</label>
+                    <input type="text" id="f-tags" placeholder="e.g. #Politics #Satire #Sweden">
+                    <div class="tag-preview" id="tag-preview"></div>
+                </div>
+
+                <div class="field">
+                    <label for="f-desc" data-i18n="descLabel">Description (Optional)</label>
+                    <textarea id="f-desc" placeholder="Short background or commentary for this cartoon..."></textarea>
+                </div>
+
+                <div class="modal-foot">
+                    <button type="button" class="btn-outline-sm" id="editor-cancel" data-i18n="cancel">Cancel</button>
+                    <button type="submit" class="btn-solid-sm" id="editor-submit" data-i18n="publishBtn">Publish Cartoon</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="delete-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="delete-title">
+        <div class="modal-panel" style="max-width:460px;">
+            <div class="modal-head">
+                <h2 id="delete-title" data-i18n="deleteTitle">Delete Cartoon?</h2>
+                <button type="button" class="modal-x" id="delete-close" aria-label="Close">&times;</button>
+            </div>
+            <p style="font-size:0.9rem; color:#333;" data-i18n="deleteWarn">This permanently removes the cartoon image, text file, and web page from your gallery.</p>
+            <div class="delete-preview" id="delete-preview"></div>
+            <div id="delete-alert" class="alert error"></div>
+            <div class="modal-foot">
+                <button type="button" class="btn-outline-sm" id="delete-cancel" data-i18n="cancel">Cancel</button>
+                <button type="button" class="btn-danger-sm" id="delete-confirm" data-i18n="confirmDelete">Yes, Delete Permanently</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const ADMIN_API = "https://cartoon-admin.ahmadqaddura01.workers.dev";
+        const STATS_API = "https://cartoon-stats.ahmadqaddura01.workers.dev";
+        const TOKEN_KEY = "aq_admin_token_v1";
+        const LANG_KEY = "aq_admin_lang_v1";
+
+        const I18N = {
+            en: {
+                brandTitle: "Gallery Manager",
+                brandSub: "Ahmad Qaddura • Private Admin Panel",
+                viewSite: "View Gallery ↗",
+                newCartoon: "+ New Cartoon",
+                logout: "Log Out",
+                adminOnly: "Admin Access Only",
+                signInTitle: "Sign In to Gallery",
+                signInDesc: "Enter your admin password to publish, edit, or delete cartoons in your gallery.",
+                passwordLabel: "Admin Password",
+                show: "Show",
+                hide: "Hide",
+                rememberMe: "Keep me signed in on this device (7 days)",
+                signInBtn: "Sign In",
+                signingIn: "Signing in...",
+                totalCartoons: "Total Cartoons",
+                totalLikes: "Total Likes",
+                totalShares: "Total Shares",
+                refresh: "Refresh",
+                loading: "Loading cartoons...",
+                searchPlaceholder: "Search cartoons by title, tag, or date...",
+                newModalTitle: "Publish New Cartoon",
+                editModalTitle: "Edit Cartoon",
+                imageLabel: "Cartoon Image",
+                imageOptional: "Cartoon Image (Optional — leave empty to keep current)",
+                dropLabel: "Click to choose image or drag & drop here",
+                dropSub: "PNG & JPG are automatically optimized to high-quality WebP",
+                dateLabel: "Cartoon Date",
+                dateHint: "Choose any date (today or an older date). Multiple cartoons on the same date are numbered automatically (-2, -3).",
+                dateLockedHint: "Date / URL slug stays locked when editing so shared links and likes remain intact.",
+                titleLabel: "Title",
+                tagsLabel: "Hashtags",
+                descLabel: "Description (Optional)",
+                cancel: "Cancel",
+                publishBtn: "Publish Cartoon",
+                saveBtn: "Save Changes",
+                publishing: "Publishing...",
+                saving: "Saving...",
+                edit: "Edit",
+                view: "View ↗",
+                del: "Delete",
+                deleteTitle: "Delete Cartoon?",
+                deleteWarn: "This permanently removes the cartoon image, text file, and web page from your gallery.",
+                confirmDelete: "Yes, Delete Permanently",
+                deleting: "Deleting...",
+                publishedMsg: "Published successfully! Your website will update automatically within ~45 seconds.",
+                updatedMsg: "Changes saved! Your website will update automatically within ~45 seconds.",
+                deletedMsg: "Cartoon deleted! Your gallery will update automatically within ~45 seconds.",
+                pendingBadge: "Building (~45s)",
+                noCartoons: "No cartoons found.",
+                imgRequired: "Please choose a cartoon image first.",
+                sessionExpired: "Your session has expired. Please sign in again.",
+                wrongPw: "Incorrect password. Please try again.",
+                langSwitch: "عربي",
+                untitled: "Untitled",
+            },
+            ar: {
+                brandTitle: "إدارة المعرض",
+                brandSub: "أحمد قدورة • لوحة التحكم الخاصة",
+                viewSite: "عرض المعرض ↗",
+                newCartoon: "+ رسمة جديدة",
+                logout: "تسجيل الخروج",
+                adminOnly: "دخول خاص بالمدير فقط",
+                signInTitle: "تسجيل الدخول للمعرض",
+                signInDesc: "أدخل كلمة السر الخاصة بك لإضافة أو تعديل أو حذف الرسوم في المعرض.",
+                passwordLabel: "كلمة السر",
+                show: "إظهار",
+                hide: "إخفاء",
+                rememberMe: "تذكّر دخولي على هذا الجهاز (7 أيام)",
+                signInBtn: "دخول",
+                signingIn: "جارٍ الدخول...",
+                totalCartoons: "إجمالي الرسوم",
+                totalLikes: "إجمالي الإعجابات",
+                totalShares: "إجمالي المشاركات",
+                refresh: "تحديث",
+                loading: "جارٍ تحميل الرسوم...",
+                searchPlaceholder: "ابحث بالعنوان أو الهاشتاغ أو التاريخ...",
+                newModalTitle: "نشر رسمة جديدة",
+                editModalTitle: "تعديل الرسمة",
+                imageLabel: "صورة الكاريكاتير",
+                imageOptional: "صورة الكاريكاتير (اختياري — اتركها فارغة للإبقاء على الصورة الحالية)",
+                dropLabel: "اضغط لاختيار صورة أو اسحبها وأفلتها هنا",
+                dropSub: "يتم تحويل صور PNG و JPG تلقائياً إلى WebP عالية الجودة",
+                dateLabel: "تاريخ الرسمة",
+                dateHint: "يمكنك اختيار أي تاريخ (اليوم أو تاريخ قديم). عند رفع أكثر من رسمة بنفس التاريخ يتم ترقيمها تلقائياً (-2، -3).",
+                dateLockedHint: "يبقى التاريخ ثابتاً عند التعديل للحفاظ على الروابط المشتركة وعدد اللايكات.",
+                titleLabel: "العنوان",
+                tagsLabel: "الهاشتاغات",
+                descLabel: "الوصف (اختياري)",
+                cancel: "إلغاء",
+                publishBtn: "نشر الرسمة",
+                saveBtn: "حفظ التعديلات",
+                publishing: "جارٍ النشر...",
+                saving: "جارٍ الحفظ...",
+                edit: "تعديل",
+                view: "عرض ↗",
+                del: "حذف",
+                deleteTitle: "حذف الرسمة؟",
+                deleteWarn: "سيؤدي هذا إلى حذف صورة الرسمة وملف النص وصفحتها نهائياً من موقعك.",
+                confirmDelete: "نعم، احذف نهائياً",
+                deleting: "جارٍ الحذف...",
+                publishedMsg: "تم النشر بنجاح! سيظهر التحديث تلقائياً على موقعك خلال ~45 ثانية.",
+                updatedMsg: "تم حفظ التعديلات بنجاح! سيتحدّث موقعك تلقائياً خلال ~45 ثانية.",
+                deletedMsg: "تم حذف الرسمة! سيتحدّث معرضك تلقائياً خلال ~45 ثانية.",
+                pendingBadge: "جارٍ النشر (~45ث)",
+                noCartoons: "لا توجد رسوم مطابقة.",
+                imgRequired: "يرجى اختيار صورة الكاريكاتير أولاً.",
+                sessionExpired: "انتهت الجلسة، يرجى تسجيل الدخول مجدداً.",
+                wrongPw: "كلمة السر غير صحيحة، حاول مجدداً.",
+                langSwitch: "EN",
+                untitled: "بدون عنوان",
+            }
+        };
+
+        let lang = localStorage.getItem(LANG_KEY) || "en";
+        let allItems = [];
+        let statsMap = {};
+        let selectedImage = null; // { base64, ext, infoText }
+        let deleteTarget = null;
+
+        function t(key) { return (I18N[lang] && I18N[lang][key]) || I18N.en[key] || key; }
+        function escHtml(s) {
+            return String(s || "").replace(/[&<>"']/g, m => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[m]));
+        }
+
+        function applyLang() {
+            document.documentElement.lang = lang;
+            document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
+            document.querySelectorAll("[data-i18n]").forEach(el => {
+                const k = el.getAttribute("data-i18n");
+                if (I18N[lang][k]) el.textContent = I18N[lang][k];
+            });
+            document.getElementById("lang-btn").textContent = t("langSwitch");
+            document.getElementById("admin-search").placeholder = t("searchPlaceholder");
+            const pwInput = document.getElementById("pw-input");
+            document.getElementById("toggle-pw").textContent = pwInput.type === "password" ? t("show") : t("hide");
+            if (allItems.length) renderList();
+        }
+
+        document.getElementById("lang-btn").addEventListener("click", () => {
+            lang = lang === "en" ? "ar" : "en";
+            localStorage.setItem(LANG_KEY, lang);
+            applyLang();
+        });
+
+        function getToken() {
+            return localStorage.getItem(TOKEN_KEY) || sessionStorage.getItem(TOKEN_KEY) || "";
+        }
+        function setToken(token, remember) {
+            localStorage.removeItem(TOKEN_KEY);
+            sessionStorage.removeItem(TOKEN_KEY);
+            if (token) (remember ? localStorage : sessionStorage).setItem(TOKEN_KEY, token);
+        }
+
+        function showAlert(id, type, msg) {
+            const el = document.getElementById(id);
+            if (!msg) { el.className = "alert"; el.textContent = ""; return; }
+            el.className = `alert show ${type}`;
+            el.textContent = msg;
+        }
+
+        async function apiFetch(path, opts = {}) {
+            const headers = { ...(opts.headers || {}) };
+            const tok = getToken();
+            if (tok) headers["Authorization"] = `Bearer ${tok}`;
+            if (opts.body && !headers["Content-Type"]) headers["Content-Type"] = "application/json";
+            const res = await fetch(`${ADMIN_API}${path}`, {
+                method: opts.method || "GET",
+                headers,
+                body: opts.body ? JSON.stringify(opts.body) : undefined,
+            });
+            const data = await res.json().catch(() => ({}));
+            if (res.status === 401 && path !== "/login") {
+                logout(t("sessionExpired"));
+                throw new Error(t("sessionExpired"));
+            }
+            if (!res.ok) throw new Error(data.error || `Error ${res.status}`);
+            return data;
+        }
+
+        function showLoggedIn(isAuthed) {
+            document.getElementById("login-view").style.display = isAuthed ? "none" : "block";
+            document.getElementById("dashboard-view").style.display = isAuthed ? "block" : "none";
+            document.getElementById("new-btn").style.display = isAuthed ? "inline-flex" : "none";
+            document.getElementById("logout-btn").style.display = isAuthed ? "inline-flex" : "none";
+        }
+
+        function logout(msg) {
+            setToken("", false);
+            allItems = [];
+            showLoggedIn(false);
+            if (msg) showAlert("login-alert", "error", msg);
+            else showAlert("login-alert", "", "");
+            document.getElementById("pw-input").value = "";
+        }
+
+        document.getElementById("logout-btn").addEventListener("click", () => logout(""));
+
+        document.getElementById("toggle-pw").addEventListener("click", () => {
+            const inp = document.getElementById("pw-input");
+            inp.type = inp.type === "password" ? "text" : "password";
+            document.getElementById("toggle-pw").textContent = inp.type === "password" ? t("show") : t("hide");
+        });
+
+        document.getElementById("login-form").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            showAlert("login-alert", "", "");
+            const btn = document.getElementById("login-submit");
+            const pw = document.getElementById("pw-input").value;
+            const remember = document.getElementById("remember-me").checked;
+            btn.disabled = true;
+            btn.textContent = t("signingIn");
+            try {
+                const data = await apiFetch("/login", { method: "POST", body: { password: pw } });
+                setToken(data.token, remember);
+                showLoggedIn(true);
+                await loadDashboard();
+            } catch (_) {
+                showAlert("login-alert", "error", t("wrongPw"));
+            } finally {
+                btn.disabled = false;
+                btn.textContent = t("signInBtn");
+            }
+        });
+
+        async function loadDashboard() {
+            const grid = document.getElementById("admin-grid");
+            grid.innerHTML = `<div class="empty-admin">${escHtml(t("loading"))}</div>`;
+            try {
+                const [listRes, statsRes] = await Promise.all([
+                    apiFetch("/list"),
+                    fetch(`${STATS_API}/stats`, { cache: "no-store" }).then(r => r.ok ? r.json() : {}).catch(() => ({})),
+                ]);
+                allItems = listRes.items || [];
+                statsMap = statsRes || {};
+                updateSummary();
+                renderList();
+            } catch (err) {
+                if (getToken()) showAlert("dash-alert", "error", err.message);
+            }
+        }
+
+        function updateSummary() {
+            let totalLikes = 0, totalShares = 0;
+            for (const c of allItems) {
+                const st = statsMap[c.slug] || statsMap[c.base];
+                if (st) {
+                    totalLikes += Number(st.likes) || 0;
+                    totalShares += Number(st.shares) || 0;
+                }
+            }
+            document.getElementById("stat-total").textContent = allItems.length;
+            document.getElementById("stat-likes").textContent = totalLikes;
+            document.getElementById("stat-shares").textContent = totalShares;
+        }
+
+        function renderList() {
+            const grid = document.getElementById("admin-grid");
+            const q = document.getElementById("admin-search").value.trim().toLowerCase().replace(/^#+/, "");
+            const filtered = allItems.filter(c => {
+                if (!q) return true;
+                const hay = `${c.title} ${c.desc} ${(c.tags || []).join(" ")} ${c.date} ${c.base}`.toLowerCase();
+                return hay.includes(q);
+            });
+
+            if (!filtered.length) {
+                grid.innerHTML = `<div class="empty-admin">${escHtml(t("noCartoons"))}</div>`;
+                return;
+            }
+
+            grid.innerHTML = filtered.map(c => {
+                const st = statsMap[c.slug] || statsMap[c.base] || { likes: 0, shares: 0 };
+                const liveUrl = c.page ? `https://ahmadqaddura.com/${c.page}` : `https://ahmadqaddura.com/c/${encodeURIComponent(c.slug || c.base)}.html`;
+                const tagsHtml = (c.tags || []).map(tg => `<span class="admin-tag">#${escHtml(tg)}</span>`).join("");
+                const imgSrc = `${c.imageUrl}${c.cacheBust ? `?v=${c.cacheBust}` : ""}`;
+                return `
+                    <article class="admin-card">
+                        <div>
+                            <div class="admin-thumb">
+                                <img src="${escHtml(imgSrc)}" alt="${escHtml(c.title || c.base)}" loading="lazy">
+                                ${c.pending ? `<span class="pending-badge">${escHtml(t("pendingBadge"))}</span>` : ""}
+                            </div>
+                            <div class="admin-card-body">
+                                <div class="admin-card-meta">
+                                    <span>${escHtml(c.date || c.base)}</span>
+                                    <span class="admin-card-stats">
+                                        <span title="Likes">♥ ${st.likes || 0}</span>
+                                        <span title="Shares">↗ ${st.shares || 0}</span>
+                                    </span>
+                                </div>
+                                <div class="admin-card-title">${escHtml(c.title || t("untitled"))}</div>
+                                ${c.desc ? `<div class="admin-card-desc">${escHtml(c.desc)}</div>` : ""}
+                                ${tagsHtml ? `<div class="admin-tags">${tagsHtml}</div>` : ""}
+                            </div>
+                        </div>
+                        <div class="admin-card-actions">
+                            <button type="button" class="btn-outline-sm" data-edit="${escHtml(c.base)}">${escHtml(t("edit"))}</button>
+                            <a href="${escHtml(liveUrl)}" target="_blank" rel="noopener" class="btn-outline-sm">${escHtml(t("view"))}</a>
+                            <span class="spacer"></span>
+                            <button type="button" class="btn-danger-sm" data-del="${escHtml(c.base)}">${escHtml(t("del"))}</button>
+                        </div>
+                    </article>
+                `;
+            }).join("");
+        }
+
+        document.getElementById("admin-search").addEventListener("input", renderList);
+        document.getElementById("refresh-btn").addEventListener("click", () => {
+            showAlert("dash-alert", "", "");
+            loadDashboard();
+        });
+
+        // Tag preview helper
+        function updateTagPreview() {
+            const val = document.getElementById("f-tags").value;
+            const tags = val.split(/[\s,]+/).map(s => s.replace(/^#+/, "").trim()).filter(Boolean);
+            document.getElementById("tag-preview").innerHTML = tags.map(tg => `<span class="admin-tag">#${escHtml(tg)}</span>`).join("");
+        }
+        document.getElementById("f-tags").addEventListener("input", updateTagPreview);
+
+        // Image processing: preserve WebP/GIF as-is, convert PNG/JPG to crisp WebP (max 2200px)
+        function formatKB(bytes) {
+            return bytes >= 1048576 ? `${(bytes / 1048576).toFixed(2)} MB` : `${Math.round(bytes / 1024)} KB`;
+        }
+
+        async function processImageFile(file) {
+            const origSize = file.size;
+            const isWebp = file.type === "image/webp" || /\.webp$/i.test(file.name);
+            const isGif = file.type === "image/gif" || /\.gif$/i.test(file.name);
+
+            if (isWebp || isGif) {
+                const dataUrl = await new Promise((resolve, reject) => {
+                    const fr = new FileReader();
+                    fr.onload = () => resolve(fr.result);
+                    fr.onerror = reject;
+                    fr.readAsDataURL(file);
+                });
+                const ext = isGif ? "gif" : "webp";
+                return {
+                    dataUrl,
+                    base64: String(dataUrl).split(",")[1],
+                    ext,
+                    infoText: `${ext.toUpperCase()} • ${formatKB(origSize)}`,
+                };
+            }
+
+            // Convert PNG/JPG -> WebP via canvas
+            const img = await new Promise((resolve, reject) => {
+                const url = URL.createObjectURL(file);
+                const el = new Image();
+                el.onload = () => { URL.revokeObjectURL(url); resolve(el); };
+                el.onerror = (e) => { URL.revokeObjectURL(url); reject(e); };
+                el.src = url;
+            });
+
+            const maxDim = 2200;
+            let w = img.naturalWidth, h = img.naturalHeight;
+            if (w > maxDim || h > maxDim) {
+                const scale = maxDim / Math.max(w, h);
+                w = Math.round(w * scale);
+                h = Math.round(h * scale);
+            }
+            const canvas = document.createElement("canvas");
+            canvas.width = w;
+            canvas.height = h;
+            canvas.getContext("2d").drawImage(img, 0, 0, w, h);
+
+            let outUrl = canvas.toDataURL("image/webp", 0.9);
+            let ext = "webp";
+            if (!outUrl.startsWith("data:image/webp")) {
+                outUrl = canvas.toDataURL("image/jpeg", 0.9);
+                ext = "jpg";
+            }
+            const b64 = outUrl.split(",")[1];
+            const outBytes = Math.round(b64.length * 0.75);
+            return {
+                dataUrl: outUrl,
+                base64: b64,
+                ext,
+                infoText: `${w}×${h} • ${formatKB(origSize)} → ${ext.toUpperCase()} ${formatKB(outBytes)}`,
+            };
+        }
+
+        async function handleFileSelect(file) {
+            if (!file) return;
+            showAlert("editor-alert", "", "");
+            try {
+                selectedImage = await processImageFile(file);
+                document.getElementById("preview-img").src = selectedImage.dataUrl;
+                document.getElementById("preview-meta").textContent = selectedImage.infoText;
+                document.getElementById("preview-box").classList.add("show");
+            } catch (_) {
+                showAlert("editor-alert", "error", "Could not read image file.");
+            }
+        }
+
+        const dropZone = document.getElementById("drop-zone");
+        const fileInput = document.getElementById("file-input");
+        dropZone.addEventListener("click", () => fileInput.click());
+        fileInput.addEventListener("change", () => handleFileSelect(fileInput.files[0]));
+        dropZone.addEventListener("dragover", (e) => { e.preventDefault(); dropZone.classList.add("dragover"); });
+        dropZone.addEventListener("dragleave", () => dropZone.classList.remove("dragover"));
+        dropZone.addEventListener("drop", (e) => {
+            e.preventDefault();
+            dropZone.classList.remove("dragover");
+            if (e.dataTransfer.files && e.dataTransfer.files[0]) handleFileSelect(e.dataTransfer.files[0]);
+        });
+
+        function todayISO() {
+            const d = new Date();
+            const m = String(d.getMonth() + 1).padStart(2, "0");
+            const day = String(d.getDate()).padStart(2, "0");
+            return `${d.getFullYear()}-${m}-${day}`;
+        }
+
+        function openCreateModal() {
+            selectedImage = null;
+            fileInput.value = "";
+            showAlert("editor-alert", "", "");
+            document.getElementById("edit-mode").value = "create";
+            document.getElementById("edit-base").value = "";
+            document.getElementById("edit-old-image").value = "";
+            document.getElementById("editor-title").textContent = t("newModalTitle");
+            document.querySelector('[data-i18n="imageLabel"]').textContent = t("imageLabel");
+            document.getElementById("f-date").value = todayISO();
+            document.getElementById("f-date").disabled = false;
+            document.getElementById("date-hint").textContent = t("dateHint");
+            document.getElementById("f-title").value = "";
+            document.getElementById("f-tags").value = "";
+            document.getElementById("f-desc").value = "";
+            updateTagPreview();
+            document.getElementById("preview-box").classList.remove("show");
+            document.getElementById("editor-submit").textContent = t("publishBtn");
+            document.getElementById("editor-modal").classList.add("open");
+            document.body.style.overflow = "hidden";
+        }
+
+        async function openEditModal(base) {
+            const item = allItems.find(c => c.base === base);
+            if (!item) return;
+            selectedImage = null;
+            fileInput.value = "";
+            showAlert("editor-alert", "", "");
+            document.getElementById("edit-mode").value = "edit";
+            document.getElementById("edit-base").value = item.base;
+            document.getElementById("edit-old-image").value = item.name;
+            document.getElementById("editor-title").textContent = t("editModalTitle");
+            document.querySelector('[data-i18n="imageLabel"]').textContent = t("imageOptional");
+            document.getElementById("f-date").value = item.date || "";
+            document.getElementById("f-date").disabled = true;
+            document.getElementById("date-hint").textContent = t("dateLockedHint");
+            document.getElementById("f-title").value = item.title || "";
+            document.getElementById("f-tags").value = (item.tags || []).map(x => `#${x}`).join(" ");
+            document.getElementById("f-desc").value = item.desc || "";
+            updateTagPreview();
+
+            document.getElementById("preview-img").src = `${item.imageUrl}${item.cacheBust ? `?v=${item.cacheBust}` : ""}`;
+            document.getElementById("preview-meta").textContent = item.name;
+            document.getElementById("preview-box").classList.add("show");
+            document.getElementById("editor-submit").textContent = t("saveBtn");
+            document.getElementById("editor-modal").classList.add("open");
+            document.body.style.overflow = "hidden";
+
+            // Fetch exact live .txt from GitHub in case it was just edited
+            try {
+                const fresh = await apiFetch(`/item?base=${encodeURIComponent(base)}`);
+                if (document.getElementById("edit-base").value === base) {
+                    if (fresh.title) document.getElementById("f-title").value = fresh.title;
+                    if (fresh.tags && fresh.tags.length) document.getElementById("f-tags").value = fresh.tags.map(x => `#${x}`).join(" ");
+                    document.getElementById("f-desc").value = fresh.desc || "";
+                    updateTagPreview();
+                }
+            } catch (_) {}
+        }
+
+        function closeEditorModal() {
+            document.getElementById("editor-modal").classList.remove("open");
+            document.body.style.overflow = "";
+        }
+
+        document.getElementById("new-btn").addEventListener("click", openCreateModal);
+        document.getElementById("editor-close").addEventListener("click", closeEditorModal);
+        document.getElementById("editor-cancel").addEventListener("click", closeEditorModal);
+
+        document.getElementById("editor-form").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            showAlert("editor-alert", "", "");
+            const mode = document.getElementById("edit-mode").value;
+            const title = document.getElementById("f-title").value.trim();
+            const tags = document.getElementById("f-tags").value.trim();
+            const desc = document.getElementById("f-desc").value.trim();
+            const date = document.getElementById("f-date").value;
+            const submitBtn = document.getElementById("editor-submit");
+
+            if (mode === "create" && !selectedImage) {
+                showAlert("editor-alert", "error", t("imgRequired"));
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = mode === "create" ? t("publishing") : t("saving");
+
+            try {
+                const parsedTags = tags.split(/[\s,]+/).map(x => x.replace(/^#+/, "").trim()).filter(Boolean);
+
+                if (mode === "create") {
+                    const res = await apiFetch("/publish", {
+                        method: "POST",
+                        body: {
+                            date,
+                            title,
+                            tags,
+                            desc,
+                            imageBase64: selectedImage.base64,
+                            ext: selectedImage.ext,
+                        }
+                    });
+                    allItems.unshift({
+                        name: res.imageName,
+                        base: res.base,
+                        slug: res.base,
+                        date: res.date,
+                        title,
+                        tags: parsedTags,
+                        desc,
+                        page: `c/${res.base}.html`,
+                        imageUrl: selectedImage.dataUrl,
+                        pending: true,
+                        cacheBust: Date.now(),
+                    });
+                    allItems.sort((a, b) => (b.date.localeCompare(a.date) || b.name.localeCompare(a.name)));
+                    updateSummary();
+                    renderList();
+                    closeEditorModal();
+                    showAlert("dash-alert", "success", t("publishedMsg"));
+                } else {
+                    const base = document.getElementById("edit-base").value;
+                    const oldImageName = document.getElementById("edit-old-image").value;
+                    const payload = { base, title, tags, desc, oldImageName };
+                    if (selectedImage) {
+                        payload.imageBase64 = selectedImage.base64;
+                        payload.ext = selectedImage.ext;
+                    }
+                    const res = await apiFetch("/update", { method: "POST", body: payload });
+                    const target = allItems.find(c => c.base === base);
+                    if (target) {
+                        target.title = title;
+                        target.tags = parsedTags;
+                        target.desc = desc;
+                        if (selectedImage) {
+                            target.name = res.imageName || target.name;
+                            target.imageUrl = selectedImage.dataUrl;
+                        }
+                        target.pending = true;
+                        target.cacheBust = Date.now();
+                    }
+                    renderList();
+                    closeEditorModal();
+                    showAlert("dash-alert", "success", t("updatedMsg"));
+                }
+            } catch (err) {
+                showAlert("editor-alert", "error", err.message);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = mode === "create" ? t("publishBtn") : t("saveBtn");
+            }
+        });
+
+        // Delete Modal
+        function openDeleteModal(base) {
+            const item = allItems.find(c => c.base === base);
+            if (!item) return;
+            deleteTarget = item;
+            showAlert("delete-alert", "", "");
+            document.getElementById("delete-preview").innerHTML = `
+                <img src="${escHtml(item.imageUrl)}" alt="">
+                <div>
+                    <div style="font-weight:700; font-size:0.95rem;">${escHtml(item.title || t("untitled"))}</div>
+                    <div style="font-size:0.8rem; color:var(--ink-gray);">${escHtml(item.date || item.base)} &bull; ${escHtml(item.name)}</div>
+                </div>
+            `;
+            document.getElementById("delete-modal").classList.add("open");
+            document.body.style.overflow = "hidden";
+        }
+
+        function closeDeleteModal() {
+            deleteTarget = null;
+            document.getElementById("delete-modal").classList.remove("open");
+            document.body.style.overflow = "";
+        }
+
+        document.getElementById("delete-close").addEventListener("click", closeDeleteModal);
+        document.getElementById("delete-cancel").addEventListener("click", closeDeleteModal);
+
+        document.getElementById("delete-confirm").addEventListener("click", async () => {
+            if (!deleteTarget) return;
+            const btn = document.getElementById("delete-confirm");
+            btn.disabled = true;
+            btn.textContent = t("deleting");
+            showAlert("delete-alert", "", "");
+            try {
+                await apiFetch("/delete", {
+                    method: "POST",
+                    body: { base: deleteTarget.base, imageName: deleteTarget.name }
+                });
+                allItems = allItems.filter(c => c.base !== deleteTarget.base);
+                updateSummary();
+                renderList();
+                closeDeleteModal();
+                showAlert("dash-alert", "success", t("deletedMsg"));
+            } catch (err) {
+                showAlert("delete-alert", "error", err.message);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = t("confirmDelete");
+            }
+        });
+
+        // Card button delegation
+        document.getElementById("admin-grid").addEventListener("click", (e) => {
+            const editBtn = e.target.closest("[data-edit]");
+            if (editBtn) { openEditModal(editBtn.getAttribute("data-edit")); return; }
+            const delBtn = e.target.closest("[data-del]");
+            if (delBtn) { openDeleteModal(delBtn.getAttribute("data-del")); }
+        });
+
+        // Close modals on Escape
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape") {
+                if (document.getElementById("editor-modal").classList.contains("open")) closeEditorModal();
+                if (document.getElementById("delete-modal").classList.contains("open")) closeDeleteModal();
+            }
+        });
+
+        // Init
+        applyLang();
+        if (getToken()) {
+            showLoggedIn(true);
+            loadDashboard();
+        } else {
+            showLoggedIn(false);
+        }
+    </script>
+</body>
+</html>
