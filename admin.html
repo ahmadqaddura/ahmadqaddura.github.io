@@ -725,6 +725,8 @@
                 imgRequired: "Please choose a cartoon image first.",
                 sessionExpired: "Your session has expired. Please sign in again.",
                 wrongPw: "Incorrect password. Please try again.",
+                wrongPwLeft: "Incorrect password ({n} attempt(s) remaining before temporary lockout).",
+                lockedMsg: "Too many failed attempts. Login is temporarily locked — please try again in {m} minute(s).",
                 langSwitch: "عربي",
                 untitled: "Untitled",
             },
@@ -781,6 +783,8 @@
                 imgRequired: "يرجى اختيار صورة الكاريكاتير أولاً.",
                 sessionExpired: "انتهت الجلسة، يرجى تسجيل الدخول مجدداً.",
                 wrongPw: "كلمة السر غير صحيحة، حاول مجدداً.",
+                wrongPwLeft: "كلمة السر غير صحيحة (متبقي {n} محاولات قبل القفل المؤقت).",
+                lockedMsg: "تم قفل تسجيل الدخول مؤقتاً بعد عدة محاولات خاطئة. يرجى المحاولة بعد {m} دقيقة.",
                 langSwitch: "EN",
                 untitled: "بدون عنوان",
             }
@@ -846,9 +850,17 @@
             const data = await res.json().catch(() => ({}));
             if (res.status === 401 && path !== "/login") {
                 logout(t("sessionExpired"));
-                throw new Error(t("sessionExpired"));
+                const err = new Error(t("sessionExpired"));
+                err.status = 401;
+                err.data = data;
+                throw err;
             }
-            if (!res.ok) throw new Error(data.error || `Error ${res.status}`);
+            if (!res.ok) {
+                const err = new Error(data.error || `Error ${res.status}`);
+                err.status = res.status;
+                err.data = data;
+                throw err;
+            }
             return data;
         }
 
@@ -889,8 +901,15 @@
                 setToken(data.token, remember);
                 showLoggedIn(true);
                 await loadDashboard();
-            } catch (_) {
-                showAlert("login-alert", "error", t("wrongPw"));
+            } catch (err) {
+                if (err.status === 429) {
+                    const mins = Math.max(1, Math.ceil((Number(err.data && err.data.retryAfter) || 900) / 60));
+                    showAlert("login-alert", "error", t("lockedMsg").replace("{m}", String(mins)));
+                } else if (err.status === 401 && err.data && typeof err.data.remaining === "number") {
+                    showAlert("login-alert", "error", t("wrongPwLeft").replace("{n}", String(err.data.remaining)));
+                } else {
+                    showAlert("login-alert", "error", t("wrongPw"));
+                }
             } finally {
                 btn.disabled = false;
                 btn.textContent = t("signInBtn");
