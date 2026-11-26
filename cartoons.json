@@ -140,9 +140,13 @@
     "base": "2026-11-08",
     "slug": "2026-11-08",
     "date": "2026-11-08",
-    "title": "",
-    "tags": [],
-    "desc": "",
+    "title": "Deep concern",
+    "tags": [
+      "Gaza_Genocide",
+      "Gaza",
+      "The_international_community"
+    ],
+    "desc": "Gaza caught between drowning in blood and drowning in winter rain.",
     "image": "cartoons/2026-11-08.webp",
     "page": "c/2026-11-08.html",
     "width": 1500,
