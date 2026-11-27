@@ -305,8 +305,12 @@ def render_cartoon_page(items, idx: int) -> str:
     <title>{title_esc} — Ahmad Qaddura</title>
     <meta name="description" content="{desc_meta_esc}">
     <link rel="canonical" href="{canonical}">
-    <link rel="icon" type="image/png" href="../avatar.png">
-    <link rel="apple-touch-icon" href="../avatar.png">
+    <link rel="icon" href="/favicon.ico" sizes="48x48">
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192x192.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/site.webmanifest">
     <meta property="og:type" content="article">
     <meta property="og:site_name" content="Ahmad Qaddura">
     <meta property="og:url" content="{canonical}">
