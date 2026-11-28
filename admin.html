@@ -504,10 +504,210 @@
             color: var(--ink-gray);
         }
 
+        .field select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border-line);
+            background: #fff;
+            color: var(--ink-black);
+            font-family: inherit;
+            font-size: 0.94rem;
+        }
+        .field select:focus {
+            outline: none;
+            border-color: var(--ink-black);
+        }
+        .field-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+        .section-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 22px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid var(--border-line);
+        }
+        .section-tab {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 9px 18px;
+            border: 1px solid var(--border-line);
+            background: #fff;
+            color: var(--ink-black);
+            font-family: inherit;
+            font-size: 0.88rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.18s ease;
+        }
+        .section-tab:hover {
+            border-color: var(--ink-black);
+            background: var(--bg-paper-alt);
+        }
+        .section-tab.active {
+            background: var(--ink-black);
+            border-color: var(--ink-black);
+            color: #fff;
+        }
+        .section-tab .tab-pill {
+            font-size: 0.74rem;
+            padding: 1px 7px;
+            border-radius: 999px;
+            background: rgba(128, 128, 128, 0.18);
+            font-variant-numeric: tabular-nums;
+        }
+        .section-tab.active .tab-pill {
+            background: rgba(255, 255, 255, 0.22);
+        }
+        .cat-badge {
+            font-size: 0.68rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--accent-red);
+        }
+        .modal-panel.wide {
+            max-width: 740px;
+        }
+
+        /* Flexible Story Block Builder */
+        .blocks-wrap {
+            margin-top: 20px;
+            padding: 16px;
+            background: #F2ECE1;
+            border-top: 2px solid var(--ink-black);
+        }
+        .blocks-wrap-head {
+            margin-bottom: 12px;
+        }
+        .blocks-wrap-head h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.12rem;
+            color: var(--ink-black);
+        }
+        .blocks-wrap-head p {
+            font-size: 0.8rem;
+            color: var(--ink-gray);
+            margin-top: 2px;
+        }
+        .blocks-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+        .blocks-empty {
+            background: rgba(255, 255, 255, 0.75);
+            border: 1px dashed var(--border-line);
+            padding: 16px;
+            text-align: center;
+            font-size: 0.84rem;
+            color: var(--ink-gray);
+        }
+        .block-item {
+            background: #fff;
+            border: 1px solid var(--border-line);
+            padding: 12px 14px;
+        }
+        .block-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #ECE8E0;
+        }
+        .block-type-label {
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--accent-red);
+        }
+        .block-controls {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .blk-btn {
+            background: #fff;
+            border: 1px solid var(--border-line);
+            color: var(--ink-black);
+            padding: 3px 8px;
+            font-family: inherit;
+            font-size: 0.76rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .blk-btn:hover:not(:disabled) {
+            border-color: var(--ink-black);
+            background: var(--bg-paper-alt);
+        }
+        .blk-btn.del:hover {
+            border-color: var(--accent-red);
+            background: var(--accent-red);
+            color: #fff;
+        }
+        .block-item textarea,
+        .block-item input[type="text"] {
+            width: 100%;
+            padding: 9px 11px;
+            border: 1px solid var(--border-line);
+            background: var(--bg-paper);
+            color: var(--ink-black);
+            font-family: inherit;
+            font-size: 0.92rem;
+        }
+        .block-item textarea {
+            min-height: 92px;
+            resize: vertical;
+            line-height: 1.55;
+        }
+        .block-item textarea:focus,
+        .block-item input[type="text"]:focus {
+            outline: none;
+            border-color: var(--ink-black);
+            background: #fff;
+        }
+        .block-photo-row {
+            display: flex;
+            gap: 14px;
+            align-items: flex-start;
+        }
+        .block-photo-thumb {
+            width: 140px;
+            flex-shrink: 0;
+            text-align: center;
+        }
+        .block-photo-thumb img {
+            width: 140px;
+            height: 96px;
+            object-fit: cover;
+            border: 1px solid var(--border-line);
+            background: var(--bg-paper-alt);
+            display: block;
+            margin-bottom: 6px;
+        }
+        .block-photo-fields {
+            flex: 1;
+            min-width: 0;
+        }
+        .block-add-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
         [dir="rtl"] .admin-brand h1,
         [dir="rtl"] .login-wrap h2,
         [dir="rtl"] .modal-head h2,
-        [dir="rtl"] .admin-card-title {
+        [dir="rtl"] .admin-card-title,
+        [dir="rtl"] .blocks-wrap-head h3 {
             font-family: 'Inter', system-ui, sans-serif;
         }
 
@@ -516,6 +716,9 @@
             .login-wrap { padding: 26px 20px; margin: 28px auto; }
             .summary-strip { grid-template-columns: 1fr; gap: 10px; }
             .modal-panel { padding: 20px 18px; }
+            .field-row { grid-template-columns: 1fr; gap: 0; }
+            .block-photo-row { flex-direction: column; }
+            .block-photo-thumb, .block-photo-thumb img { width: 100%; height: auto; max-height: 180px; object-fit: contain; }
         }
     </style>
 </head>
@@ -529,7 +732,7 @@
             </div>
             <div class="topbar-actions">
                 <button type="button" id="lang-btn" class="btn-outline-sm">عربي</button>
-                <a href="gallery.html" target="_blank" rel="noopener" class="btn-outline-sm" data-i18n="viewSite">View Gallery ↗</a>
+                <a href="gallery.html" id="view-site-link" target="_blank" rel="noopener" class="btn-outline-sm" data-i18n="viewSite">View Gallery ↗</a>
                 <button type="button" id="new-btn" class="btn-solid-sm" style="display:none;" data-i18n="newCartoon">+ New Cartoon</button>
                 <button type="button" id="logout-btn" class="btn-outline-sm" style="display:none;" data-i18n="logout">Log Out</button>
             </div>
@@ -567,33 +770,75 @@
         <main id="dashboard-view" style="display:none;">
             <div id="dash-alert" class="alert" role="status" aria-live="polite"></div>
 
-            <div class="summary-strip">
-                <div class="summary-box">
-                    <div class="summary-label" data-i18n="totalCartoons">Total Cartoons</div>
-                    <div class="summary-num" id="stat-total">—</div>
+            <!-- Section Switcher -->
+            <div class="section-tabs" role="tablist">
+                <button type="button" id="tab-cartoons" class="section-tab active" data-section="cartoons" role="tab" aria-selected="true">
+                    <span data-i18n="tabCartoons">Cartoons</span>
+                    <span class="tab-pill" id="pill-cartoons">—</span>
+                </button>
+                <button type="button" id="tab-projects" class="section-tab" data-section="projects" role="tab" aria-selected="false">
+                    <span data-i18n="tabProjects">Press &amp; Projects</span>
+                    <span class="tab-pill" id="pill-projects">—</span>
+                </button>
+            </div>
+
+            <!-- Cartoons Pane -->
+            <div id="cartoons-pane">
+                <div class="summary-strip">
+                    <div class="summary-box">
+                        <div class="summary-label" data-i18n="totalCartoons">Total Cartoons</div>
+                        <div class="summary-num" id="stat-total">—</div>
+                    </div>
+                    <div class="summary-box tone-slate">
+                        <div class="summary-label" data-i18n="totalLikes">Total Likes</div>
+                        <div class="summary-num" id="stat-likes">—</div>
+                    </div>
+                    <div class="summary-box tone-sage">
+                        <div class="summary-label" data-i18n="totalShares">Total Shares</div>
+                        <div class="summary-num" id="stat-shares">—</div>
+                    </div>
                 </div>
-                <div class="summary-box tone-slate">
-                    <div class="summary-label" data-i18n="totalLikes">Total Likes</div>
-                    <div class="summary-num" id="stat-likes">—</div>
+
+                <div class="toolbar">
+                    <input type="text" id="admin-search" class="search-box" placeholder="Search cartoons by title, tag, or date...">
+                    <button type="button" id="refresh-btn" class="btn-outline-sm" data-i18n="refresh">Refresh</button>
                 </div>
-                <div class="summary-box tone-sage">
-                    <div class="summary-label" data-i18n="totalShares">Total Shares</div>
-                    <div class="summary-num" id="stat-shares">—</div>
+
+                <div class="admin-grid" id="admin-grid">
+                    <div class="empty-admin" data-i18n="loading">Loading cartoons...</div>
                 </div>
             </div>
 
-            <div class="toolbar">
-                <input type="text" id="admin-search" class="search-box" placeholder="Search cartoons by title, tag, or date...">
-                <button type="button" id="refresh-btn" class="btn-outline-sm" data-i18n="refresh">Refresh</button>
-            </div>
+            <!-- Press & Projects Pane -->
+            <div id="projects-pane" style="display:none;">
+                <div class="summary-strip">
+                    <div class="summary-box">
+                        <div class="summary-label" data-i18n="statPress">Press</div>
+                        <div class="summary-num" id="pstat-press">—</div>
+                    </div>
+                    <div class="summary-box tone-sage">
+                        <div class="summary-label" data-i18n="statBooks">Books</div>
+                        <div class="summary-num" id="pstat-books">—</div>
+                    </div>
+                    <div class="summary-box tone-slate">
+                        <div class="summary-label" data-i18n="statProjects">Projects</div>
+                        <div class="summary-num" id="pstat-projects">—</div>
+                    </div>
+                </div>
 
-            <div class="admin-grid" id="admin-grid">
-                <div class="empty-admin" data-i18n="loading">Loading cartoons...</div>
+                <div class="toolbar">
+                    <input type="text" id="projects-admin-search" class="search-box" placeholder="Search press, books, or projects...">
+                    <button type="button" id="projects-refresh-btn" class="btn-outline-sm" data-i18n="refresh">Refresh</button>
+                </div>
+
+                <div class="admin-grid" id="projects-admin-grid">
+                    <div class="empty-admin" data-i18n="loadingProjects">Loading press &amp; projects...</div>
+                </div>
             </div>
         </main>
     </div>
 
-    <!-- Publish / Edit Modal -->
+    <!-- Publish / Edit Cartoon Modal -->
     <div id="editor-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="editor-title">
         <div class="modal-panel">
             <div class="modal-head">
@@ -651,6 +896,101 @@
         </div>
     </div>
 
+    <!-- Publish / Edit Press & Projects Story Modal -->
+    <div id="project-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="proj-modal-title">
+        <div class="modal-panel wide">
+            <div class="modal-head">
+                <h2 id="proj-modal-title">New Press / Project Post</h2>
+                <button type="button" class="modal-x" id="proj-close" aria-label="Close">&times;</button>
+            </div>
+
+            <div id="proj-alert" class="alert error" role="alert"></div>
+
+            <form id="project-form">
+                <input type="hidden" id="p-mode" value="create">
+                <input type="hidden" id="p-slug" value="">
+
+                <div class="field-row">
+                    <div class="field">
+                        <label for="p-cat" data-i18n="pCatLabel">Category</label>
+                        <select id="p-cat" required>
+                            <option value="press" data-i18n="catPress">Press (Newspapers &amp; Magazines)</option>
+                            <option value="books" data-i18n="catBooks">Books</option>
+                            <option value="projects" data-i18n="catProjects">Projects &amp; Exhibitions</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label for="p-date" data-i18n="pDateLabel">Date</label>
+                        <input type="date" id="p-date" required>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label id="p-cover-label" data-i18n="pCoverLabel">Cover Image (Shown on Card)</label>
+                    <div class="drop-zone" id="p-cover-drop">
+                        <input type="file" id="p-cover-input" accept="image/webp,image/png,image/jpeg,image/gif">
+                        <div class="drop-zone-label" data-i18n="dropLabel">Click to choose image or drag &amp; drop here</div>
+                        <div class="drop-zone-sub" data-i18n="dropSub">PNG &amp; JPG are automatically optimized to high-quality WebP</div>
+                    </div>
+                    <div class="preview-box" id="p-cover-preview">
+                        <img id="p-cover-img" src="" alt="Cover Preview">
+                        <div class="preview-meta" id="p-cover-meta"></div>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label for="p-title" data-i18n="titleLabel">Title</label>
+                    <input type="text" id="p-title" dir="auto" required placeholder="e.g. Published in Dagens Nyheter">
+                </div>
+
+                <div class="field">
+                    <label for="p-outlet" data-i18n="pOutletLabel">Newspaper / Publisher / Location (Optional)</label>
+                    <input type="text" id="p-outlet" dir="auto" placeholder="e.g. Dagens Nyheter • Stockholm">
+                </div>
+
+                <div class="field">
+                    <label for="p-summary" data-i18n="pSummaryLabel">Short Card Summary (Optional)</label>
+                    <textarea id="p-summary" dir="auto" style="min-height:68px;" placeholder="1–2 lines summarizing this feature, book, or project..."></textarea>
+                </div>
+
+                <div class="field-row">
+                    <div class="field">
+                        <label for="p-ext-url" data-i18n="pExtUrlLabel">External Link (Optional)</label>
+                        <input type="text" id="p-ext-url" dir="ltr" placeholder="https://...">
+                    </div>
+                    <div class="field">
+                        <label for="p-ext-label" data-i18n="pExtLabelLabel">Link Button Text (Optional)</label>
+                        <input type="text" id="p-ext-label" dir="auto" placeholder="e.g. View Publication">
+                    </div>
+                </div>
+
+                <!-- Unlimited Flexible Story Blocks -->
+                <div class="blocks-wrap">
+                    <div class="blocks-wrap-head">
+                        <h3 data-i18n="blocksTitle">Page Content (Photos &amp; Text in Any Order)</h3>
+                        <p data-i18n="blocksSub">Add as many paragraphs, headings, and photos as you want, and arrange them in any order.</p>
+                    </div>
+
+                    <div class="blocks-list" id="blocks-list"></div>
+
+                    <input type="file" id="block-multi-file" multiple accept="image/webp,image/png,image/jpeg,image/gif" style="display:none;">
+                    <input type="file" id="block-replace-file" accept="image/webp,image/png,image/jpeg,image/gif" style="display:none;">
+
+                    <div class="block-add-bar">
+                        <button type="button" id="add-blk-text" class="btn-outline-sm" data-i18n="addTextBtn">+ Add Paragraph</button>
+                        <button type="button" id="add-blk-photo" class="btn-solid-sm" data-i18n="addPhotoBtn">+ Add Photo(s)</button>
+                        <button type="button" id="add-blk-heading" class="btn-outline-sm" data-i18n="addHeadingBtn">+ Add Heading</button>
+                    </div>
+                </div>
+
+                <div class="modal-foot">
+                    <button type="button" class="btn-outline-sm" id="proj-cancel" data-i18n="cancel">Cancel</button>
+                    <button type="submit" class="btn-solid-sm" id="proj-submit" data-i18n="pPublishBtn">Publish Post</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Delete Confirmation Modal -->
     <div id="delete-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="delete-title">
         <div class="modal-panel" style="max-width:460px;">
@@ -658,7 +998,7 @@
                 <h2 id="delete-title" data-i18n="deleteTitle">Delete Cartoon?</h2>
                 <button type="button" class="modal-x" id="delete-close" aria-label="Close">&times;</button>
             </div>
-            <p style="font-size:0.9rem; color:#333;" data-i18n="deleteWarn">This permanently removes the cartoon image, text file, and web page from your gallery.</p>
+            <p id="delete-warn-text" style="font-size:0.9rem; color:#333;" data-i18n="deleteWarn">This permanently removes the cartoon image, text file, and web page from your gallery.</p>
             <div class="delete-preview" id="delete-preview"></div>
             <div id="delete-alert" class="alert error"></div>
             <div class="modal-foot">
@@ -732,16 +1072,65 @@
                 lockedMsg: "Too many failed attempts. Login is temporarily locked — please try again in {m} minute(s).",
                 langSwitch: "عربي",
                 untitled: "Untitled",
+                tabCartoons: "Cartoons",
+                tabProjects: "Press & Projects",
+                viewProjects: "View Press & Projects ↗",
+                newPost: "+ New Post",
+                statPress: "Press",
+                statBooks: "Books",
+                statProjects: "Projects",
+                loadingProjects: "Loading press & projects...",
+                projectsSearchPlaceholder: "Search press, books, or projects...",
+                noProjects: "No press, books, or projects yet. Click '+ New Post' to add your first one.",
+                pNewModalTitle: "New Press / Project Post",
+                pEditModalTitle: "Edit Press / Project Post",
+                pCatLabel: "Category",
+                catPress: "Press (Newspapers & Magazines)",
+                catBooks: "Books",
+                catProjects: "Projects & Exhibitions",
+                catBadgePress: "Press",
+                catBadgeBooks: "Books",
+                catBadgeProjects: "Projects",
+                pDateLabel: "Date",
+                pCoverLabel: "Cover Image (Shown on Card)",
+                pCoverOptional: "Cover Image (Optional — leave empty to keep current)",
+                pOutletLabel: "Newspaper / Publisher / Location (Optional)",
+                pSummaryLabel: "Short Card Summary (Optional)",
+                pExtUrlLabel: "External Link (Optional)",
+                pExtLabelLabel: "Link Button Text (Optional)",
+                blocksTitle: "Page Content (Photos & Text in Any Order)",
+                blocksSub: "Add as many paragraphs, headings, and photos as you want, and arrange them in any order.",
+                blocksEmpty: "No inner blocks yet — use the buttons below to add paragraphs, headings, or photos in any order.",
+                addTextBtn: "+ Add Paragraph",
+                addPhotoBtn: "+ Add Photo(s)",
+                addHeadingBtn: "+ Add Heading",
+                blkTypeText: "Paragraph",
+                blkTypeHeading: "Subheading",
+                blkTypeImage: "Photo",
+                blkTextPh: "Write your paragraph here...",
+                blkHeadingPh: "Section heading...",
+                blkCaptionPh: "Optional caption under this photo...",
+                changePhoto: "Change Photo",
+                pPublishBtn: "Publish Post",
+                pSaveBtn: "Save Post",
+                pCoverRequired: "Please choose a cover image first.",
+                pDeleteTitle: "Delete Post?",
+                pDeleteWarn: "This permanently removes this post, all of its photos, and its web page from Press & Projects.",
+                pDeletedMsg: "Post deleted! Your site will update automatically within ~45 seconds.",
+                photosWord: "photo(s)",
+                moveUp: "Up",
+                moveDown: "Down",
+                removeBlk: "Remove",
             },
             ar: {
-                brandTitle: "إدارة المعرض",
+                brandTitle: "إدارة الموقع",
                 brandSub: "أحمد قدورة • لوحة التحكم الخاصة",
                 viewSite: "عرض المعرض ↗",
                 newCartoon: "+ رسمة جديدة",
                 logout: "تسجيل الخروج",
                 adminOnly: "دخول خاص بالمدير فقط",
                 signInTitle: "تسجيل الدخول للمعرض",
-                signInDesc: "أدخل كلمة السر الخاصة بك لإضافة أو تعديل أو حذف الرسوم في المعرض.",
+                signInDesc: "أدخل كلمة السر الخاصة بك لإضافة أو تعديل أو حذف الرسوم والمنشورات في موقعك.",
                 passwordLabel: "كلمة السر",
                 show: "إظهار",
                 hide: "إخفاء",
@@ -790,19 +1179,108 @@
                 lockedMsg: "تم قفل تسجيل الدخول مؤقتاً بعد عدة محاولات خاطئة. يرجى المحاولة بعد {m} دقيقة.",
                 langSwitch: "EN",
                 untitled: "بدون عنوان",
+                tabCartoons: "المعرض (الرسوم)",
+                tabProjects: "الصحافة والمشاريع",
+                viewProjects: "عرض الصحافة والمشاريع ↗",
+                newPost: "+ منشور جديد",
+                statPress: "صحافة ومجلات",
+                statBooks: "كتب",
+                statProjects: "مشاريع ومعارض",
+                loadingProjects: "جارٍ تحميل الصحافة والمشاريع...",
+                projectsSearchPlaceholder: "ابحث في الصحافة أو الكتب أو المشاريع...",
+                noProjects: "لا توجد منشورات بعد. اضغط «+ منشور جديد» لإضافة أول صحيفة أو كتاب أو مشروع.",
+                pNewModalTitle: "منشور جديد (صحافة / كتاب / مشروع)",
+                pEditModalTitle: "تعديل المنشور",
+                pCatLabel: "القسم",
+                catPress: "الصحافة والمجلات (Press)",
+                catBooks: "الكتب (Books)",
+                catProjects: "المشاريع والمعارض (Projects)",
+                catBadgePress: "صحافة",
+                catBadgeBooks: "كتب",
+                catBadgeProjects: "مشاريع",
+                pDateLabel: "التاريخ",
+                pCoverLabel: "الصورة الخارجية (غلاف البطاقة)",
+                pCoverOptional: "الصورة الخارجية (اختياري — اتركها فارغة للإبقاء على الحالية)",
+                pOutletLabel: "اسم الصحيفة / الناشر / المكان (اختياري)",
+                pSummaryLabel: "ملخص قصير يظهر على البطاقة (اختياري)",
+                pExtUrlLabel: "رابط خارجي للمقال أو الكتاب (اختياري)",
+                pExtLabelLabel: "نص زر الرابط (اختياري)",
+                blocksTitle: "محتوى الصفحة الداخلي (صور ونصوص بأي ترتيب)",
+                blocksSub: "أضف فقرات وعناوين وصوراً بالعدد والترتيب الذي تريده، ويمكنك تحريك أي كتلة للأعلى أو الأسفل.",
+                blocksEmpty: "لا توجد كتل محتوى بعد — استخدم الأزرار بالأسفل لإضافة فقرة نص أو صورة أو عنوان فرعي.",
+                addTextBtn: "+ إضافة فقرة نص",
+                addPhotoBtn: "+ إضافة صورة / صور",
+                addHeadingBtn: "+ إضافة عنوان فرعي",
+                blkTypeText: "فقرة نص",
+                blkTypeHeading: "عنوان فرعي",
+                blkTypeImage: "صورة",
+                blkTextPh: "اكتب الفقرة هنا...",
+                blkHeadingPh: "اكتب العنوان الفرعي هنا...",
+                blkCaptionPh: "تعليق أو شرح اختياري تحت الصورة...",
+                changePhoto: "تغيير الصورة",
+                pPublishBtn: "نشر المنشور",
+                pSaveBtn: "حفظ التعديلات",
+                pCoverRequired: "يرجى اختيار الصورة الخارجية (الغلاف) أولاً.",
+                pDeleteTitle: "حذف المنشور؟",
+                pDeleteWarn: "سيؤدي هذا إلى حذف المنشور وكل صوره وصفحته نهائياً من قسم الصحافة والمشاريع.",
+                pDeletedMsg: "تم حذف المنشور! سيتحدّث موقعك تلقائياً خلال ~45 ثانية.",
+                photosWord: "صورة",
+                moveUp: "أعلى",
+                moveDown: "أسفل",
+                removeBlk: "حذف",
             }
         };
 
         let lang = localStorage.getItem(LANG_KEY) || "en";
+        let activeSection = "cartoons"; // "cartoons" | "projects"
         let allItems = [];
+        let allProjects = [];
         let statsMap = {};
-        let selectedImage = null; // { base64, ext, infoText }
-        let deleteTarget = null;
+        let selectedImage = null;       // Cartoon image
+        let selectedCover = null;       // Project cover: { base64, ext, dataUrl, infoText } | { existingSrc, dataUrl }
+        let storyBlocks = [];           // [{ type: "text"|"heading"|"image", ... }]
+        let replacingBlockIdx = -1;
+        let deleteTarget = null;        // { kind: "cartoon"|"project", item }
 
         function t(key) { return (I18N[lang] && I18N[lang][key]) || I18N.en[key] || key; }
         function escHtml(s) {
             return String(s || "").replace(/[&<>"']/g, m => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[m]));
         }
+
+        function catBadgeLabel(cat) {
+            if (cat === "press") return t("catBadgePress");
+            if (cat === "books") return t("catBadgeBooks");
+            return t("catBadgeProjects");
+        }
+
+        function syncTopBarForSection() {
+            const viewLink = document.getElementById("view-site-link");
+            const newBtn = document.getElementById("new-btn");
+            if (activeSection === "projects") {
+                viewLink.href = "projects.html";
+                viewLink.textContent = t("viewProjects");
+                newBtn.textContent = t("newPost");
+            } else {
+                viewLink.href = "gallery.html";
+                viewLink.textContent = t("viewSite");
+                newBtn.textContent = t("newCartoon");
+            }
+        }
+
+        function switchSection(sec) {
+            activeSection = sec === "projects" ? "projects" : "cartoons";
+            document.getElementById("cartoons-pane").style.display = activeSection === "cartoons" ? "block" : "none";
+            document.getElementById("projects-pane").style.display = activeSection === "projects" ? "block" : "none";
+            document.getElementById("tab-cartoons").classList.toggle("active", activeSection === "cartoons");
+            document.getElementById("tab-projects").classList.toggle("active", activeSection === "projects");
+            document.getElementById("tab-cartoons").setAttribute("aria-selected", activeSection === "cartoons" ? "true" : "false");
+            document.getElementById("tab-projects").setAttribute("aria-selected", activeSection === "projects" ? "true" : "false");
+            syncTopBarForSection();
+            showAlert("dash-alert", "", "");
+        }
+
+        document.getElementById("tab-cartoons").addEventListener("click", () => switchSection("cartoons"));
+        document.getElementById("tab-projects").addEventListener("click", () => switchSection("projects"));
 
         function applyLang() {
             document.documentElement.lang = lang;
@@ -813,9 +1291,13 @@
             });
             document.getElementById("lang-btn").textContent = t("langSwitch");
             document.getElementById("admin-search").placeholder = t("searchPlaceholder");
+            document.getElementById("projects-admin-search").placeholder = t("projectsSearchPlaceholder");
             const pwInput = document.getElementById("pw-input");
             document.getElementById("toggle-pw").textContent = pwInput.type === "password" ? t("show") : t("hide");
+            syncTopBarForSection();
             if (allItems.length) renderList();
+            renderProjectsList();
+            if (document.getElementById("project-modal").classList.contains("open")) renderBlocksEditor();
         }
 
         document.getElementById("lang-btn").addEventListener("click", () => {
@@ -872,11 +1354,13 @@
             document.getElementById("dashboard-view").style.display = isAuthed ? "block" : "none";
             document.getElementById("new-btn").style.display = isAuthed ? "inline-flex" : "none";
             document.getElementById("logout-btn").style.display = isAuthed ? "inline-flex" : "none";
+            syncTopBarForSection();
         }
 
         function logout(msg) {
             setToken("", false);
             allItems = [];
+            allProjects = [];
             showLoggedIn(false);
             if (msg) showAlert("login-alert", "error", msg);
             else showAlert("login-alert", "", "");
@@ -921,16 +1405,22 @@
 
         async function loadDashboard() {
             const grid = document.getElementById("admin-grid");
+            const pGrid = document.getElementById("projects-admin-grid");
             grid.innerHTML = `<div class="empty-admin">${escHtml(t("loading"))}</div>`;
+            pGrid.innerHTML = `<div class="empty-admin">${escHtml(t("loadingProjects"))}</div>`;
             try {
-                const [listRes, statsRes] = await Promise.all([
+                const [listRes, statsRes, projRes] = await Promise.all([
                     apiFetch("/list"),
                     fetch(`${STATS_API}/stats`, { cache: "no-store" }).then(r => r.ok ? r.json() : {}).catch(() => ({})),
+                    apiFetch("/projects/list").catch(() => ({ items: [] })),
                 ]);
                 allItems = listRes.items || [];
                 statsMap = statsRes || {};
+                allProjects = (projRes && projRes.items) || [];
                 updateSummary();
                 renderList();
+                updateProjectsSummary();
+                renderProjectsList();
             } catch (err) {
                 if (getToken()) showAlert("dash-alert", "error", err.message);
             }
@@ -948,6 +1438,20 @@
             document.getElementById("stat-total").textContent = allItems.length;
             document.getElementById("stat-likes").textContent = totalLikes;
             document.getElementById("stat-shares").textContent = totalShares;
+            document.getElementById("pill-cartoons").textContent = allItems.length;
+        }
+
+        function updateProjectsSummary() {
+            let press = 0, books = 0, projects = 0;
+            for (const p of allProjects) {
+                if (p.category === "press") press++;
+                else if (p.category === "books") books++;
+                else projects++;
+            }
+            document.getElementById("pstat-press").textContent = press;
+            document.getElementById("pstat-books").textContent = books;
+            document.getElementById("pstat-projects").textContent = projects;
+            document.getElementById("pill-projects").textContent = allProjects.length;
         }
 
         function renderList() {
@@ -1000,8 +1504,59 @@
             }).join("");
         }
 
+        function renderProjectsList() {
+            const grid = document.getElementById("projects-admin-grid");
+            const q = document.getElementById("projects-admin-search").value.trim().toLowerCase();
+            const filtered = allProjects.filter(p => {
+                if (!q) return true;
+                const hay = `${p.title} ${p.outlet} ${p.summary} ${p.date} ${p.category} ${p.slug}`.toLowerCase();
+                return hay.includes(q);
+            });
+
+            if (!filtered.length) {
+                grid.innerHTML = `<div class="empty-admin">${escHtml(t("noProjects"))}</div>`;
+                return;
+            }
+
+            grid.innerHTML = filtered.map(p => {
+                const liveUrl = p.page ? `https://ahmadqaddura.com/${p.page}` : `https://ahmadqaddura.com/p/${encodeURIComponent(p.slug)}.html`;
+                const imgSrc = p.coverUrl ? `${p.coverUrl}${p.cacheBust ? `?v=${p.cacheBust}` : ""}` : "";
+                const photos = Number(p.photoCount) || 1;
+                return `
+                    <article class="admin-card">
+                        <div>
+                            <div class="admin-thumb">
+                                ${imgSrc ? `<img src="${escHtml(imgSrc)}" alt="${escHtml(p.title)}" loading="lazy">` : ""}
+                                ${p.pending ? `<span class="pending-badge">${escHtml(t("pendingBadge"))}</span>` : ""}
+                            </div>
+                            <div class="admin-card-body">
+                                <div class="admin-card-meta">
+                                    <span class="cat-badge">${escHtml(catBadgeLabel(p.category))}</span>
+                                    <span>${escHtml(p.date || "")} &bull; ${photos} ${escHtml(t("photosWord"))}</span>
+                                </div>
+                                <div class="admin-card-title" dir="auto">${escHtml(p.title || t("untitled"))}</div>
+                                ${p.outlet ? `<div style="font-size:0.8rem;font-weight:600;color:#444;margin-bottom:4px;" dir="auto">${escHtml(p.outlet)}</div>` : ""}
+                                ${p.summary ? `<div class="admin-card-desc" dir="auto">${escHtml(p.summary)}</div>` : ""}
+                            </div>
+                        </div>
+                        <div class="admin-card-actions">
+                            <button type="button" class="btn-outline-sm" data-pedit="${escHtml(p.slug)}">${escHtml(t("edit"))}</button>
+                            <a href="${escHtml(liveUrl)}" target="_blank" rel="noopener" class="btn-outline-sm">${escHtml(t("view"))}</a>
+                            <span class="spacer"></span>
+                            <button type="button" class="btn-danger-sm" data-pdel="${escHtml(p.slug)}">${escHtml(t("del"))}</button>
+                        </div>
+                    </article>
+                `;
+            }).join("");
+        }
+
         document.getElementById("admin-search").addEventListener("input", renderList);
+        document.getElementById("projects-admin-search").addEventListener("input", renderProjectsList);
         document.getElementById("refresh-btn").addEventListener("click", () => {
+            showAlert("dash-alert", "", "");
+            loadDashboard();
+        });
+        document.getElementById("projects-refresh-btn").addEventListener("click", () => {
             showAlert("dash-alert", "", "");
             loadDashboard();
         });
@@ -1014,12 +1569,12 @@
         }
         document.getElementById("f-tags").addEventListener("input", updateTagPreview);
 
-        // Image processing: preserve WebP/GIF as-is, convert PNG/JPG to crisp WebP (max 2200px)
+        // Shared image processor: preserve WebP/GIF as-is, convert PNG/JPG to crisp WebP
         function formatKB(bytes) {
             return bytes >= 1048576 ? `${(bytes / 1048576).toFixed(2)} MB` : `${Math.round(bytes / 1024)} KB`;
         }
 
-        async function processImageFile(file) {
+        async function processImageFile(file, maxDim = 2200, quality = 0.9) {
             const origSize = file.size;
             const isWebp = file.type === "image/webp" || /\.webp$/i.test(file.name);
             const isGif = file.type === "image/gif" || /\.gif$/i.test(file.name);
@@ -1040,7 +1595,6 @@
                 };
             }
 
-            // Convert PNG/JPG -> WebP via canvas
             const img = await new Promise((resolve, reject) => {
                 const url = URL.createObjectURL(file);
                 const el = new Image();
@@ -1049,7 +1603,6 @@
                 el.src = url;
             });
 
-            const maxDim = 2200;
             let w = img.naturalWidth, h = img.naturalHeight;
             if (w > maxDim || h > maxDim) {
                 const scale = maxDim / Math.max(w, h);
@@ -1061,10 +1614,10 @@
             canvas.height = h;
             canvas.getContext("2d").drawImage(img, 0, 0, w, h);
 
-            let outUrl = canvas.toDataURL("image/webp", 0.9);
+            let outUrl = canvas.toDataURL("image/webp", quality);
             let ext = "webp";
             if (!outUrl.startsWith("data:image/webp")) {
-                outUrl = canvas.toDataURL("image/jpeg", 0.9);
+                outUrl = canvas.toDataURL("image/jpeg", quality);
                 ext = "jpg";
             }
             const b64 = outUrl.split(",")[1];
@@ -1077,6 +1630,7 @@
             };
         }
 
+        // ================== CARTOON MODAL ==================
         async function handleFileSelect(file) {
             if (!file) return;
             showAlert("editor-alert", "", "");
@@ -1157,7 +1711,6 @@
             document.getElementById("editor-modal").classList.add("open");
             document.body.style.overflow = "hidden";
 
-            // Fetch exact live .txt from GitHub in case it was just edited
             try {
                 const fresh = await apiFetch(`/item?base=${encodeURIComponent(base)}`);
                 if (document.getElementById("edit-base").value === base) {
@@ -1174,7 +1727,10 @@
             document.body.style.overflow = "";
         }
 
-        document.getElementById("new-btn").addEventListener("click", openCreateModal);
+        document.getElementById("new-btn").addEventListener("click", () => {
+            if (activeSection === "projects") openProjectCreateModal();
+            else openCreateModal();
+        });
         document.getElementById("editor-close").addEventListener("click", closeEditorModal);
         document.getElementById("editor-cancel").addEventListener("click", closeEditorModal);
 
@@ -1262,17 +1818,422 @@
             }
         });
 
-        // Delete Modal
+        // ================== PRESS & PROJECTS FLEXIBLE STORY EDITOR ==================
+        const pCoverDrop = document.getElementById("p-cover-drop");
+        const pCoverInput = document.getElementById("p-cover-input");
+        const blkMultiInput = document.getElementById("block-multi-file");
+        const blkReplaceInput = document.getElementById("block-replace-file");
+
+        async function handleCoverSelect(file) {
+            if (!file) return;
+            showAlert("proj-alert", "", "");
+            try {
+                const img = await processImageFile(file, 2000, 0.88);
+                selectedCover = img;
+                document.getElementById("p-cover-img").src = img.dataUrl;
+                document.getElementById("p-cover-meta").textContent = img.infoText;
+                document.getElementById("p-cover-preview").classList.add("show");
+            } catch (_) {
+                showAlert("proj-alert", "error", "Could not read cover image.");
+            }
+        }
+
+        pCoverDrop.addEventListener("click", () => pCoverInput.click());
+        pCoverInput.addEventListener("change", () => handleCoverSelect(pCoverInput.files[0]));
+        pCoverDrop.addEventListener("dragover", (e) => { e.preventDefault(); pCoverDrop.classList.add("dragover"); });
+        pCoverDrop.addEventListener("dragleave", () => pCoverDrop.classList.remove("dragover"));
+        pCoverDrop.addEventListener("drop", (e) => {
+            e.preventDefault();
+            pCoverDrop.classList.remove("dragover");
+            if (e.dataTransfer.files && e.dataTransfer.files[0]) handleCoverSelect(e.dataTransfer.files[0]);
+        });
+
+        function renderBlocksEditor() {
+            const wrap = document.getElementById("blocks-list");
+            if (!storyBlocks.length) {
+                wrap.innerHTML = `<div class="blocks-empty">${escHtml(t("blocksEmpty"))}</div>`;
+                return;
+            }
+            wrap.innerHTML = storyBlocks.map((blk, idx) => {
+                const typeLabel = blk.type === "heading" ? t("blkTypeHeading")
+                    : blk.type === "image" ? t("blkTypeImage")
+                    : t("blkTypeText");
+                const head = `
+                    <div class="block-head">
+                        <span class="block-type-label">#${idx + 1} &bull; ${escHtml(typeLabel)}</span>
+                        <div class="block-controls">
+                            <button type="button" class="blk-btn" data-blk-up="${idx}" ${idx === 0 ? "disabled" : ""} title="${escHtml(t("moveUp"))}">↑</button>
+                            <button type="button" class="blk-btn" data-blk-down="${idx}" ${idx === storyBlocks.length - 1 ? "disabled" : ""} title="${escHtml(t("moveDown"))}">↓</button>
+                            <button type="button" class="blk-btn del" data-blk-del="${idx}" title="${escHtml(t("removeBlk"))}">&times;</button>
+                        </div>
+                    </div>
+                `;
+                if (blk.type === "heading") {
+                    return `
+                        <div class="block-item">
+                            ${head}
+                            <input type="text" dir="auto" data-blk-val="${idx}" value="${escHtml(blk.text || "")}" placeholder="${escHtml(t("blkHeadingPh"))}">
+                        </div>
+                    `;
+                }
+                if (blk.type === "image") {
+                    const thumb = blk.dataUrl || blk.imageUrl || "";
+                    return `
+                        <div class="block-item">
+                            ${head}
+                            <div class="block-photo-row">
+                                <div class="block-photo-thumb">
+                                    ${thumb ? `<img src="${escHtml(thumb)}" alt="">` : ""}
+                                    <button type="button" class="blk-btn" style="width:100%;" data-blk-swap="${idx}">${escHtml(t("changePhoto"))}</button>
+                                </div>
+                                <div class="block-photo-fields">
+                                    <input type="text" dir="auto" data-blk-cap="${idx}" value="${escHtml(blk.caption || "")}" placeholder="${escHtml(t("blkCaptionPh"))}">
+                                    ${blk.infoText ? `<div class="preview-meta" style="text-align:start;">${escHtml(blk.infoText)}</div>` : ""}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+                return `
+                    <div class="block-item">
+                        ${head}
+                        <textarea dir="auto" data-blk-val="${idx}" placeholder="${escHtml(t("blkTextPh"))}">${escHtml(blk.text || "")}</textarea>
+                    </div>
+                `;
+            }).join("");
+        }
+
+        document.getElementById("add-blk-text").addEventListener("click", () => {
+            storyBlocks.push({ type: "text", text: "" });
+            renderBlocksEditor();
+            const last = document.querySelector(`[data-blk-val="${storyBlocks.length - 1}"]`);
+            if (last) last.focus();
+        });
+
+        document.getElementById("add-blk-heading").addEventListener("click", () => {
+            storyBlocks.push({ type: "heading", text: "" });
+            renderBlocksEditor();
+            const last = document.querySelector(`[data-blk-val="${storyBlocks.length - 1}"]`);
+            if (last) last.focus();
+        });
+
+        document.getElementById("add-blk-photo").addEventListener("click", () => {
+            blkMultiInput.value = "";
+            blkMultiInput.click();
+        });
+
+        blkMultiInput.addEventListener("change", async () => {
+            const files = Array.from(blkMultiInput.files || []);
+            if (!files.length) return;
+            showAlert("proj-alert", "", "");
+            for (const f of files) {
+                try {
+                    const img = await processImageFile(f, 1900, 0.88);
+                    storyBlocks.push({
+                        type: "image",
+                        dataUrl: img.dataUrl,
+                        base64: img.base64,
+                        ext: img.ext,
+                        infoText: img.infoText,
+                        caption: "",
+                    });
+                } catch (_) {
+                    showAlert("proj-alert", "error", "Could not read one of the selected images.");
+                }
+            }
+            renderBlocksEditor();
+        });
+
+        blkReplaceInput.addEventListener("change", async () => {
+            const file = blkReplaceInput.files && blkReplaceInput.files[0];
+            if (!file || replacingBlockIdx < 0 || !storyBlocks[replacingBlockIdx]) return;
+            try {
+                const img = await processImageFile(file, 1900, 0.88);
+                const prevCap = storyBlocks[replacingBlockIdx].caption || "";
+                storyBlocks[replacingBlockIdx] = {
+                    type: "image",
+                    dataUrl: img.dataUrl,
+                    base64: img.base64,
+                    ext: img.ext,
+                    infoText: img.infoText,
+                    caption: prevCap,
+                };
+                renderBlocksEditor();
+            } catch (_) {
+                showAlert("proj-alert", "error", "Could not read replacement image.");
+            } finally {
+                replacingBlockIdx = -1;
+            }
+        });
+
+        const blocksListEl = document.getElementById("blocks-list");
+        blocksListEl.addEventListener("input", (e) => {
+            const valIdx = e.target.getAttribute("data-blk-val");
+            if (valIdx !== null && storyBlocks[Number(valIdx)]) {
+                storyBlocks[Number(valIdx)].text = e.target.value;
+            }
+            const capIdx = e.target.getAttribute("data-blk-cap");
+            if (capIdx !== null && storyBlocks[Number(capIdx)]) {
+                storyBlocks[Number(capIdx)].caption = e.target.value;
+            }
+        });
+
+        blocksListEl.addEventListener("click", (e) => {
+            const up = e.target.closest("[data-blk-up]");
+            if (up) {
+                const i = Number(up.getAttribute("data-blk-up"));
+                if (i > 0) {
+                    [storyBlocks[i - 1], storyBlocks[i]] = [storyBlocks[i], storyBlocks[i - 1]];
+                    renderBlocksEditor();
+                }
+                return;
+            }
+            const down = e.target.closest("[data-blk-down]");
+            if (down) {
+                const i = Number(down.getAttribute("data-blk-down"));
+                if (i < storyBlocks.length - 1) {
+                    [storyBlocks[i], storyBlocks[i + 1]] = [storyBlocks[i + 1], storyBlocks[i]];
+                    renderBlocksEditor();
+                }
+                return;
+            }
+            const del = e.target.closest("[data-blk-del]");
+            if (del) {
+                const i = Number(del.getAttribute("data-blk-del"));
+                storyBlocks.splice(i, 1);
+                renderBlocksEditor();
+                return;
+            }
+            const swap = e.target.closest("[data-blk-swap]");
+            if (swap) {
+                replacingBlockIdx = Number(swap.getAttribute("data-blk-swap"));
+                blkReplaceInput.value = "";
+                blkReplaceInput.click();
+            }
+        });
+
+        function openProjectCreateModal() {
+            selectedCover = null;
+            storyBlocks = [{ type: "text", text: "" }];
+            pCoverInput.value = "";
+            showAlert("proj-alert", "", "");
+            document.getElementById("p-mode").value = "create";
+            document.getElementById("p-slug").value = "";
+            document.getElementById("proj-modal-title").textContent = t("pNewModalTitle");
+            document.getElementById("p-cover-label").textContent = t("pCoverLabel");
+            document.getElementById("p-cat").value = "press";
+            document.getElementById("p-date").value = todayISO();
+            document.getElementById("p-title").value = "";
+            document.getElementById("p-outlet").value = "";
+            document.getElementById("p-summary").value = "";
+            document.getElementById("p-ext-url").value = "";
+            document.getElementById("p-ext-label").value = "";
+            document.getElementById("p-cover-preview").classList.remove("show");
+            document.getElementById("proj-submit").textContent = t("pPublishBtn");
+            renderBlocksEditor();
+            document.getElementById("project-modal").classList.add("open");
+            document.body.style.overflow = "hidden";
+        }
+
+        async function openProjectEditModal(slug) {
+            const item = allProjects.find(p => p.slug === slug);
+            if (!item) return;
+            selectedCover = null;
+            storyBlocks = [];
+            pCoverInput.value = "";
+            showAlert("proj-alert", "", "");
+            document.getElementById("p-mode").value = "edit";
+            document.getElementById("p-slug").value = slug;
+            document.getElementById("proj-modal-title").textContent = t("pEditModalTitle");
+            document.getElementById("p-cover-label").textContent = t("pCoverOptional");
+            document.getElementById("p-cat").value = item.category || "projects";
+            document.getElementById("p-date").value = item.date || todayISO();
+            document.getElementById("p-title").value = item.title || "";
+            document.getElementById("p-outlet").value = item.outlet || "";
+            document.getElementById("p-summary").value = item.summary || "";
+            document.getElementById("p-ext-url").value = item.externalUrl || "";
+            document.getElementById("p-ext-label").value = item.externalLabel || "";
+            if (item.coverUrl) {
+                document.getElementById("p-cover-img").src = `${item.coverUrl}${item.cacheBust ? `?v=${item.cacheBust}` : ""}`;
+                document.getElementById("p-cover-meta").textContent = "";
+                document.getElementById("p-cover-preview").classList.add("show");
+            } else {
+                document.getElementById("p-cover-preview").classList.remove("show");
+            }
+            document.getElementById("proj-submit").textContent = t("pSaveBtn");
+            document.getElementById("blocks-list").innerHTML = `<div class="blocks-empty">${escHtml(t("loadingProjects"))}</div>`;
+            document.getElementById("project-modal").classList.add("open");
+            document.body.style.overflow = "hidden";
+
+            try {
+                const fresh = await apiFetch(`/projects/item?slug=${encodeURIComponent(slug)}`);
+                if (document.getElementById("p-slug").value !== slug) return;
+                document.getElementById("p-cat").value = fresh.category || "projects";
+                document.getElementById("p-date").value = fresh.date || todayISO();
+                document.getElementById("p-title").value = fresh.title || "";
+                document.getElementById("p-outlet").value = fresh.outlet || "";
+                document.getElementById("p-summary").value = fresh.summary || "";
+                document.getElementById("p-ext-url").value = fresh.externalUrl || "";
+                document.getElementById("p-ext-label").value = fresh.externalLabel || "";
+                if (fresh.cover) {
+                    selectedCover = { existingSrc: fresh.cover, dataUrl: fresh.coverUrl };
+                    document.getElementById("p-cover-img").src = fresh.coverUrl;
+                    document.getElementById("p-cover-meta").textContent = fresh.cover;
+                    document.getElementById("p-cover-preview").classList.add("show");
+                }
+                storyBlocks = (Array.isArray(fresh.blocks) ? fresh.blocks : []).map(b => {
+                    if (b.type === "image") {
+                        return { type: "image", existingSrc: b.src, imageUrl: b.imageUrl, caption: b.caption || "" };
+                    }
+                    return { type: b.type, text: b.text || "" };
+                });
+                renderBlocksEditor();
+            } catch (err) {
+                showAlert("proj-alert", "error", err.message);
+            }
+        }
+
+        function closeProjectModal() {
+            document.getElementById("project-modal").classList.remove("open");
+            document.body.style.overflow = "";
+        }
+
+        document.getElementById("proj-close").addEventListener("click", closeProjectModal);
+        document.getElementById("proj-cancel").addEventListener("click", closeProjectModal);
+
+        document.getElementById("project-form").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            showAlert("proj-alert", "", "");
+            const mode = document.getElementById("p-mode").value;
+            const slug = document.getElementById("p-slug").value;
+            const category = document.getElementById("p-cat").value;
+            const date = document.getElementById("p-date").value;
+            const title = document.getElementById("p-title").value.trim();
+            const outlet = document.getElementById("p-outlet").value.trim();
+            const summary = document.getElementById("p-summary").value.trim();
+            const externalUrl = document.getElementById("p-ext-url").value.trim();
+            const externalLabel = document.getElementById("p-ext-label").value.trim();
+            const submitBtn = document.getElementById("proj-submit");
+
+            if (mode === "create" && (!selectedCover || !selectedCover.base64)) {
+                showAlert("proj-alert", "error", t("pCoverRequired"));
+                return;
+            }
+
+            const coverPayload = selectedCover
+                ? (selectedCover.base64
+                    ? { base64: selectedCover.base64, ext: selectedCover.ext }
+                    : { existingSrc: selectedCover.existingSrc })
+                : null;
+
+            const blocksPayload = storyBlocks.map(b => {
+                if (b.type === "image") {
+                    if (b.base64) return { type: "image", base64: b.base64, ext: b.ext, caption: b.caption || "" };
+                    if (b.existingSrc) return { type: "image", existingSrc: b.existingSrc, caption: b.caption || "" };
+                    return null;
+                }
+                const txt = String(b.text || "").trim();
+                return txt ? { type: b.type, text: txt } : null;
+            }).filter(Boolean);
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = mode === "create" ? t("publishing") : t("saving");
+
+            try {
+                const res = await apiFetch("/projects/save", {
+                    method: "POST",
+                    body: {
+                        mode,
+                        slug,
+                        category,
+                        date,
+                        title,
+                        outlet,
+                        summary,
+                        externalUrl,
+                        externalLabel,
+                        cover: coverPayload,
+                        blocks: blocksPayload,
+                    }
+                });
+
+                const previewCoverUrl = (selectedCover && selectedCover.dataUrl) || res.coverUrl || "";
+                if (mode === "create") {
+                    allProjects.unshift({
+                        slug: res.slug,
+                        category: res.category,
+                        title: res.title,
+                        outlet: res.outlet,
+                        date: res.date,
+                        summary: res.summary,
+                        externalUrl: res.externalUrl,
+                        externalLabel: res.externalLabel,
+                        photoCount: res.photoCount,
+                        page: res.page,
+                        coverUrl: previewCoverUrl,
+                        pending: true,
+                        cacheBust: Date.now(),
+                    });
+                } else {
+                    const target = allProjects.find(p => p.slug === slug);
+                    if (target) {
+                        target.category = res.category;
+                        target.title = res.title;
+                        target.outlet = res.outlet;
+                        target.date = res.date;
+                        target.summary = res.summary;
+                        target.externalUrl = res.externalUrl;
+                        target.externalLabel = res.externalLabel;
+                        target.photoCount = res.photoCount;
+                        if (previewCoverUrl) target.coverUrl = previewCoverUrl;
+                        target.pending = true;
+                        target.cacheBust = Date.now();
+                    }
+                }
+                allProjects.sort((a, b) => (b.date.localeCompare(a.date) || b.slug.localeCompare(a.slug)));
+                updateProjectsSummary();
+                renderProjectsList();
+                closeProjectModal();
+                showAlert("dash-alert", "success", mode === "create" ? t("publishedMsg") : t("updatedMsg"));
+            } catch (err) {
+                showAlert("proj-alert", "error", err.message);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = mode === "create" ? t("pPublishBtn") : t("pSaveBtn");
+            }
+        });
+
+        // ================== UNIFIED DELETE MODAL ==================
         function openDeleteModal(base) {
             const item = allItems.find(c => c.base === base);
             if (!item) return;
-            deleteTarget = item;
+            deleteTarget = { kind: "cartoon", item };
             showAlert("delete-alert", "", "");
+            document.getElementById("delete-title").textContent = t("deleteTitle");
+            document.getElementById("delete-warn-text").textContent = t("deleteWarn");
             document.getElementById("delete-preview").innerHTML = `
                 <img src="${escHtml(item.imageUrl)}" alt="">
                 <div>
                     <div style="font-weight:700; font-size:0.95rem;">${escHtml(item.title || t("untitled"))}</div>
                     <div style="font-size:0.8rem; color:var(--ink-gray);">${escHtml(item.date || item.base)} &bull; ${escHtml(item.name)}</div>
+                </div>
+            `;
+            document.getElementById("delete-modal").classList.add("open");
+            document.body.style.overflow = "hidden";
+        }
+
+        function openProjectDeleteModal(slug) {
+            const item = allProjects.find(p => p.slug === slug);
+            if (!item) return;
+            deleteTarget = { kind: "project", item };
+            showAlert("delete-alert", "", "");
+            document.getElementById("delete-title").textContent = t("pDeleteTitle");
+            document.getElementById("delete-warn-text").textContent = t("pDeleteWarn");
+            document.getElementById("delete-preview").innerHTML = `
+                ${item.coverUrl ? `<img src="${escHtml(item.coverUrl)}" alt="">` : ""}
+                <div>
+                    <div style="font-weight:700; font-size:0.95rem;" dir="auto">${escHtml(item.title || t("untitled"))}</div>
+                    <div style="font-size:0.8rem; color:var(--ink-gray);">${escHtml(catBadgeLabel(item.category))} &bull; ${escHtml(item.date || "")}</div>
                 </div>
             `;
             document.getElementById("delete-modal").classList.add("open");
@@ -1295,15 +2256,27 @@
             btn.textContent = t("deleting");
             showAlert("delete-alert", "", "");
             try {
-                await apiFetch("/delete", {
-                    method: "POST",
-                    body: { base: deleteTarget.base, imageName: deleteTarget.name }
-                });
-                allItems = allItems.filter(c => c.base !== deleteTarget.base);
-                updateSummary();
-                renderList();
-                closeDeleteModal();
-                showAlert("dash-alert", "success", t("deletedMsg"));
+                if (deleteTarget.kind === "project") {
+                    await apiFetch("/projects/delete", {
+                        method: "POST",
+                        body: { slug: deleteTarget.item.slug }
+                    });
+                    allProjects = allProjects.filter(p => p.slug !== deleteTarget.item.slug);
+                    updateProjectsSummary();
+                    renderProjectsList();
+                    closeDeleteModal();
+                    showAlert("dash-alert", "success", t("pDeletedMsg"));
+                } else {
+                    await apiFetch("/delete", {
+                        method: "POST",
+                        body: { base: deleteTarget.item.base, imageName: deleteTarget.item.name }
+                    });
+                    allItems = allItems.filter(c => c.base !== deleteTarget.item.base);
+                    updateSummary();
+                    renderList();
+                    closeDeleteModal();
+                    showAlert("dash-alert", "success", t("deletedMsg"));
+                }
             } catch (err) {
                 showAlert("delete-alert", "error", err.message);
             } finally {
@@ -1312,7 +2285,7 @@
             }
         });
 
-        // Card button delegation
+        // Card button delegation (Cartoons + Projects)
         document.getElementById("admin-grid").addEventListener("click", (e) => {
             const editBtn = e.target.closest("[data-edit]");
             if (editBtn) { openEditModal(editBtn.getAttribute("data-edit")); return; }
@@ -1320,10 +2293,18 @@
             if (delBtn) { openDeleteModal(delBtn.getAttribute("data-del")); }
         });
 
+        document.getElementById("projects-admin-grid").addEventListener("click", (e) => {
+            const editBtn = e.target.closest("[data-pedit]");
+            if (editBtn) { openProjectEditModal(editBtn.getAttribute("data-pedit")); return; }
+            const delBtn = e.target.closest("[data-pdel]");
+            if (delBtn) { openProjectDeleteModal(delBtn.getAttribute("data-pdel")); }
+        });
+
         // Close modals on Escape
         document.addEventListener("keydown", (e) => {
             if (e.key === "Escape") {
                 if (document.getElementById("editor-modal").classList.contains("open")) closeEditorModal();
+                if (document.getElementById("project-modal").classList.contains("open")) closeProjectModal();
                 if (document.getElementById("delete-modal").classList.contains("open")) closeDeleteModal();
             }
         });

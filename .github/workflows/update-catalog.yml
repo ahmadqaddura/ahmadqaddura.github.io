@@ -5,6 +5,7 @@ on:
     branches: [ main ]
     paths:
       - 'cartoons/**'
+      - 'projects/**'
       - 'scripts/build_catalog.py'
   workflow_dispatch:
 
@@ -25,7 +26,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Generate cartoons.json, static cartoon pages, and sitemap.xml
+      - name: Generate catalogs, static share pages, and sitemap
         run: python3 scripts/build_catalog.py
 
       - name: Commit generated files if changed
@@ -33,11 +34,12 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add cartoons.json sitemap.xml c/
+          git add cartoons.json projects.json sitemap.xml c/
+          if [ -d p ]; then git add p/; fi
           if git diff --cached --quiet; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
           else
-            git commit -m "Auto-update cartoon catalog, share pages, and sitemap"
+            git commit -m "Auto-update catalog, share pages, and sitemap"
             git push
             echo "changed=true" >> "$GITHUB_OUTPUT"
           fi
