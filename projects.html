@@ -48,6 +48,7 @@
                     <h2 class="section-title">Press &amp; Projects</h2>
                     <span class="section-note">Published works in newspapers &amp; magazines, books, exhibitions &amp; special projects</span>
                 </div>
+                <span class="section-note" id="projects-page-info"></span>
             </div>
 
             <div class="projects-toolbar">
@@ -65,6 +66,7 @@
                     <p>Loading archive...</p>
                 </div>
             </div>
+            <div class="pagination" id="projects-pagination" style="display:none;"></div>
         </section>
     </main>
 
@@ -90,16 +92,20 @@
 
     <script>
         (function () {
+            const PER_PAGE = 9;
             const CAT_LABELS = { press: "Press", books: "Books", projects: "Projects" };
             const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
 
             let allPosts = [];
             let activeCat = "all";
             let query = "";
+            let currentPage = 1;
 
             const grid = document.getElementById("projects-grid");
             const tabs = document.getElementById("cat-tabs");
             const searchInput = document.getElementById("projects-search");
+            const paginationEl = document.getElementById("projects-pagination");
+            const pageInfoEl = document.getElementById("projects-page-info");
 
             function esc(s) {
                 return String(s || "").replace(/[&<>"']/g, m => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[m]));
@@ -118,6 +124,15 @@
                 return d || "";
             }
 
+            function syncUrl() {
+                const params = new URLSearchParams();
+                if (activeCat !== "all") params.set("cat", activeCat);
+                if (currentPage > 1) params.set("page", String(currentPage));
+                const qs = params.toString();
+                const nextUrl = qs ? `projects.html?${qs}` : "projects.html";
+                try { history.replaceState(null, "", nextUrl); } catch (_) {}
+            }
+
             function updateCounts() {
                 const counts = { all: allPosts.length, press: 0, books: 0, projects: 0 };
                 for (const p of allPosts) {
@@ -127,6 +142,21 @@
                     const el = document.getElementById(`count-${k}`);
                     if (el) el.textContent = counts[k] ? `(${counts[k]})` : "";
                 }
+            }
+
+            function renderPagination(totalPages) {
+                if (totalPages <= 1) {
+                    paginationEl.style.display = "none";
+                    paginationEl.innerHTML = "";
+                    return;
+                }
+                paginationEl.style.display = "flex";
+                let html = `<button type="button" class="page-btn" ${currentPage === 1 ? "disabled" : ""} data-page="${currentPage - 1}">&larr; Previous</button>`;
+                for (let i = 1; i <= totalPages; i++) {
+                    html += `<button type="button" class="page-btn ${i === currentPage ? "active" : ""}" data-page="${i}" aria-label="Page ${i}"${i === currentPage ? ' aria-current="page"' : ""}>${i}</button>`;
+                }
+                html += `<button type="button" class="page-btn" ${currentPage === totalPages ? "disabled" : ""} data-page="${currentPage + 1}">Next &rarr;</button>`;
+                paginationEl.innerHTML = html;
             }
 
             function render() {
@@ -139,6 +169,8 @@
                 });
 
                 if (!allPosts.length) {
+                    pageInfoEl.textContent = "";
+                    paginationEl.style.display = "none";
                     grid.innerHTML = `
                         <div class="projects-empty" style="grid-column: 1 / -1;">
                             <h3>Press &amp; Projects Archive</h3>
@@ -149,15 +181,31 @@
                 }
 
                 if (!filtered.length) {
+                    pageInfoEl.textContent = "Showing 0 entries";
+                    paginationEl.style.display = "none";
                     grid.innerHTML = `
                         <div class="projects-empty" style="grid-column: 1 / -1;">
                             <p>No matching entries found.</p>
                         </div>
                     `;
+                    syncUrl();
                     return;
                 }
 
-                grid.innerHTML = filtered.map(p => {
+                const totalPages = Math.ceil(filtered.length / PER_PAGE);
+                if (currentPage < 1) currentPage = 1;
+                if (currentPage > totalPages) currentPage = totalPages;
+
+                const startIdx = (currentPage - 1) * PER_PAGE;
+                const pageItems = filtered.slice(startIdx, startIdx + PER_PAGE);
+
+                if (totalPages > 1) {
+                    pageInfoEl.textContent = `Showing ${startIdx + 1}–${startIdx + pageItems.length} of ${filtered.length}`;
+                } else {
+                    pageInfoEl.textContent = filtered.length === 1 ? "Showing 1 entry" : `Showing ${filtered.length} entries`;
+                }
+
+                grid.innerHTML = pageItems.map(p => {
                     const catClass = p.category === "books" ? "cat-books" : p.category === "projects" ? "cat-projects" : "";
                     const catLabel = CAT_LABELS[p.category] || "Projects";
                     const photos = Number(p.photoCount) || 1;
@@ -188,12 +236,26 @@
                         </a>
                     `;
                 }).join("");
+
+                renderPagination(totalPages);
+                syncUrl();
             }
+
+            paginationEl.addEventListener("click", (e) => {
+                const btn = e.target.closest("button[data-page]");
+                if (!btn || btn.disabled) return;
+                const next = parseInt(btn.getAttribute("data-page"), 10);
+                if (!Number.isFinite(next) || next < 1) return;
+                currentPage = next;
+                render();
+                window.scrollTo({ top: 0, behavior: "smooth" });
+            });
 
             tabs.addEventListener("click", (e) => {
                 const btn = e.target.closest("button[data-cat]");
                 if (!btn) return;
                 activeCat = btn.getAttribute("data-cat");
+                currentPage = 1;
                 tabs.querySelectorAll("button[data-cat]").forEach(b => {
                     const on = b === btn;
                     b.classList.toggle("active", on);
@@ -204,6 +266,7 @@
 
             searchInput.addEventListener("input", () => {
                 query = searchInput.value;
+                currentPage = 1;
                 render();
             });
 
@@ -218,12 +281,21 @@
                         b.setAttribute("aria-selected", on ? "true" : "false");
                     });
                 }
+                const initPage = parseInt(params.get("page") || "1", 10);
+                if (Number.isFinite(initPage) && initPage >= 1) {
+                    currentPage = initPage;
+                }
 
                 try {
                     const res = await fetch("projects.json", { cache: "no-cache" });
                     if (res.ok) {
                         const data = await res.json();
-                        if (Array.isArray(data)) allPosts = data;
+                        if (Array.isArray(data)) {
+                            allPosts = data.slice().sort((a, b) =>
+                                String(b.date || "").localeCompare(String(a.date || "")) ||
+                                String(b.slug || "").localeCompare(String(a.slug || ""))
+                            );
+                        }
                     }
                 } catch (_) {}
                 updateCounts();
